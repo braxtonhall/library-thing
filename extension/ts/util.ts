@@ -4,4 +4,4 @@ const getElementsByTag = (parent: HTMLElement) => (tag: string) =>
 const getElementsByTags = (parent: HTMLElement, tags: string[]) =>
 	tags.flatMap(getElementsByTag(parent));
 
-export {getElementsByTag, getElementsByTags};
+export { getElementsByTag, getElementsByTags };
