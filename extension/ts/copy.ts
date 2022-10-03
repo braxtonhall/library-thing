@@ -1,4 +1,5 @@
 import { RELEVANT_TAGS } from "./constants";
+import { getElementsByTags } from "./util";
 
 const COLLECTIONS_ID_PREFIX = "collection_u_";
 const SAVE_DATA_KEY = "_save-data";
@@ -19,11 +20,11 @@ const loadData = (parent) =>
 
 const getSaveData = (parent) => {
 	const elements = getElementsByTags(parent, RELEVANT_TAGS);
-	return elements.reduce((saveData, element) => {
+	return elements.reduce((saveData: Record<string, unknown>, element: any) => {
 		// We can't change hidden elements because LibraryThing relies
 		// on hidden form inputs to send additional, form-specific metadata
 		// on save
-		if (element.id && element.type !== 'hidden') {
+		if (element && element.id && element.type !== 'hidden') {
 			const {value, checked} = element;
 			if (element.id.startsWith(COLLECTIONS_ID_PREFIX)) {
 				const collections = saveData[COLLECTIONS_KEY] || {};
@@ -40,14 +41,14 @@ const getSaveData = (parent) => {
 
 const insertSaveData = (parent, saveData) => {
 	const elements = getElementsByTags(parent, RELEVANT_TAGS);
-	return elements.forEach((element) => {
+	return elements.forEach((element: any) => {
 		// We can't change hidden elements because LibraryThing relies
 		// on hidden form inputs to send additional, form-specific metadata
 		// on save
-		if (element.id && element.type !== 'hidden') {
+		if (element && element.id && element.type !== 'hidden') {
 			let saveElement = element;
 			if (element.id.startsWith(COLLECTIONS_ID_PREFIX)) {
-				const [span] = element.parentElement.getElementsByTagName("span");
+				const span = element.parentElement.getElementsByTagName("span")[0];
 				saveElement = saveData[COLLECTIONS_KEY][span.textContent] || element;
 			} else {
 				saveElement = saveData[element.id] || element;

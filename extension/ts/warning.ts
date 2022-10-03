@@ -1,4 +1,5 @@
 import { RELEVANT_TAGS } from "./constants";
+import { getElementsByTags } from "./util";
 
 let edited = false;
 
