@@ -1,47 +1,45 @@
 import { RELEVANT_TAGS } from "./constants";
+import { SaveData } from "./types";
 import { getElementsByTags } from "./util";
 
 const COLLECTIONS_ID_PREFIX = "collection_u_";
 const SAVE_DATA_KEY = "_save-data";
 const COLLECTIONS_KEY = "___collections_";
 
-const saveData = (parent) => (event) => {
+const saveData = (parent: HTMLElement) => (event: Event) => {
 	event.preventDefault();
 	localStorage.setItem(SAVE_DATA_KEY, JSON.stringify(getSaveData(parent)));
 };
 
-const loadData = (parent) => (event) => {
+const loadData = (parent: HTMLElement) => (event: Event) => {
 	event.preventDefault();
 	const saveData = JSON.parse(localStorage.getItem(SAVE_DATA_KEY) ?? "{}");
 	insertSaveData(parent, saveData);
 };
 
-const getSaveData = (parent) => {
+const getSaveData = (parent: HTMLElement) => {
 	const elements = getElementsByTags(parent, RELEVANT_TAGS);
-	return elements.reduce(
-		(saveData: Record<string, unknown>, element: any) => {
-			// We can't change hidden elements because LibraryThing relies
-			// on hidden form inputs to send additional, form-specific metadata
-			// on save
-			if (element && element.id && element.type !== "hidden") {
-				const { value, checked } = element;
-				if (element.id.startsWith(COLLECTIONS_ID_PREFIX)) {
-					const collections = saveData[COLLECTIONS_KEY] || {};
-					const [span] =
-						element.parentElement.getElementsByTagName("span");
-					collections[span.textContent] = { value, checked };
-					saveData[COLLECTIONS_KEY] = collections;
-				} else {
-					saveData[element.id] = { value, checked };
-				}
+	return elements.reduce((saveData: SaveData, element: any) => {
+		// We can't change hidden elements because LibraryThing relies
+		// on hidden form inputs to send additional, form-specific metadata
+		// on save
+		if (element && element.id && element.type !== "hidden") {
+			const { value, checked } = element;
+			if (element.id.startsWith(COLLECTIONS_ID_PREFIX)) {
+				const collections = saveData[COLLECTIONS_KEY] || {};
+				const [span] =
+					element.parentElement.getElementsByTagName("span");
+				collections[span.textContent] = { value, checked };
+				saveData[COLLECTIONS_KEY] = collections;
+			} else {
+				saveData[element.id] = { value, checked };
 			}
-			return saveData;
-		},
-		{}
-	);
+		}
+		return saveData;
+	}, {});
 };
 
-const insertSaveData = (parent, saveData) => {
+const insertSaveData = (parent: HTMLElement, saveData: SaveData) => {
 	const elements = getElementsByTags(parent, RELEVANT_TAGS);
 	return elements.forEach((element: any) => {
 		// We can't change hidden elements because LibraryThing relies
@@ -63,7 +61,11 @@ const insertSaveData = (parent, saveData) => {
 	});
 };
 
-const appendButton = (element, text, onClick) => {
+const appendButton = (
+	element: HTMLElement,
+	text: string,
+	onClick: (e: Event) => void
+) => {
 	const button = document.createElement("button");
 	button.innerHTML = text;
 	button.addEventListener("click", onClick);
@@ -72,11 +74,11 @@ const appendButton = (element, text, onClick) => {
 	element.appendChild(td);
 };
 
-const appendRow = (editForm) => (table) => {
+const appendRow = (editForm: HTMLElement) => (table: HTMLTableElement) => {
 	const row = document.createElement("tr");
 	appendButton(row, "SAVE", saveData(editForm));
 	appendButton(row, "LOAD", loadData(editForm));
-	const [body] = table.getElementsByTagName("tbody");
+	const [body] = Array.from(table.getElementsByTagName("tbody"));
 	body.appendChild(row);
 };
 

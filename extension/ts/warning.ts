@@ -7,7 +7,7 @@ const onEdit = () => (edited = true);
 
 const undoEdits = () => (edited = false);
 
-const addEditListener = (parent) =>
+const addEditListener = (parent: HTMLElement) =>
 	getElementsByTags(parent, RELEVANT_TAGS).forEach((element) => {
 		element.addEventListener("change", onEdit);
 		element.addEventListener("keydown", onEdit);
