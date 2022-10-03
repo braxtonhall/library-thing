@@ -18,6 +18,9 @@ const loadData = (parent) =>
 const getSaveData = (parent) => {
 	const elements = getElementsByTags(parent, RELEVANT_TAGS);
 	return elements.reduce((saveData, element) => {
+		// We can't change hidden elements because LibraryThing relies
+		// on hidden form inputs to send additional, form-specific metadata
+		// on save
 		if (element.id && element.type !== 'hidden') {
 			const {value, checked} = element;
 			if (element.id.startsWith(COLLECTIONS_ID_PREFIX)) {
@@ -36,6 +39,9 @@ const getSaveData = (parent) => {
 const insertSaveData = (parent, saveData) => {
 	const elements = getElementsByTags(parent, RELEVANT_TAGS);
 	return elements.forEach((element) => {
+		// We can't change hidden elements because LibraryThing relies
+		// on hidden form inputs to send additional, form-specific metadata
+		// on save
 		if (element.id && element.type !== 'hidden') {
 			let saveElement = element;
 			if (element.id.startsWith(COLLECTIONS_ID_PREFIX)) {
