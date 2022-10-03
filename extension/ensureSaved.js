@@ -10,9 +10,6 @@ const addEditListener = (parent) =>
 		element.addEventListener("keydown", onEdit);
 	});
 
-const addOnEditClicked = (element) =>
-	element.addEventListener("click", undoEdits);
-
 const observer = new MutationObserver((mutations) => {
 	/**
 	 * This potentially means things are added same listener to the same node multiple times,
@@ -29,7 +26,7 @@ const addUndoEditListener = () => [
 	document.getElementById("book_editTabTextSave1"),
 	document.getElementById("book_editTabTextSave2"),
 	document.getElementById("book_editTabTextDelete"), // so that it doesn't alert you when you're deleting something (?)
-].forEach(addOnEditClicked);
+].forEach((element) => element.addEventListener("click", undoEdits));
 
 window.addEventListener("load", () => {
 
