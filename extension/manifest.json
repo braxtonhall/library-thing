@@ -8,7 +8,7 @@
     "content_scripts": [
       {
         "matches": ["https://*.librarything.com/*"],
-        "js": ["copy.js", "ensureSaved.js", "helpers.js"]
+        "js": ["copy.js", "ensureSaved.js", "constants.js", "helpers.js"]
       }
     ]
   }

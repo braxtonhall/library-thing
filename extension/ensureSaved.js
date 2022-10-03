@@ -1,7 +1,5 @@
 let edited = false;
 
-const relevantTags = ["textarea", "input", "select"];
-
 const onEdit = () => {
 	edited = true
 };
@@ -21,7 +19,7 @@ const removeListener = (element) => {
 };
 
 const editListenersFrom = (parent, update) => () => {
-	const editableElements = getElementsByTags(parent, relevantTags);
+	const editableElements = getElementsByTags(parent, RELEVANT_TAGS);
 	editableElements.forEach(update);
 };
 
