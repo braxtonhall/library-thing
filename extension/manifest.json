@@ -1,0 +1,14 @@
+{
+    "name": "Better LibraryThing",
+    "version": "0.0.1",
+    "manifest_version": 2,
+    "description": "Makes LibraryThing BETTER",
+    "permissions": ["https://*.librarything.com/*"],
+    "icons": { },
+    "content_scripts": [
+      {
+        "matches": ["https://*.librarything.com/*"],
+        "js": ["copy.js", "ensureSaved.js", "helpers.js"]
+      }
+    ]
+  }
