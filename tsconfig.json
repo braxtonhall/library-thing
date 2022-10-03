@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"strict": false,
 		"types": [
+			"chrome"
 		],
 		"lib": [
 			"DOM",
