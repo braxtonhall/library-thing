@@ -1,3 +1,5 @@
+import { RELEVANT_TAGS } from "./constants";
+
 const COLLECTIONS_ID_PREFIX = "collection_u_";
 const SAVE_DATA_KEY = "_save-data";
 const COLLECTIONS_KEY = "___collections_";
@@ -11,7 +13,7 @@ const saveData = (parent) =>
 const loadData = (parent) =>
 	(event) => {
 		event.preventDefault();
-		const saveData = JSON.parse(localStorage.getItem(SAVE_DATA_KEY));
+		const saveData = JSON.parse(localStorage.getItem(SAVE_DATA_KEY) ?? '{}');
 		insertSaveData(parent, saveData);
 	};
 
@@ -75,6 +77,6 @@ const appendRow = (editForm) => (table) => {
 };
 
 window.addEventListener("load", () => {
-	const [editForm] = document.getElementsByClassName("book_bit");
+	const editForm = document.getElementById("book_editForm");
 	Array.from(document.getElementsByClassName("book_bitTable")).forEach(appendRow(editForm));
 });

@@ -1,3 +1,5 @@
+import { RELEVANT_TAGS } from "./constants";
+
 let edited = false;
 
 const onEdit = () => edited = true;
@@ -26,23 +28,25 @@ const addUndoEditListener = () => [
 	document.getElementById("book_editTabTextSave1"),
 	document.getElementById("book_editTabTextSave2"),
 	document.getElementById("book_editTabTextDelete"), // so that it doesn't alert you when you're deleting something (?)
-].forEach((element) => element.addEventListener("click", undoEdits));
+].forEach((element) => element?.addEventListener("click", undoEdits));
 
 window.addEventListener("load", () => {
 
-	const editWindow = document.getElementById("book_editForm");
-	observer.observe(editWindow, { subtree: true, childList: true });
-	addEditListener(editWindow);
+	const editForm = document.getElementById("book_editForm");
+	if (editForm) {
+		observer.observe(editForm, { subtree: true, childList: true });
+		addEditListener(editForm);
+	
+		addUndoEditListener();
 
-	addUndoEditListener();
-
-	window.addEventListener("beforeunload", (event) => {
-		if (edited) {
-			const confirmationMessage = 'It looks like you have been editing something. '
-			+ 'If you leave before saving, your changes will be lost.';
-
-			(event || window.event).returnValue = confirmationMessage; // Gecko + IE
-			return confirmationMessage; // Gecko + Webkit, Safari, Chrome etc.
-		}
-	});
+		window.addEventListener("beforeunload", (event) => {
+			if (edited) {
+				const confirmationMessage = 'It looks like you have been editing something. '
+				+ 'If you leave before saving, your changes will be lost.';
+	
+				(event || window.event).returnValue = confirmationMessage; // Gecko + IE
+				return confirmationMessage; // Gecko + Webkit, Safari, Chrome etc.
+			}
+		});
+	}
 });

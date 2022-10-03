@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+	  "strict": false,
+	  "types": [
+	  ],
+	  "lib": [
+		"DOM",
+		"ES2021"
+	  ]
+	},
+	"exclude": [
+	  "node_modules"
+	]
+  }
