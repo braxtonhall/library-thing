@@ -22,6 +22,32 @@ _TODO get the extension on the releases page._
 
 _TODO walk through this entire user story with pictures._
 
+### Chrome
+1. Download and unzip the extension from the [releases page](https://github.com/braxtonhall/library-thing/releases)
+1. Navigate to [`chrome://extensions`](chrome://extensions)
+1. Toggle `Developer mode`
+1. Click `Load unpacked`
+1. Select the unzipped extension directory
+
+### Firefox
+Not yet supported
+
+### Safari
+Not yet supported
+
+### Edge
+Not yet supported
+
+### Opera
+1. Download and unzip the extension from the [releases page](https://github.com/braxtonhall/library-thing/releases)
+1. Navigate to [`opera://extensions`](opera://extensions)
+1. Toggle `Developer mode`
+1. Click `Load unpacked`
+1. Select the unzipped extension directory
+
+### Brave
+Not yet supported
+
 ## Development
 
 ### Contributing
