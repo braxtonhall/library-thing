@@ -17,10 +17,19 @@ const setCSS = (id: string, css: Partial<CSSStyleDeclaration>) =>
 	editElement(id, (element) =>
 		Object.entries(css).forEach(([key, value]) => element.style[key] = value));
 
+const setFavicon = () => {
+	const element = Array.from(document.getElementsByTagName("link"))
+		.find((element) => element.rel === "icon" && element.type === "image/x-icon");
+	if (element) {
+		element.href = chrome.runtime.getURL("img/favicon.ico");
+	}
+};
+
 window.addEventListener("load", () => {
 	setCSS("masthead", {transition: "500ms", filter: "saturate(1.5)"});
 
 	const background = `url(${chrome.runtime.getURL("img/icon128.png")}) no-repeat 16px 0`;
 	setCSS("masthead_logo_wordmark", {background});
 	setLogo("masthead_lt_logo");
+	setFavicon();
 });
