@@ -1,6 +1,6 @@
 # Better Library Thing
 
-A browser extension to improve the LibraryThing cataloguing experience
+A browser extension to improve the LibraryThing cataloguing experience. Made in support of the [Vancouver Black Library](https://www.vancouverblacklibrary.org/).
 
 ## Features
 
@@ -15,6 +15,12 @@ _TODO walk through this entire user story with pictures._
 While on the Edit book page, a Copy and Paste button appear to allow you to Copy and Paste entire book entries.
 
 _TODO walk through this entire user story with pictures._
+
+### VBL Banner
+
+When the extension is used, the LibraryThing banner is replaced with a [Vancouver Black Library](https://www.vancouverblacklibrary.org/), so you can discern whether the extension is active at a glance.
+
+_TODO just add a picture of this._
 
 ## Installation
 
