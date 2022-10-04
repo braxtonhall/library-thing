@@ -1,5 +1,5 @@
-import { RELEVANT_TAGS } from "./constants";
-import { getElementsByTags } from "./util";
+import {RELEVANT_TAGS} from "./constants";
+import {getElementsByTags} from "./util";
 
 let edited = false;
 
@@ -19,9 +19,7 @@ const observer = new MutationObserver((mutations) => {
 	 * but who cares if we set the edited boolean as true 8 times lmao
 	 */
 	addUndoEditListener();
-	mutations.forEach((mutation) =>
-		mutation.addedNodes.forEach(addEditListener)
-	);
+	mutations.forEach((mutation) => mutation.addedNodes.forEach(addEditListener));
 });
 
 const addUndoEditListener = () =>
@@ -36,7 +34,7 @@ const addUndoEditListener = () =>
 window.addEventListener("load", () => {
 	const editForm = document.getElementById("book_editForm");
 	if (editForm) {
-		observer.observe(editForm, { subtree: true, childList: true });
+		observer.observe(editForm, {subtree: true, childList: true});
 		addEditListener(editForm);
 
 		addUndoEditListener();

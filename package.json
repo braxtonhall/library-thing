@@ -15,6 +15,6 @@
 	"scripts": {
 		"watch": "webpack --watch --mode development",
 		"build": "webpack --mode production",
-		"pretty": "yarn prettier --editorconfig true --write extension/ts/*.ts"
+		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write extension/ts/*.ts"
 	}
 }
