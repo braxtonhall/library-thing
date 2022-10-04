@@ -8,6 +8,7 @@ const editElement = <E extends HTMLElement>(
 	id: string,
 	callback: (element: E) => void
 ) => {
+	// warning: THIS IS NOT TYPE SAFE. it's LAZY
 	const element = getElement(document, id) as E;
 	element && callback(element);
 };
