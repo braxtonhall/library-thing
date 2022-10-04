@@ -1,31 +1,31 @@
 name: Run linter # & tests
 
 on:
-	pull_request:
-		branches:
-			- main
-	workflow_dispatch:
+    pull_request:
+        branches:
+            - main
+    workflow_dispatch:
 
 jobs:
-	build:
-		runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-		strategy:
-			matrix:
-				node: [ 16.x ]
+        strategy:
+            matrix:
+                node: [ 16.x ]
 
-		steps:
-			-   uses: actions/checkout@v2
-			-   name: Install modules with Node ${{ matrix.node }}
-				uses: actions/setup-node@v1
-				with:
-					node-version: ${{ matrix.node }}
+        steps:
+            -   uses: actions/checkout@v2
+            -   name: Install modules with Node ${{ matrix.node }}
+                uses: actions/setup-node@v1
+                with:
+                    node-version: ${{ matrix.node }}
 
-			-   name: Install packages
-				run: yarn install
-			-   name: Compile TypeScript
-				run: yarn build
-			-   name: Run linter
-				run: yarn lint
-#			-   name: Run tests
-#				run: yarn test
+            -   name: Install packages
+                run: yarn install
+            -   name: Compile TypeScript
+                run: yarn build
+            -   name: Run linter
+                run: yarn lint
+#            -   name: Run tests
+#                run: yarn test
