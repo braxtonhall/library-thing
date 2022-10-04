@@ -1,7 +1,5 @@
-const getElementsByTag = (parent: HTMLElement) => (tag: string) =>
-	Array.from(parent?.getElementsByTagName(tag) ?? []);
+const getElementsByTag = (parent: HTMLElement) => (tag: string) => Array.from(parent?.getElementsByTagName(tag) ?? []);
 
-const getElementsByTags = (parent: HTMLElement, tags: string[]) =>
-	tags.flatMap(getElementsByTag(parent));
+const getElementsByTags = (parent: HTMLElement, tags: string[]) => tags.flatMap(getElementsByTag(parent));
 
-export { getElementsByTag, getElementsByTags };
+export {getElementsByTag, getElementsByTags};
