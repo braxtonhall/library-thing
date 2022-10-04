@@ -7,6 +7,7 @@ const config = {
 	entry: {
 		'copy': './ts/copy.ts',
 		'warning': './ts/warning.ts',
+		'colour': './ts/colour.ts',
 	},
 	output: {
 		path: path.join(__dirname, '/extension/js'),
