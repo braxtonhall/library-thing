@@ -26,5 +26,15 @@
 	"content_security_policy": {},
 	"host_permissions": [
 		"https://*.librarything.com/*"
+	],
+	"web_accessible_resources": [
+		{
+			"resources": [
+				"img/icon128.png"
+			],
+			"matches": [
+				"https://*.librarything.com/*"
+			]
+		}
 	]
 }
