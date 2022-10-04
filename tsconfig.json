@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"strict": false,
+		"types": [
+			"chrome"
+		],
+		"lib": [
+			"DOM",
+			"ES2021"
+		]
+	},
+	"exclude": [
+		"node_modules"
+	]
+}
