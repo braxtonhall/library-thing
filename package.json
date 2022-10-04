@@ -19,7 +19,8 @@
 	"scripts": {
 		"watch": "webpack --watch --mode development",
 		"build": "webpack --mode production",
-		"lint": "eslint extension/ts/ --ext .ts --fix",
+		"lint": "eslint extension/ts/ --ext .ts",
+		"fix": "yarn lint --fix",
 		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write extension/ts/*.ts"
 	}
 }
