@@ -18,12 +18,24 @@
 			],
 			"js": [
 				"js/copy.js",
-				"js/warning.js"
+				"js/warning.js",
+				"js/colour.js"
 			]
 		}
 	],
 	"content_security_policy": {},
 	"host_permissions": [
 		"https://*.librarything.com/*"
+	],
+	"web_accessible_resources": [
+		{
+			"resources": [
+				"img/icon128.png",
+				"img/favicon.ico"
+			],
+			"matches": [
+				"https://*.librarything.com/*"
+			]
+		}
 	]
 }
