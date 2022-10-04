@@ -1,6 +1,6 @@
 # Better Library Thing
 
-TODO: what is better library thing? What is it for?
+A browser extension to improve the LibraryThing cataloguing experience
 
 ## Features
 
@@ -19,8 +19,6 @@ _TODO walk through this entire user story with pictures._
 ## Installation
 
 _TODO get the extension on the releases page._
-
-_TODO walk through this entire user story with pictures._
 
 ### Chrome
 1. Download and unzip the extension from the [releases page](https://github.com/braxtonhall/library-thing/releases)
