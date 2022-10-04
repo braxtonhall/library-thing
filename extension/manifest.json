@@ -1,18 +1,29 @@
 {
 	"name": "Better LibraryThing",
 	"version": "0.0.1",
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"description": "Makes LibraryThing BETTER",
-	"permissions": ["https://*.librarything.com/*"],
+	"permissions": [
+		"https://*.librarything.com/*"
+	],
 	"icons": {
 		"16": "img/icon16.png",
 		"48": "img/icon48.png",
 		"128": "img/icon128.png"
 	},
 	"content_scripts": [
-	  {
-		"matches": ["https://*.librarything.com/*"],
-		"js": ["js/copy.js", "js/warning.js"]
-	  }
+		{
+			"matches": [
+				"https://*.librarything.com/*"
+			],
+			"js": [
+				"js/copy.js",
+				"js/warning.js"
+			]
+		}
+	],
+	"content_security_policy": {},
+	"host_permissions": [
+		"https://*.librarything.com/*"
 	]
-  }
+}
