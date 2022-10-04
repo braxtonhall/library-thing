@@ -1,6 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
-require('dotenv').config();
 
 const config = {
 	context: path.join(__dirname, '/extension'),
@@ -34,11 +32,6 @@ const config = {
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js'],
 	},
-	plugins: [
-		new webpack.EnvironmentPlugin({
-			LOGO_URL: '', // TODO will be useful when we emit both Chrome and FireFox extensions
-		})
-	]
 };
 
 module.exports = (env, options) => {
