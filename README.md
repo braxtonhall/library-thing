@@ -16,6 +16,16 @@ While on the Edit book page, a Copy and Paste button appear to allow you to Copy
 
 _TODO walk through this entire user story with pictures._
 
+
+### Find PDF
+
+While Editing a book, click on the `Find PDF` to search the internet for PDFs of the book.
+Results are pulled from z-lib and libgen, with more websites to be added in the future.
+
+<sub>Please make sure to check the links! They may not be perfect!</sub>
+
+_TODO walk through this entire user story with pictures._
+
 ### VBL Banner
 
 When the extension is used, the LibraryThing banner is replaced with a [Vancouver Black Library](https://www.vancouverblacklibrary.org/), so you can discern whether the extension is active at a glance.
