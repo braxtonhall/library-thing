@@ -1,6 +1,6 @@
-import {Finder, FinderParameters, FinderResponse} from "../finder";
+import {Finder, FinderResponse} from "../finder";
 
-const InternetArchive: Finder = async ({author, title}: FinderParameters): Promise<FinderResponse> => {
+const InternetArchive: Finder = async (): Promise<FinderResponse> => {
 	return [];
 };
 

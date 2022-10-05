@@ -1,10 +1,8 @@
 import {Finder, FinderParameters, FinderResponse} from "../finder";
-import {get$} from "../../../services/request";
-import {Element} from "cheerio";
 import {getLinks} from "./util/getLinks";
 
 const BASE_URL = "https://b-ok.cc";
-const SEARCH_PATH = "/s"
+const SEARCH_PATH = "/s";
 const MAX = 3;
 
 const bOK: Finder = async ({author, title}: FinderParameters): Promise<FinderResponse> => {

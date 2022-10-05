@@ -1,6 +1,4 @@
 import {Finder, FinderParameters, FinderResponse} from "../finder";
-import {get$} from "../../../services/request";
-import {Element} from "cheerio";
 import {getLinks} from "./util/getLinks";
 
 const MAX = 3;
@@ -12,7 +10,7 @@ const getUrl = (base: string, queryKey: string, maxLenQuery: number, parameters:
 
 const simplify = (text: string): string =>
 	text
-		.replace(/[-'`~!@#$%^&*()_|+=?;:",.<>{}\[\]\\\/]/gi, ' ')
+		.replace(/[-'`~!@#$%^&*()_|+=?;:",.<>{}[\]\\/]/gi, ' ')
 		.replace(/\s+/g, ' ');
 
 const shorten = (maxLenQuery: number, {author, title}: FinderParameters): string => {
