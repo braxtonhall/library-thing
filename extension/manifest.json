@@ -3,9 +3,6 @@
 	"version": "0.0.1",
 	"manifest_version": 3,
 	"description": "Makes LibraryThing BETTER",
-	"permissions": [
-		"https://*.librarything.com/*"
-	],
 	"icons": {
 		"16": "img/icon16.png",
 		"48": "img/icon48.png",
@@ -18,12 +15,32 @@
 			],
 			"js": [
 				"js/copy.js",
-				"js/warning.js"
+				"js/warning.js",
+				"js/colour.js",
+				"js/pdf.js",
+				"js/emitter.js"
 			]
 		}
 	],
 	"content_security_policy": {},
 	"host_permissions": [
-		"https://*.librarything.com/*"
+		"https://*.librarything.com/*",
+		"https://*.b-ok.cc/*",
+		"https://*.libgen.is/*"
+	],
+	"background": {
+		"service_worker": "js/background.js"
+	},
+	"permissions": ["tabs"],
+	"web_accessible_resources": [
+		{
+			"resources": [
+				"img/icon128.png",
+				"img/favicon.ico"
+			],
+			"matches": [
+				"https://*.librarything.com/*"
+			]
+		}
 	]
 }

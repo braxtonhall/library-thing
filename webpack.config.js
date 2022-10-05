@@ -1,12 +1,14 @@
 const path = require('path');
-const webpack = require('webpack');
-require('dotenv').config();
 
 const config = {
 	context: path.join(__dirname, '/extension'),
 	entry: {
 		'copy': './ts/copy.ts',
 		'warning': './ts/warning.ts',
+		'colour': './ts/colour.ts',
+		'pdf': './ts/pdf.ts',
+		'background': './ts/workers/delegator.ts',
+		'emitter': './ts/services/renderFormEmitter.ts',
 	},
 	output: {
 		path: path.join(__dirname, '/extension/js'),
@@ -33,11 +35,6 @@ const config = {
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js'],
 	},
-	plugins: [
-		new webpack.EnvironmentPlugin({
-			LOGO_URL: '', // TODO will be useful when we emit both Chrome and FireFox extensions
-		})
-	]
 };
 
 module.exports = (env, options) => {
