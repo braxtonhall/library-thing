@@ -2,13 +2,17 @@
 
 A browser extension to improve the LibraryThing cataloguing experience. Made in support of the [Vancouver Black Library](https://www.vancouverblacklibrary.org/).
 
+<p style="text-align:center;">
+	<img src="img/vbl.png" alt="vancouver black library" style="width: 100px; height: auto">
+</p>
+
 ## Features
 
 ### Warnings
 
 While Editing a book, leaving the page without hitting Save, Cancel, or Delete Book cause a warning if there is unsaved work.
 
-_TODO walk through this entire user story with pictures._
+<img src="img/warning.png" alt="warning">
 
 ### Copy/Paste
 
@@ -22,15 +26,16 @@ _TODO walk through this entire user story with pictures._
 While Editing a book, click on the `Find PDF` to search the internet for PDFs of the book.
 Results are pulled from z-lib and libgen, with more websites to be added in the future.
 
-<sub>Please make sure to check the links! They may not be perfect!</sub>
+<img src="img/find-pdf-before.png" alt="before clicking find pdf">
+<img src="img/find-pdf-after.png" alt="after clicking find pdf">
 
-_TODO walk through this entire user story with pictures._
+<sub>Please make sure to check the links! They may not be perfect!</sub>
 
 ### VBL Banner
 
 When the extension is used, the LibraryThing banner is replaced with a [Vancouver Black Library](https://www.vancouverblacklibrary.org/), so you can discern whether the extension is active at a glance.
 
-_TODO just add a picture of this._
+<img src="img/banner.png" alt="banner">
 
 ## Installation
 
