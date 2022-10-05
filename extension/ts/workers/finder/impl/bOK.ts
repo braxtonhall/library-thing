@@ -15,7 +15,7 @@ const bOK: Finder = async ({author, title}: FinderParameters): Promise<FinderRes
 	});
 	// TODO actually visit these websites and make sure that there is a download button
 	// For example: https://b-ok.cc/book/17689031/7bf9fc
-	return paths.slice(MAX).map((path) => `${BASE_URL}/${path}`);
+	return paths.slice(0, MAX).map((path) => `${BASE_URL}/${path}`);
 };
 
 export {bOK};
