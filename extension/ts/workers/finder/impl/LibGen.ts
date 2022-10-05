@@ -49,7 +49,8 @@ const findNonFiction: Finder = async (parameters: FinderParameters): Promise<Fin
 };
 
 const LibGen: Finder = async (parameters: FinderParameters): Promise<FinderResponse> => {
-	return findNonFiction(parameters);
+	return Promise.all([findFiction, findNonFiction].map((finder) => finder(parameters)))
+		.then((results: string[][]) => results.flat());
 };
 
 export {LibGen};
