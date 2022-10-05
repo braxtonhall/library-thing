@@ -4,19 +4,17 @@ import {WorkerKind} from "./workers/types";
 const findTextContent = (id: string) =>
 	(): string => (document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement)?.value ?? "";
 
-const findTitle = findTextContent("form_authorunflip");
+const findTitle = findTextContent("form_title");
 
-const findAuthor = findTextContent("form_title");
+const findAuthor = findTextContent("form_authorunflip");
 
 const onClick = (comments: HTMLTextAreaElement) => async (event: MouseEvent) => {
 	event.preventDefault();
 	const author = findAuthor();
 	const title = findTitle();
 
-	console.log(title);
-
 	const test = await invokeWorker(WorkerKind.Finder, {author, title});
-	comments.textContent += JSON.stringify(test);
+	console.log(test);
 };
 
 const createButton = (onClick: (event: MouseEvent) => void): HTMLButtonElement => {
