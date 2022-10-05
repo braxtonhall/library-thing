@@ -16,14 +16,21 @@
 			"js": [
 				"js/copy.js",
 				"js/warning.js",
-				"js/colour.js"
+				"js/colour.js",
+				"js/pdf.js"
 			]
 		}
 	],
 	"content_security_policy": {},
 	"host_permissions": [
-		"https://*.librarything.com/*"
+		"https://*.librarything.com/*",
+		"https://*.b-ok.cc/*",
+		"https://*.libgen.is/*"
 	],
+	"background": {
+		"service_worker": "js/background.js"
+	},
+	"permissions": ["tabs"],
 	"web_accessible_resources": [
 		{
 			"resources": [
