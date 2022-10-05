@@ -40,7 +40,7 @@ const findNonFiction: Finder = async (parameters: FinderParameters): Promise<Fin
 	const searchUrl = getUrl("https://libgen.is/search.php?", "req", 80, parameters);
 	return getLinks({
 		searchUrl,
-		baseUrl: BASE_URL,
+		baseUrl: BASE_URL + "/", // non-fiction links are relative, not absolute
 		maxResults: MAX,
 		aSelector: "table.c > tbody > tr > td:nth-child(3) > a"
 	});
