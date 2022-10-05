@@ -1,19 +1,38 @@
-export enum ToastType {
-	WARNING,
-	SUCCESS,
-}
+import {ToastType, ShowToastEvent} from "./types";
+import {SHOW_TOAST_EVENT} from "./constants";
 
-function styleInject(cssText: string) {
+const TOAST_DURATION_MS = 6000;
+let toastCounter = 0;
+
+const styleInject = (cssText: string) => {
 	const head = document.head || document.getElementsByTagName("head")[0];
 	const style = document.createElement("style");
 	style.appendChild(document.createTextNode(cssText));
 	head.appendChild(style);
 	return style;
-}
+};
+
+const assertNever = () => {
+	throw new Error("should never reach here");
+};
+
+const getToastBackgroundColour = (toastType: ToastType) => {
+	switch (toastType) {
+		case ToastType.ERROR:
+			return "#FF6955";
+		case ToastType.WARNING:
+			return "#FFB82F";
+		case ToastType.SUCCESS:
+			return "#A0FF98";
+		default:
+			assertNever();
+	}
+};
 
 const createToast = (toastType: ToastType) => {
 	const toast = document.createElement("div");
-	toast.id = `better-library-thing-toast-${Math.floor(Math.random() * 100)}`;
+	toast.id = `better-library-thing-toast-${toastCounter++}`;
+	const backgroundColour = getToastBackgroundColour(toastType);
 	const style = styleInject(`
 		#${toast.id} {
 			min-width: 400px; /* Set a default minimum width */
@@ -22,12 +41,11 @@ const createToast = (toastType: ToastType) => {
 			font-weight: bold;
 			border-radius: 8px; /* Rounded borders */
 			padding: 16px;
-			position: fixed;
-			z-index: 99;
+			position: fixed; z-index: 99;
 			left: 70%;
 			top: 80px;
 			color: #000;
-			background-color: ${toastType == ToastType.WARNING ? "#FFB82F" : "#A0FF98"};
+			background-color: ${backgroundColour};
 			visibility: visible;
 			-webkit-animation: fadein 0.5s, fadeout 0.5s 5.5s;
 			animation: fadein 0.5s, fadeout 0.5s 5.5s;
@@ -54,16 +72,22 @@ const createToast = (toastType: ToastType) => {
 			to {top: 0; opacity: 0;}
 		}
 	`);
+
 	document.body.appendChild(toast);
 	return {style, toast};
 };
 
-export const showToast = (text: string, toastType: ToastType) => {
+const showToast = (text: string, toastType: ToastType) => {
 	const {style, toast} = createToast(toastType);
 	toast.innerText = text;
 	setTimeout(() => {
 		const head = document.head || document.getElementsByTagName("head")[0];
 		document.body.removeChild(toast);
 		head.removeChild(style);
-	}, 6000);
+	}, TOAST_DURATION_MS);
 };
+
+window.addEventListener(SHOW_TOAST_EVENT, (e: CustomEvent<ShowToastEvent>) => {
+	const {toastText, toastType} = e.detail;
+	showToast(toastText, toastType);
+});

@@ -1,6 +1,6 @@
 import {FORM_RENDER_EVENT, RELEVANT_TAGS} from "./constants";
-import {SaveData} from "./types";
-import {showToast, ToastType} from "./toast";
+import {SaveData, ToastType} from "./types";
+import {emitShowToast} from "./services/emitShowToast";
 import {getElementsByTags} from "./util";
 
 const COLLECTIONS_ID_PREFIX = "collection_u_";
@@ -10,7 +10,7 @@ const COLLECTIONS_KEY = "___collections_";
 const saveData = (parent: HTMLElement) => (event: Event) => {
 	event.preventDefault();
 	localStorage.setItem(SAVE_DATA_KEY, JSON.stringify(getSaveData(parent)));
-	showToast(
+	emitShowToast(
 		"The metadata for this book was saved!\n\nYou can use the LOAD button on a different book's page to paste in your saved metadata.",
 		ToastType.SUCCESS
 	);
@@ -18,8 +18,13 @@ const saveData = (parent: HTMLElement) => (event: Event) => {
 
 const loadData = (parent: HTMLElement) => (event: Event) => {
 	event.preventDefault();
-	const saveData = JSON.parse(localStorage.getItem(SAVE_DATA_KEY) ?? "{}");
-	insertSaveData(parent, saveData);
+	try {
+		const saveData = JSON.parse(localStorage.getItem(SAVE_DATA_KEY) ?? "{}");
+		insertSaveData(parent, saveData);
+	} catch (e) {
+		console.error(e);
+		emitShowToast("Something went wrong when trying to paste metadata :/", ToastType.ERROR);
+	}
 };
 
 const getSaveData = (parent: HTMLElement) => {
