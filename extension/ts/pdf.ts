@@ -1,5 +1,6 @@
 import {invokeWorker} from "./workers/invoker";
 import {WorkerKind} from "./workers/types";
+import {FORM_RENDER_EVENT} from "./constants";
 
 const findTextContent = (id: string) =>
 	(): string => (document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement)?.value ?? "";
@@ -28,7 +29,7 @@ const createButton = (onClick: (event: MouseEvent) => void): HTMLButtonElement =
 	return button;
 };
 
-window.addEventListener("load", async () => {
+window.addEventListener(FORM_RENDER_EVENT, async () => {
 	const commentsCell = document.getElementById("bookedit_comments");
 	const comments = document.getElementById("form_comments") as HTMLTextAreaElement; // not type safe -- lazy
 

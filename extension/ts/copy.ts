@@ -1,4 +1,4 @@
-import {RELEVANT_TAGS} from "./constants";
+import {FORM_RENDER_EVENT, RELEVANT_TAGS} from "./constants";
 import {SaveData} from "./types";
 import {getElementsByTags} from "./util";
 
@@ -75,7 +75,7 @@ const appendRow = (editForm: HTMLElement) => (table: HTMLTableElement) => {
 	body.appendChild(row);
 };
 
-window.addEventListener("load", () => {
+window.addEventListener(FORM_RENDER_EVENT, () => {
 	const editForm = document.getElementById("book_editForm");
 	Array.from(document.getElementsByClassName("book_bitTable")).forEach(appendRow(editForm));
 });

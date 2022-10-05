@@ -17,7 +17,8 @@
 				"js/copy.js",
 				"js/warning.js",
 				"js/colour.js",
-				"js/pdf.js"
+				"js/pdf.js",
+				"js/emitter.js"
 			]
 		}
 	],

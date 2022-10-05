@@ -8,6 +8,7 @@ const config = {
 		'colour': './ts/colour.ts',
 		'pdf': './ts/pdf.ts',
 		'background': './ts/workers/delegator.ts',
+		'emitter': './ts/services/renderFormEmitter.ts',
 	},
 	output: {
 		path: path.join(__dirname, '/extension/js'),
