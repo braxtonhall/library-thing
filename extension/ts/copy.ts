@@ -1,5 +1,6 @@
 import {FORM_RENDER_EVENT, RELEVANT_TAGS} from "./constants";
 import {SaveData} from "./types";
+import {showToast, ToastType} from "./toast";
 import {getElementsByTags} from "./util";
 
 const COLLECTIONS_ID_PREFIX = "collection_u_";
@@ -9,6 +10,10 @@ const COLLECTIONS_KEY = "___collections_";
 const saveData = (parent: HTMLElement) => (event: Event) => {
 	event.preventDefault();
 	localStorage.setItem(SAVE_DATA_KEY, JSON.stringify(getSaveData(parent)));
+	showToast(
+		"The metadata for this book was saved!\n\nYou can use the LOAD button on a different book's page to paste in your saved metadata.",
+		ToastType.SUCCESS
+	);
 };
 
 const loadData = (parent: HTMLElement) => (event: Event) => {
