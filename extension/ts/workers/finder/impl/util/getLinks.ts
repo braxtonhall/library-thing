@@ -14,7 +14,7 @@ const getLinks = async ({searchUrl, aSelector, baseUrl, maxResults}: GetLinksEnv
 	$(aSelector).each((_, element: Element) => {
 		paths.push($(element).attr("href"));
 	});
-	return paths.slice(0, maxResults).map((path) => `${baseUrl}/${path}`);
+	return paths.slice(0, maxResults).map((path) => `${baseUrl}${path}`);
 };
 
 export {getLinks};
