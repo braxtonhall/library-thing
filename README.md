@@ -65,7 +65,11 @@ Not yet supported
 1. Select the unzipped extension directory
 
 ### Brave
-Not yet supported
+1. Download and unzip the extension from the [releases page](https://github.com/braxtonhall/library-thing/releases)
+1. Navigate to [`brave://extensions`](brave://extensions)
+1. Toggle `Developer mode`
+1. Click `Load unpacked`
+1. Select the unzipped extension directory
 
 ## Development
 
