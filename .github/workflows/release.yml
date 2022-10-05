@@ -1,0 +1,44 @@
+name: Release
+
+on:
+    push:
+        tags:
+            - '*.*.*'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node: [ 16.x ]
+
+        permissions:
+            contents: write
+
+        steps:
+            -   uses: actions/checkout@v2
+            -   name: Set output
+                id: vars
+                run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+            -   name: Install modules with Node ${{ matrix.node }}
+                uses: actions/setup-node@v1
+                with:
+                    node-version: ${{ matrix.node }}
+            -   name: Install packages
+                run: yarn install
+            -   name: Compile TypeScript
+                run: yarn build
+            -   name: Archive Release
+                uses: thedoctor0/zip-release@main
+                with:
+                    type: "zip"
+                    filename: "extension.zip"
+                    path: "extension"
+                    exclusions: "/*extension/ts/*"
+            -   name: Upload Release
+                uses: ncipollo/release-action@v1
+                with:
+                    artifacts: "extension.zip"
+                    bodyFile: "docs/releases/${{ steps.vars.outputs.tag }}.md"
+                    token: ${{ secrets.YOUR_GITHUB_TOKEN }}
