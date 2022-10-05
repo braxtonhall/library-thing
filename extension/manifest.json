@@ -10,37 +10,20 @@
 	},
 	"content_scripts": [
 		{
-			"matches": [
-				"https://*.librarything.com/*"
-			],
-			"js": [
-				"js/copy.js",
-				"js/warning.js",
-				"js/colour.js",
-				"js/pdf.js",
-				"js/emitter.js"
-			]
+			"matches": ["https://*.librarything.com/*"],
+			"js": ["js/copy.js", "js/warning.js", "js/colour.js", "js/pdf.js", "js/emitter.js", "js/toast.js"]
 		}
 	],
 	"content_security_policy": {},
-	"host_permissions": [
-		"https://*.librarything.com/*",
-		"https://*.b-ok.cc/*",
-		"https://*.libgen.is/*"
-	],
+	"host_permissions": ["https://*.librarything.com/*", "https://*.b-ok.cc/*", "https://*.libgen.is/*"],
 	"background": {
 		"service_worker": "js/background.js"
 	},
 	"permissions": ["tabs"],
 	"web_accessible_resources": [
 		{
-			"resources": [
-				"img/icon128.png",
-				"img/favicon.ico"
-			],
-			"matches": [
-				"https://*.librarything.com/*"
-			]
+			"resources": ["img/icon128.png", "img/favicon.ico"],
+			"matches": ["https://*.librarything.com/*"]
 		}
 	]
 }

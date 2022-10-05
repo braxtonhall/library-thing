@@ -1,9 +1,11 @@
 import {invokeWorker} from "./workers/invoker";
 import {WorkerKind} from "./workers/types";
 import {FORM_RENDER_EVENT} from "./constants";
+import {emitShowToast} from "./services/emitShowToast";
+import {ToastType} from "./types";
 
-const findTextContent = (id: string) =>
-	(): string => (document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement)?.value ?? "";
+const findTextContent = (id: string) => (): string =>
+	(document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement)?.value ?? "";
 
 const findTitle = findTextContent("form_title");
 
@@ -15,10 +17,12 @@ const onClick = (comments: HTMLTextAreaElement) => async (event: MouseEvent) => 
 	const title = findTitle();
 
 	const links = await invokeWorker(WorkerKind.Finder, {author, title});
-	const commentAddition = links.map((link) => `PDF: ${link}`).join('\n');
+	const commentAddition = links.map((link) => `PDF: ${link}`).join("\n");
 	if (commentAddition) {
 		comments.value += `\n${commentAddition}`;
 		comments.dispatchEvent(new Event("change"));
+	} else {
+		emitShowToast("No PDFs found for this book", ToastType.WARNING);
 	}
 };
 
