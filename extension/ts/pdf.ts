@@ -13,8 +13,12 @@ const onClick = (comments: HTMLTextAreaElement) => async (event: MouseEvent) => 
 	const author = findAuthor();
 	const title = findTitle();
 
-	const test = await invokeWorker(WorkerKind.Finder, {author, title});
-	console.log(test);
+	const links = await invokeWorker(WorkerKind.Finder, {author, title});
+	const commentAddition = links.map((link) => `PDF: ${link}`).join('\n');
+	if (commentAddition) {
+		comments.value += `\n${commentAddition}`;
+		comments.dispatchEvent(new Event("change"));
+	}
 };
 
 const createButton = (onClick: (event: MouseEvent) => void): HTMLButtonElement => {

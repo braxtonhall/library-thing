@@ -18,7 +18,6 @@ const shorten = (maxLenQuery: number, {author, title}: FinderParameters): string
 	const shorterTitle = simplify(title);
 	const combined = `${shorterAuthor} ${shorterTitle}`;
 	if (combined.length > maxLenQuery) {
-		console.log(combined);
 		const maxLengthText = combined.slice(0, maxLenQuery).trim();
 		return maxLengthText.replace(/\s[^\s]*$/, "");
 	} else {
