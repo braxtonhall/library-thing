@@ -3,7 +3,7 @@ name: Release
 on:
     push:
         tags:
-            - '*'
+            - '*.*.*'
 
 jobs:
     build:
@@ -18,6 +18,9 @@ jobs:
 
         steps:
             -   uses: actions/checkout@v2
+            -   name: Set output
+                id: vars
+                run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
             -   name: Install modules with Node ${{ matrix.node }}
                 uses: actions/setup-node@v1
                 with:
@@ -37,5 +40,5 @@ jobs:
                 uses: ncipollo/release-action@v1
                 with:
                     artifacts: "extension.zip"
-                    bodyFile: "docs/releases/current.md"
+                    bodyFile: "docs/releases/${{ steps.vars.outputs.tag }}.md"
                     token: ${{ secrets.YOUR_GITHUB_TOKEN }}
