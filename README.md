@@ -68,10 +68,10 @@ Not yet supported
 To contribute just make a PR into the `main` branch!
 
 1. Click `Fork` button in the top right of the [GitHub page](https://github.com/braxtonhall/library-thing)
-2. Develop your feature and push to your fork
-3. Click the `Pull requests` tab and then the `New pull request` in your fork
-4. Set the base repo and branch to be `braxtonhall/library-thing` and `main`
-5. Click `Create pull request`
+1. Develop your feature and push to your fork
+1. Click the `Pull requests` tab and then the `New pull request` in your fork
+1. Set the base repo and branch to be `braxtonhall/library-thing` and `main`
+1. Click `Create pull request`
 
 ### Requirements
 - [Node](https://nodejs.org/en/)
