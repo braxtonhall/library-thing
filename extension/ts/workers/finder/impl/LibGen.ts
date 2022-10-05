@@ -36,6 +36,7 @@ const findFiction: Finder = async (parameters: FinderParameters): Promise<Finder
 };
 
 const findNonFiction: Finder = async (parameters: FinderParameters): Promise<FinderResponse> => {
+	// LibGen has a limit of 80 characters on its searches
 	const searchUrl = getUrl("https://libgen.is/search.php?", "req", 80, parameters);
 	return getLinks({
 		searchUrl,
