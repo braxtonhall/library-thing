@@ -1,11 +1,12 @@
 import {FORM_RENDER_EVENT, FORM_DATA_ELEMENT_TAGS} from "../constants";
-import {SaveData, ToastType} from "../types";
-import {showToast} from "../ui/toast";
+import {showToast, ToastType} from "../ui/toast";
 import {getElementsByTags} from "../util";
 
 const COLLECTIONS_ID_PREFIX = "collection_u_";
 const SAVE_DATA_KEY = "_save-data";
 const COLLECTIONS_KEY = "___collections_";
+
+type SaveData = Record<string, Record<string, any>>;
 
 const saveData = (parent: HTMLElement) => (event: Event) => {
 	event.preventDefault();

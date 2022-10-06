@@ -1,8 +1,13 @@
-import {ToastType} from "../types";
 import {styleInject, styleRemove} from "./ui-utils";
 
 const TOAST_DURATION_MS = 6000;
 let toastCounter = 0;
+
+enum ToastType {
+	ERROR,
+	WARNING,
+	SUCCESS,
+}
 
 const assertNever = () => {
 	throw new Error("should never reach here");
@@ -80,4 +85,4 @@ const showToast = (text: string, toastType: ToastType) => {
 	setTimeout(() => removeToast(toast, style), TOAST_DURATION_MS);
 };
 
-export {showToast};
+export {showToast, ToastType};

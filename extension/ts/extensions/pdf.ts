@@ -1,8 +1,7 @@
 import {invokeWorker} from "../workers/invoker";
 import {WorkerKind} from "../workers/types";
 import {FORM_RENDER_EVENT} from "../constants";
-import {showToast} from "../ui/toast";
-import {ToastType} from "../types";
+import {showToast, ToastType} from "../ui/toast";
 import {createLoader, removeLoader} from "../ui/loading-indicator";
 
 const findTextContent = (id: string) => (): string =>
