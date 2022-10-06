@@ -22,7 +22,7 @@ const onClick = (comments: HTMLTextAreaElement) => async (event: MouseEvent) => 
 
 	if (links.length > 0) {
 		const commentAddition = links.map((link) => `PDF: ${link}`).join("\n");
-		comments.value += `\n${commentAddition}`;
+		comments.value += `${comments.value ? "\n" : ""}${commentAddition}`;
 		comments.dispatchEvent(new Event("change"));
 		showToast(`Found ${links.length} PDF${links.length > 1 ? "s" : ""}!`, ToastType.SUCCESS);
 	} else {
