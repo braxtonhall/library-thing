@@ -1,19 +1,8 @@
-import {ForEachFormElement, FormData, formDataEquals, getFormData, onFormRender} from "../objects/bookForm";
+import {FormData, formDataEquals, getFormData, onFormRender} from "../objects/bookForm";
 
-let edited: boolean;
 let storedFormData: FormData;
 
-const onEdit = () => (edited = true);
-
-const undoEdits = () => {
-	storedFormData = getFormData();
-	edited = false;
-};
-
-const addEditListener = (element: Element) => {
-	element.addEventListener("change", onEdit);
-	element.addEventListener("keydown", onEdit);
-};
+const undoEdits = () => (storedFormData = getFormData());
 
 const addUndoEditListener = () =>
 	[
@@ -24,14 +13,13 @@ const addUndoEditListener = () =>
 		document.getElementById("book_editTabTextDelete"), // so that it doesn't alert you when you're deleting something (?)
 	].forEach((element) => element?.addEventListener("click", undoEdits));
 
-onFormRender((_, forEachElement: ForEachFormElement) => {
+onFormRender(() => {
 	undoEdits();
-	forEachElement(addEditListener);
 	addUndoEditListener();
 });
 
 window.addEventListener("beforeunload", (event) => {
-	if (edited && !formDataEquals(storedFormData, getFormData())) {
+	if (!formDataEquals(storedFormData, getFormData())) {
 		const confirmationMessage =
 			"It looks like you have been editing something. " +
 			"If you leave before saving, your changes will be lost.";
