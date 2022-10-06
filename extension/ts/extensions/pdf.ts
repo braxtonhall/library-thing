@@ -1,9 +1,7 @@
-import {invokeWorker} from "./workers/invoker";
-import {WorkerKind} from "./workers/types";
-import {FORM_RENDER_EVENT} from "./constants";
-import {emitShowToast} from "./services/emitShowToast";
-import {ToastType} from "./types";
-import {createLoader, removeLoader} from "./ui/loading-indicator";
+import {showToast, ToastType} from "../ui/toast";
+import {createLoader, removeLoader} from "../ui/loadingIndicator";
+import {FORM_RENDER_EVENT} from "../services/renderFormObserver";
+import {find} from "../services/finder/finder";
 
 const findTextContent = (id: string) => (): string =>
 	(document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement)?.value ?? "";
@@ -17,16 +15,17 @@ const onClick = (comments: HTMLTextAreaElement) => async (event: MouseEvent) => 
 	const author = findAuthor();
 	const title = findTitle();
 
-	const {overlay, style} = createLoader();
-	const links = await invokeWorker(WorkerKind.Finder, {author, title});
-	removeLoader(overlay, style);
+	const overlay = createLoader();
+	const links = await find({author, title});
+	removeLoader(overlay);
 
-	const commentAddition = links.map((link) => `PDF: ${link}`).join("\n");
-	if (commentAddition) {
+	if (links.length > 0) {
+		const commentAddition = links.map((link) => `PDF: ${link}`).join("\n");
 		comments.value += `\n${commentAddition}`;
 		comments.dispatchEvent(new Event("change"));
+		showToast(`Found ${links.length} PDF${links.length > 1 ? "s" : ""}!`, ToastType.SUCCESS);
 	} else {
-		emitShowToast("No PDFs found for this book", ToastType.WARNING);
+		showToast("No PDFs found for this book", ToastType.WARNING);
 	}
 };
 

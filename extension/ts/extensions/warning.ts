@@ -1,5 +1,5 @@
-import {FORM_RENDER_EVENT, RELEVANT_TAGS} from "./constants";
-import {getElementsByTags} from "./util";
+import {FORM_RENDER_EVENT} from "../services/renderFormObserver";
+import {getFormElements} from "../util/bookForm";
 
 let edited = false;
 
@@ -7,8 +7,8 @@ const onEdit = () => (edited = true);
 
 const undoEdits = () => (edited = false);
 
-const addEditListener = (parent: HTMLElement) =>
-	getElementsByTags(parent, RELEVANT_TAGS).forEach((element) => {
+const addEditListener = () =>
+	getFormElements().forEach((element) => {
 		element.addEventListener("change", onEdit);
 		element.addEventListener("keydown", onEdit);
 	});
@@ -23,11 +23,8 @@ const addUndoEditListener = () =>
 	].forEach((element) => element?.addEventListener("click", undoEdits));
 
 window.addEventListener(FORM_RENDER_EVENT, () => {
-	const editForm = document.getElementById("book_editForm");
-	if (editForm) {
-		addEditListener(editForm);
-		addUndoEditListener();
-	}
+	addEditListener();
+	addUndoEditListener();
 });
 
 window.addEventListener("beforeunload", (event) => {

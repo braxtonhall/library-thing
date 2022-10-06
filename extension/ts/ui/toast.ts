@@ -1,87 +1,62 @@
-import {ToastType, ShowToastEvent} from "../types";
-import {SHOW_TOAST_EVENT} from "../constants";
-import {styleInject, styleRemove} from "./ui-utils";
+const TOAST_ON_SCREEN_MS = 6000;
+const TOAST_TRANSITION_MS = 500;
+const TRANSITION_CLASS_NAME = "transitioning";
+const CLICKABLE_CLASS_NAME = "ready";
+const TOAST_CLASS_NAME = "vblblt-toast";
 
-const TOAST_DURATION_MS = 6000;
-let toastCounter = 0;
+enum ToastType {
+	ERROR = "error-toast",
+	WARNING = "warning-toast",
+	SUCCESS = "success-toast",
+}
 
-const assertNever = () => {
-	throw new Error("should never reach here");
-};
+const onScreen: Keyframe = {top: '80px', opacity: 1};
+const offScreen: Keyframe = {top: 0, opacity: 0};
 
-const getToastBackgroundColour = (toastType: ToastType) => {
-	switch (toastType) {
-		case ToastType.ERROR:
-			return "#FF6955";
-		case ToastType.WARNING:
-			return "#FFB82F";
-		case ToastType.SUCCESS:
-			return "#A0FF98";
-		default:
-			assertNever();
-	}
-};
+const fadeIn: Keyframe[] = [offScreen, onScreen];
+const fadeOut: Keyframe[] = [onScreen, offScreen];
 
 const createToast = (toastType: ToastType) => {
 	const toast = document.createElement("div");
-	toast.id = `better-library-thing-toast-${toastCounter++}`;
-	const backgroundColour = getToastBackgroundColour(toastType);
-	const style = styleInject(`
-		#${toast.id} {
-			min-width: 400px; /* Set a default minimum width */
-			margin-left: -200px; /* Divide value of min-width by 2 */
-			text-align: center;
-			font-weight: bold;
-			border-radius: 8px; /* Rounded borders */
-			padding: 16px;
-			position: fixed; z-index: 99;
-			left: 70%;
-			top: 80px;
-			color: #000;
-			background-color: ${backgroundColour};
-			visibility: visible;
-			-webkit-animation: fadein 0.5s, fadeout 0.5s 5.5s;
-			animation: fadein 0.5s, fadeout 0.5s 5.5s;
-		}
-
-		/* Animations to fade the snackbar in and out */
-		@-webkit-keyframes fadein {
-			from {top: 0; opacity: 0;}
-			to {top: 80px; opacity: 1;}
-		}
-
-		@keyframes fadein {
-			from {top: 0; opacity: 0;}
-			to {top: 80px; opacity: 1;}
-		}
-
-		@-webkit-keyframes fadeout {
-			from {top: 80px; opacity: 1;}
-			to {top: 0; opacity: 0;}
-		}
-
-		@keyframes fadeout {
-			from {top: 80px; opacity: 1;}
-			to {top: 0; opacity: 0;}
-		}
-	`);
-
+	toast.className = `${TOAST_CLASS_NAME} ${toastType}`;
 	document.body.appendChild(toast);
-	return {style, toast};
+	return toast;
 };
 
-const removeToast = (toast: HTMLDivElement, style: HTMLStyleElement) => {
-	document.body.removeChild(toast);
-	styleRemove(style);
+const show = (toast: HTMLDivElement): Promise<HTMLDivElement> => {
+	return new Promise((resolve) => {
+		const animation = toast.animate(fadeIn, TOAST_TRANSITION_MS);
+		animation.onfinish = () => {
+			toast.className = toast.className.replace(TRANSITION_CLASS_NAME, CLICKABLE_CLASS_NAME);
+			resolve(toast);
+		};
+	});
+};
+
+const removeToast = (toast: HTMLDivElement) => {
+	toast.className = toast.className.replace(CLICKABLE_CLASS_NAME, TRANSITION_CLASS_NAME);
+	toast.animate(fadeOut, TOAST_TRANSITION_MS).onfinish = () => {
+		document.body.removeChild(toast);
+	};
+};
+
+const prepareToDismiss = (toast: HTMLDivElement) => {
+	const dismiss = () => {
+		toast.removeEventListener("click", onClick);
+		removeToast(toast);
+	};
+	const timeout = setTimeout(dismiss, TOAST_ON_SCREEN_MS);
+	const onClick = () => {
+		clearTimeout(timeout);
+		dismiss();
+	};
+	toast.addEventListener("click", onClick);
 };
 
 const showToast = (text: string, toastType: ToastType) => {
-	const {style, toast} = createToast(toastType);
+	const toast = createToast(toastType);
 	toast.innerText = text;
-	setTimeout(() => removeToast(toast, style), TOAST_DURATION_MS);
+	show(toast).then(prepareToDismiss);
 };
 
-window.addEventListener(SHOW_TOAST_EVENT, (e: CustomEvent<ShowToastEvent>) => {
-	const {toastText, toastType} = e.detail;
-	showToast(toastText, toastType);
-});
+export {showToast, ToastType};

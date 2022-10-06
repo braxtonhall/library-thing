@@ -1,11 +1,11 @@
-import {InternalWorkerRequest, WorkerKind, Workers} from "./types";
-import {find} from "./finder/finder";
+import {TypedWorkerRequest, WorkerKind, Workers} from "./types";
+import {get} from "./impl/request";
 
 const workers: Workers = {
-	[WorkerKind.Finder]: find,
+	[WorkerKind.Get]: get,
 };
 
-chrome.runtime.onMessage.addListener(<Kind extends WorkerKind>(request: InternalWorkerRequest<Kind>, sender, sendResponse) => {
-	workers[request.kind](request).then(sendResponse);
+chrome.runtime.onMessage.addListener(<Kind extends WorkerKind>(typedRequest: TypedWorkerRequest<Kind>, sender, sendResponse) => {
+	workers[typedRequest.kind](typedRequest.request).then(sendResponse);
 	return true;
 });

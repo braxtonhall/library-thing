@@ -1,14 +1,14 @@
-import {FinderParameters, FinderResponse} from "./finder/finder";
+import {GetParameters, GetResponse} from "./impl/request";
 
 enum WorkerKind {
-	Finder = "finder",
+	Get = "get",
 }
 
-type WorkerRequest<Kind extends WorkerKind> = Kind extends WorkerKind.Finder ? FinderParameters : never;
+type WorkerRequest<Kind extends WorkerKind> = Kind extends WorkerKind.Get ? GetParameters : never;
 
-type InternalWorkerRequest<Kind extends WorkerKind> = {kind: WorkerKind} & WorkerRequest<Kind>;
+type TypedWorkerRequest<Kind extends WorkerKind> = {kind: WorkerKind, request: WorkerRequest<Kind>};
 
-type WorkerResponse<Kind extends WorkerKind> = Kind extends WorkerKind.Finder ? FinderResponse : never;
+type WorkerResponse<Kind extends WorkerKind> = Kind extends WorkerKind.Get ? GetResponse : never;
 
 type Worker<Kind extends WorkerKind> = (request: WorkerRequest<Kind>) => Promise<WorkerResponse<Kind>>;
 
@@ -16,4 +16,4 @@ type Workers = {
 	[Kind in WorkerKind]: Worker<Kind>;
 };
 
-export {WorkerKind, Workers, WorkerRequest, WorkerResponse, InternalWorkerRequest};
+export {WorkerKind, Workers, WorkerRequest, WorkerResponse, TypedWorkerRequest};

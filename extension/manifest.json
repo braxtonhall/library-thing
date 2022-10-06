@@ -11,7 +11,8 @@
 	"content_scripts": [
 		{
 			"matches": ["https://*.librarything.com/*"],
-			"js": ["js/copy.js", "js/warning.js", "js/colour.js", "js/pdf.js", "js/emitter.js", "js/toast.js"]
+			"js": ["js/bundle.js"],
+			"css": ["css/index.css"]
 		}
 	],
 	"content_security_policy": {},

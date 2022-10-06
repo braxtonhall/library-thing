@@ -3,13 +3,8 @@ const path = require('path');
 const config = {
 	context: path.join(__dirname, '/extension'),
 	entry: {
-		'copy': './ts/copy.ts',
-		'warning': './ts/warning.ts',
-		'colour': './ts/colour.ts',
-		'pdf': './ts/pdf.ts',
+		'bundle': './ts/index.ts',
 		'background': './ts/workers/delegator.ts',
-		'emitter': './ts/services/renderFormEmitter.ts',
-		'toast': './ts/ui/toast.ts',
 		},
 	output: {
 		path: path.join(__dirname, '/extension/js'),
