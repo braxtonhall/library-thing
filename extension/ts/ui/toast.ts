@@ -1,16 +1,9 @@
-import {ToastType, ShowToastEvent} from "./types";
-import {SHOW_TOAST_EVENT} from "./constants";
+import {ToastType, ShowToastEvent} from "../types";
+import {SHOW_TOAST_EVENT} from "../constants";
+import {styleInject, styleRemove} from "./ui-utils";
 
 const TOAST_DURATION_MS = 6000;
 let toastCounter = 0;
-
-const styleInject = (cssText: string) => {
-	const head = document.head || document.getElementsByTagName("head")[0];
-	const style = document.createElement("style");
-	style.appendChild(document.createTextNode(cssText));
-	head.appendChild(style);
-	return style;
-};
 
 const assertNever = () => {
 	throw new Error("should never reach here");
@@ -77,14 +70,15 @@ const createToast = (toastType: ToastType) => {
 	return {style, toast};
 };
 
+const removeToast = (toast: HTMLDivElement, style: HTMLStyleElement) => {
+	document.body.removeChild(toast);
+	styleRemove(style);
+};
+
 const showToast = (text: string, toastType: ToastType) => {
 	const {style, toast} = createToast(toastType);
 	toast.innerText = text;
-	setTimeout(() => {
-		const head = document.head || document.getElementsByTagName("head")[0];
-		document.body.removeChild(toast);
-		head.removeChild(style);
-	}, TOAST_DURATION_MS);
+	setTimeout(() => removeToast(toast, style), TOAST_DURATION_MS);
 };
 
 window.addEventListener(SHOW_TOAST_EVENT, (e: CustomEvent<ShowToastEvent>) => {
