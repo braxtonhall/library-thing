@@ -9,22 +9,14 @@ enum ToastType {
 	SUCCESS,
 }
 
-const assertNever = () => {
-	throw new Error("should never reach here");
+const backgroundColours: { [type in ToastType]: `#${string}` } = {
+	[ToastType.ERROR]: "#FF6955",
+	[ToastType.WARNING]: "#FFB82F",
+	[ToastType.SUCCESS]: "#A0FF98",
 };
 
-const getToastBackgroundColour = (toastType: ToastType) => {
-	switch (toastType) {
-		case ToastType.ERROR:
-			return "#FF6955";
-		case ToastType.WARNING:
-			return "#FFB82F";
-		case ToastType.SUCCESS:
-			return "#A0FF98";
-		default:
-			assertNever();
-	}
-};
+const getToastBackgroundColour = (toastType: ToastType) =>
+	backgroundColours[toastType] ?? `#FFFFFF`;
 
 const createToast = (toastType: ToastType) => {
 	const toast = document.createElement("div");
