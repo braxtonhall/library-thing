@@ -1,10 +1,9 @@
+import {formExists, getForm} from "../util/bookForm";
+
 const FORM_RENDER_EVENT = "library-thing-form-rendered";
 
 const tryToEmit = () => {
-	// This is relying on the fact that when the edit form is available, the html matches this selector,
-	// and fails to match in all other cases. This IS brittle. If LibraryThing changes
-	// the markup in any way this will just not work
-	if (document.querySelector("#book_editForm > .book_bit")) {
+	if (formExists()) {
 		window.dispatchEvent(new Event(FORM_RENDER_EVENT));
 	}
 };
@@ -12,7 +11,7 @@ const tryToEmit = () => {
 const observer = new MutationObserver(tryToEmit);
 
 window.addEventListener("load", () => {
-	const editForm = document.getElementById("book_editForm");
+	const editForm = getForm();
 	if (editForm) {
 		observer.observe(editForm, {subtree: false, childList: true});
 		tryToEmit();
