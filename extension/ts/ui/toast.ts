@@ -1,6 +1,7 @@
 import {styleInject, styleRemove} from "./util";
 
-const TOAST_DURATION_MS = 6000;
+const TOAST_ON_SCREEN_MS = 2000;
+const TOAST_TRANSITION_MS = 500;
 let toastCounter = 0;
 
 enum ToastType {
@@ -17,6 +18,12 @@ const backgroundColours: { [type in ToastType]: `#${string}` } = {
 
 const getToastBackgroundColour = (toastType: ToastType) =>
 	backgroundColours[toastType] ?? `#FFFFFF`;
+
+const onScreen: Keyframe = {top: '80px', opacity: 1};
+const offScreen: Keyframe = {top: 0, opacity: 0};
+
+const fadeIn: Keyframe[] = [offScreen, onScreen];
+const fadeOut: Keyframe[] = [onScreen, offScreen];
 
 const createToast = (toastType: ToastType) => {
 	const toast = document.createElement("div");
@@ -36,45 +43,26 @@ const createToast = (toastType: ToastType) => {
 			color: #000;
 			background-color: ${backgroundColour};
 			visibility: visible;
-			-webkit-animation: fadein 0.5s, fadeout 0.5s 5.5s;
-			animation: fadein 0.5s, fadeout 0.5s 5.5s;
-		}
-
-		/* Animations to fade the snackbar in and out */
-		@-webkit-keyframes fadein {
-			from {top: 0; opacity: 0;}
-			to {top: 80px; opacity: 1;}
-		}
-
-		@keyframes fadein {
-			from {top: 0; opacity: 0;}
-			to {top: 80px; opacity: 1;}
-		}
-
-		@-webkit-keyframes fadeout {
-			from {top: 80px; opacity: 1;}
-			to {top: 0; opacity: 0;}
-		}
-
-		@keyframes fadeout {
-			from {top: 80px; opacity: 1;}
-			to {top: 0; opacity: 0;}
 		}
 	`);
 
 	document.body.appendChild(toast);
+	toast.animate(fadeIn, TOAST_TRANSITION_MS);
 	return {style, toast};
 };
 
 const removeToast = (toast: HTMLDivElement, style: HTMLStyleElement) => {
-	document.body.removeChild(toast);
-	styleRemove(style);
+	toast.animate(fadeOut, TOAST_TRANSITION_MS);
+	setTimeout(() => {
+		document.body.removeChild(toast);
+		styleRemove(style);
+	}, TOAST_TRANSITION_MS);
 };
 
 const showToast = (text: string, toastType: ToastType) => {
 	const {style, toast} = createToast(toastType);
 	toast.innerText = text;
-	setTimeout(() => removeToast(toast, style), TOAST_DURATION_MS);
+	setTimeout(() => removeToast(toast, style), TOAST_ON_SCREEN_MS);
 };
 
 export {showToast, ToastType};
