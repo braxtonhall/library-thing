@@ -1,7 +1,8 @@
+type ForEachFormElement = (callback: (element: Element) => void) => void;
 type FormData = Record<string, Record<string, any>>;
 
+const FORM_RENDER_EVENT = "library-thing-form-rendered";
 const FORM_DATA_ELEMENT_TAGS = ["textarea", "input", "select"];
-
 const COLLECTIONS_ID_PREFIX = "collection_u_";
 const COLLECTIONS_KEY = "___collections_";
 
@@ -17,6 +18,15 @@ const getFormElements = (): Element[] => getElementsByTags(getForm(), FORM_DATA_
 const formExists = (): boolean => !!document.querySelector("#book_editForm > .book_bit");
 
 const getForm = (): HTMLElement => document.getElementById("book_editForm");
+
+const extractSaveDataFor = (targetElement: Element, saveData: FormData) => {
+	if (targetElement.id.startsWith(COLLECTIONS_ID_PREFIX)) {
+		const span = targetElement.parentElement.getElementsByTagName("span")[0];
+		return saveData[COLLECTIONS_KEY][span?.textContent] ?? targetElement;
+	} else {
+		return saveData[targetElement.id] ?? targetElement;
+	}
+};
 
 const getFormData = () => getFormElements()
 	.reduce((saveData: FormData, element: any) => {
@@ -37,16 +47,6 @@ const getFormData = () => getFormElements()
 		return saveData;
 	}, {});
 
-
-const extractSaveDataFor = (targetElement: Element, saveData: FormData) => {
-	if (targetElement.id.startsWith(COLLECTIONS_ID_PREFIX)) {
-		const span = targetElement.parentElement.getElementsByTagName("span")[0];
-		return saveData[COLLECTIONS_KEY][span?.textContent] ?? targetElement;
-	} else {
-		return saveData[targetElement.id] ?? targetElement;
-	}
-};
-
 const insertFormData = (saveData: FormData) => getFormElements()
 	.forEach((element: any) => {
 		// We can't change hidden elements because LibraryThing relies
@@ -62,5 +62,20 @@ const insertFormData = (saveData: FormData) => getFormElements()
 		}
 	});
 
-export type {FormData};
-export {getForm, getFormElements, formExists, getFormData, insertFormData};
+const forEachFormElement: ForEachFormElement = (callback: (element: Element) => void): void =>
+	getFormElements().forEach(callback);
+
+const onFormRender = (callback: (form: HTMLElement, forEachElement: ForEachFormElement) => void): void =>
+	window.addEventListener(FORM_RENDER_EVENT, () => callback(getForm(), forEachFormElement));
+
+window.addEventListener("load", () => {
+	const editForm = getForm();
+	if (editForm) {
+		const tryToEmit = () => formExists() && window.dispatchEvent(new Event(FORM_RENDER_EVENT));
+		new MutationObserver(tryToEmit).observe(editForm, {subtree: false, childList: true});
+		tryToEmit();
+	}
+});
+
+export type {FormData, ForEachFormElement};
+export {insertFormData, getFormData, onFormRender};

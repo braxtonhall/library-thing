@@ -1,6 +1,5 @@
 import {showToast, ToastType} from "../ui/toast";
-import {FORM_RENDER_EVENT} from "../services/renderFormObserver";
-import {getFormData, insertFormData} from "../util/bookForm";
+import {getFormData, insertFormData, onFormRender} from "../objects/bookForm";
 
 const SAVE_DATA_KEY = "_save-data";
 
@@ -41,6 +40,5 @@ const appendRow = (table: HTMLTableElement) => {
 	body.appendChild(row);
 };
 
-window.addEventListener(FORM_RENDER_EVENT, () => {
-	Array.from(document.getElementsByClassName("book_bitTable")).forEach(appendRow);
-});
+onFormRender((form: HTMLElement) =>
+	Array.from(form.getElementsByClassName("book_bitTable")).forEach(appendRow));

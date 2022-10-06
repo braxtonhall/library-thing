@@ -1,5 +1,4 @@
-import {FORM_RENDER_EVENT} from "../services/renderFormObserver";
-import {getFormElements} from "../util/bookForm";
+import {ForEachFormElement, onFormRender} from "../objects/bookForm";
 
 let edited = false;
 
@@ -7,11 +6,10 @@ const onEdit = () => (edited = true);
 
 const undoEdits = () => (edited = false);
 
-const addEditListener = () =>
-	getFormElements().forEach((element) => {
-		element.addEventListener("change", onEdit);
-		element.addEventListener("keydown", onEdit);
-	});
+const addEditListener = (element) => {
+	element.addEventListener("change", onEdit);
+	element.addEventListener("keydown", onEdit);
+};
 
 const addUndoEditListener = () =>
 	[
@@ -22,8 +20,8 @@ const addUndoEditListener = () =>
 		document.getElementById("book_editTabTextDelete"), // so that it doesn't alert you when you're deleting something (?)
 	].forEach((element) => element?.addEventListener("click", undoEdits));
 
-window.addEventListener(FORM_RENDER_EVENT, () => {
-	addEditListener();
+onFormRender((ignored, forEachElement: ForEachFormElement) => {
+	forEachElement(addEditListener);
 	addUndoEditListener();
 });
 
