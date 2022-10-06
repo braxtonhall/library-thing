@@ -23,12 +23,14 @@ const createToast = (toastType: ToastType) => {
 	return toast;
 };
 
-const show = (toast: HTMLDivElement, onReady: (toast: HTMLDivElement) => void) => {
-	const animation = toast.animate(fadeIn, TOAST_TRANSITION_MS);
-	animation.onfinish = () => {
-		toast.className = toast.className.replace(TRANSITION_CLASS_NAME, CLICKABLE_CLASS_NAME);
-		onReady(toast);
-	};
+const show = (toast: HTMLDivElement): Promise<HTMLDivElement> => {
+	return new Promise((resolve) => {
+		const animation = toast.animate(fadeIn, TOAST_TRANSITION_MS);
+		animation.onfinish = () => {
+			toast.className = toast.className.replace(TRANSITION_CLASS_NAME, CLICKABLE_CLASS_NAME);
+			resolve(toast);
+		};
+	});
 };
 
 const removeToast = (toast: HTMLDivElement) => {
@@ -54,7 +56,7 @@ const prepareToDismiss = (toast: HTMLDivElement) => {
 const showToast = (text: string, toastType: ToastType) => {
 	const toast = createToast(toastType);
 	toast.innerText = text;
-	show(toast, prepareToDismiss);
+	show(toast).then(prepareToDismiss);
 };
 
 export {showToast, ToastType};
