@@ -19,10 +19,11 @@ const onClick = (comments: HTMLTextAreaElement) => async (event: MouseEvent) => 
 	const links = await find({author, title});
 	removeLoader(overlay, style);
 
-	const commentAddition = links.map((link) => `PDF: ${link}`).join("\n");
-	if (commentAddition) {
+	if (links.length > 0) {
+		const commentAddition = links.map((link) => `PDF: ${link}`).join("\n");
 		comments.value += `\n${commentAddition}`;
 		comments.dispatchEvent(new Event("change"));
+		showToast(`Found ${links.length} PDF${links.length > 1 ? "s" : ""}!`, ToastType.SUCCESS);
 	} else {
 		showToast("No PDFs found for this book", ToastType.WARNING);
 	}
