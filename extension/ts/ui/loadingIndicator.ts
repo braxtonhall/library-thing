@@ -1,4 +1,4 @@
-import {styleInject, styleRemove} from "./ui-utils";
+import {styleInject, styleRemove} from "./util";
 
 export const createLoader = () => {
 	const overlay = document.createElement("div");

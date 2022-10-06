@@ -2,7 +2,7 @@ import {invokeWorker} from "../workers/invoker";
 import {WorkerKind} from "../workers/types";
 import {FORM_RENDER_EVENT} from "../constants";
 import {showToast, ToastType} from "../ui/toast";
-import {createLoader, removeLoader} from "../ui/loading-indicator";
+import {createLoader, removeLoader} from "../ui/loadingIndicator";
 
 const findTextContent = (id: string) => (): string =>
 	(document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement)?.value ?? "";

@@ -1,4 +1,4 @@
-import {styleInject, styleRemove} from "./ui-utils";
+import {styleInject, styleRemove} from "./util";
 
 const TOAST_DURATION_MS = 6000;
 let toastCounter = 0;
