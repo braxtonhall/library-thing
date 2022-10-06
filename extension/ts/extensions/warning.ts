@@ -1,5 +1,6 @@
-import {FORM_RENDER_EVENT, FORM_DATA_ELEMENT_TAGS} from "../constants";
+import {FORM_DATA_ELEMENT_TAGS} from "../constants";
 import {getElementsByTags} from "../util";
+import {FORM_RENDER_EVENT} from "../services/renderFormObserver";
 
 let edited = false;
 
