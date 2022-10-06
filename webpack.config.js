@@ -9,7 +9,7 @@ const config = {
 		'pdf': './ts/pdf.ts',
 		'background': './ts/workers/delegator.ts',
 		'emitter': './ts/services/renderFormEmitter.ts',
-		'toast': './ts/toast.ts',
+		'toast': './ts/ui/toast.ts',
 		},
 	output: {
 		path: path.join(__dirname, '/extension/js'),
