@@ -11,7 +11,7 @@ const saveData = (parent: HTMLElement) => (event: Event) => {
 	event.preventDefault();
 	localStorage.setItem(SAVE_DATA_KEY, JSON.stringify(getSaveData(parent)));
 	emitShowToast(
-		"The metadata for this book was saved!\n\nYou can use the LOAD button on a different book's page to paste in your saved metadata.",
+		"The metadata for this book was saved!\n\nYou can use the Paste button on a different book's page to paste in your saved metadata.",
 		ToastType.SUCCESS
 	);
 };
@@ -79,8 +79,8 @@ const appendButton = (element: HTMLElement, text: string, onClick: (event: Event
 
 const appendRow = (editForm: HTMLElement) => (table: HTMLTableElement) => {
 	const row = document.createElement("tr");
-	appendButton(row, "SAVE", saveData(editForm));
-	appendButton(row, "LOAD", loadData(editForm));
+	appendButton(row, "Copy book", saveData(editForm));
+	appendButton(row, "Paste book", loadData(editForm));
 	const [body] = Array.from(table.getElementsByTagName("tbody"));
 	body.appendChild(row);
 };
