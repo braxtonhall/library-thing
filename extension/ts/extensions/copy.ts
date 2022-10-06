@@ -8,7 +8,7 @@ const COLLECTIONS_KEY = "___collections_";
 
 type SaveData = Record<string, Record<string, any>>;
 
-const saveData = (event: Event) => {
+const onCopy = (event: Event) => {
 	event.preventDefault();
 	localStorage.setItem(SAVE_DATA_KEY, JSON.stringify(getSaveData()));
 	showToast(
@@ -17,7 +17,7 @@ const saveData = (event: Event) => {
 	);
 };
 
-const loadData = (event: Event) => {
+const onPaste = (event: Event) => {
 	event.preventDefault();
 	try {
 		const saveData = JSON.parse(localStorage.getItem(SAVE_DATA_KEY) ?? "{}");
@@ -49,6 +49,15 @@ const getSaveData = () => {
 	}, {});
 };
 
+const extractSaveDataFor = (targetElement: Element, saveData: SaveData) => {
+	if (targetElement.id.startsWith(COLLECTIONS_ID_PREFIX)) {
+		const span = targetElement.parentElement.getElementsByTagName("span")[0];
+		return saveData[COLLECTIONS_KEY][span?.textContent] ?? targetElement;
+	} else {
+		return saveData[targetElement.id] ?? targetElement;
+	}
+};
+
 const insertSaveData = (saveData: SaveData) => {
 	const elements = getFormElements();
 	return elements.forEach((element: any) => {
@@ -56,15 +65,9 @@ const insertSaveData = (saveData: SaveData) => {
 		// on hidden form inputs to send additional, form-specific metadata
 		// on save
 		if (element && element.id && element.type !== "hidden") {
-			let saveElement;
-			if (element.id.startsWith(COLLECTIONS_ID_PREFIX)) {
-				const span = element.parentElement.getElementsByTagName("span")[0];
-				saveElement = saveData[COLLECTIONS_KEY][span.textContent] || element;
-			} else {
-				saveElement = saveData[element.id] || element;
-			}
-			element.value = saveElement.value;
-			element.checked = saveElement.checked;
+			const {value, checked} = extractSaveDataFor(element, saveData);
+			element.value = value;
+			element.checked = checked;
 			element.dispatchEvent(new Event("change"));
 		}
 	});
@@ -81,8 +84,8 @@ const appendButton = (element: HTMLElement, text: string, onClick: (event: Event
 
 const appendRow = (table: HTMLTableElement) => {
 	const row = document.createElement("tr");
-	appendButton(row, "Copy book", saveData);
-	appendButton(row, "Paste book", loadData);
+	appendButton(row, "Copy book", onCopy);
+	appendButton(row, "Paste book", onPaste);
 	const [body] = Array.from(table.getElementsByTagName("tbody"));
 	body.appendChild(row);
 };
