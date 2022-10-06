@@ -68,6 +68,20 @@ const forEachFormElement: ForEachFormElement = (callback: (element: Element) => 
 const onFormRender = (callback: (form: HTMLElement, forEachElement: ForEachFormElement) => void): void =>
 	window.addEventListener(FORM_RENDER_EVENT, () => callback(getForm(), forEachFormElement));
 
+/**
+ * I hate that this lives here,
+ * but I don't want to expose COLLECTIONS_KEY
+ *
+ * Also, this dumb implementation only works
+ * because the form is always the same order.
+ *
+ * This wouldn't work if the form could have elements rearranged
+ * @param formA
+ * @param formB
+ */
+const formDataEquals = (formA: FormData, formB: FormData): boolean =>
+	JSON.stringify(formA) === JSON.stringify(formB);
+
 window.addEventListener("load", () => {
 	const editForm = getForm();
 	if (editForm) {
@@ -78,4 +92,4 @@ window.addEventListener("load", () => {
 });
 
 export type {FormData, ForEachFormElement};
-export {insertFormData, getFormData, onFormRender};
+export {insertFormData, getFormData, onFormRender, formDataEquals};

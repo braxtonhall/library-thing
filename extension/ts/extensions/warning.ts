@@ -1,10 +1,14 @@
-import {ForEachFormElement, onFormRender} from "../objects/bookForm";
+import {ForEachFormElement, FormData, formDataEquals, getFormData, onFormRender} from "../objects/bookForm";
 
-let edited = false;
+let edited: boolean;
+let storedFormData: FormData;
 
 const onEdit = () => (edited = true);
 
-const undoEdits = () => (edited = false);
+const undoEdits = () => {
+	storedFormData = getFormData();
+	edited = false;
+};
 
 const addEditListener = (element) => {
 	element.addEventListener("change", onEdit);
@@ -21,12 +25,13 @@ const addUndoEditListener = () =>
 	].forEach((element) => element?.addEventListener("click", undoEdits));
 
 onFormRender((ignored, forEachElement: ForEachFormElement) => {
+	undoEdits();
 	forEachElement(addEditListener);
 	addUndoEditListener();
 });
 
 window.addEventListener("beforeunload", (event) => {
-	if (edited) {
+	if (edited && !formDataEquals(storedFormData, getFormData())) {
 		const confirmationMessage =
 			"It looks like you have been editing something. " +
 			"If you leave before saving, your changes will be lost.";
