@@ -1,5 +1,5 @@
-import {FORM_RENDER_EVENT, RELEVANT_TAGS} from "./constants";
-import {getElementsByTags} from "./util";
+import {FORM_RENDER_EVENT, RELEVANT_TAGS} from "../constants";
+import {getElementsByTags} from "../util";
 
 let edited = false;
 

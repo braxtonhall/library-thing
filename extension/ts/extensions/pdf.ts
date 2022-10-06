@@ -1,9 +1,9 @@
-import {invokeWorker} from "./workers/invoker";
-import {WorkerKind} from "./workers/types";
-import {FORM_RENDER_EVENT} from "./constants";
-import {emitShowToast} from "./services/emitShowToast";
-import {ToastType} from "./types";
-import {createLoader, removeLoader} from "./ui/loading-indicator";
+import {invokeWorker} from "../workers/invoker";
+import {WorkerKind} from "../workers/types";
+import {FORM_RENDER_EVENT} from "../constants";
+import {emitShowToast} from "../services/emitShowToast";
+import {ToastType} from "../types";
+import {createLoader, removeLoader} from "../ui/loading-indicator";
 
 const findTextContent = (id: string) => (): string =>
 	(document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement)?.value ?? "";

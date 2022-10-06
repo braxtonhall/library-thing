@@ -1,7 +1,7 @@
-import {FORM_RENDER_EVENT, RELEVANT_TAGS} from "./constants";
-import {SaveData, ToastType} from "./types";
-import {emitShowToast} from "./services/emitShowToast";
-import {getElementsByTags} from "./util";
+import {FORM_RENDER_EVENT, RELEVANT_TAGS} from "../constants";
+import {SaveData, ToastType} from "../types";
+import {emitShowToast} from "../services/emitShowToast";
+import {getElementsByTags} from "../util";
 
 const COLLECTIONS_ID_PREFIX = "collection_u_";
 const SAVE_DATA_KEY = "_save-data";
