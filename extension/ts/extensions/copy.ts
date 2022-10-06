@@ -1,4 +1,4 @@
-import {FORM_RENDER_EVENT, RELEVANT_TAGS} from "../constants";
+import {FORM_RENDER_EVENT, FORM_DATA_ELEMENT_TAGS} from "../constants";
 import {SaveData, ToastType} from "../types";
 import {emitShowToast} from "../services/emitShowToast";
 import {getElementsByTags} from "../util";
@@ -28,7 +28,7 @@ const loadData = (parent: HTMLElement) => (event: Event) => {
 };
 
 const getSaveData = (parent: HTMLElement) => {
-	const elements = getElementsByTags(parent, RELEVANT_TAGS);
+	const elements = getElementsByTags(parent, FORM_DATA_ELEMENT_TAGS);
 	return elements.reduce((saveData: SaveData, element: any) => {
 		// We can't change hidden elements because LibraryThing relies
 		// on hidden form inputs to send additional, form-specific metadata
@@ -49,7 +49,7 @@ const getSaveData = (parent: HTMLElement) => {
 };
 
 const insertSaveData = (parent: HTMLElement, saveData: SaveData) => {
-	const elements = getElementsByTags(parent, RELEVANT_TAGS);
+	const elements = getElementsByTags(parent, FORM_DATA_ELEMENT_TAGS);
 	return elements.forEach((element: any) => {
 		// We can't change hidden elements because LibraryThing relies
 		// on hidden form inputs to send additional, form-specific metadata
@@ -68,7 +68,7 @@ const insertSaveData = (parent: HTMLElement, saveData: SaveData) => {
 	});
 };
 
-const appendButton = (element: HTMLElement, text: string, onClick: (e: Event) => void) => {
+const appendButton = (element: HTMLElement, text: string, onClick: (event: Event) => void) => {
 	const button = document.createElement("button");
 	button.innerHTML = text;
 	button.addEventListener("click", onClick);

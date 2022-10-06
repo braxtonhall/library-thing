@@ -1,4 +1,4 @@
-import {FORM_RENDER_EVENT, RELEVANT_TAGS} from "../constants";
+import {FORM_RENDER_EVENT, FORM_DATA_ELEMENT_TAGS} from "../constants";
 import {getElementsByTags} from "../util";
 
 let edited = false;
@@ -8,7 +8,7 @@ const onEdit = () => (edited = true);
 const undoEdits = () => (edited = false);
 
 const addEditListener = (parent: HTMLElement) =>
-	getElementsByTags(parent, RELEVANT_TAGS).forEach((element) => {
+	getElementsByTags(parent, FORM_DATA_ELEMENT_TAGS).forEach((element) => {
 		element.addEventListener("change", onEdit);
 		element.addEventListener("keydown", onEdit);
 	});

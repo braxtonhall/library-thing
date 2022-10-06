@@ -81,7 +81,7 @@ const showToast = (text: string, toastType: ToastType) => {
 	setTimeout(() => removeToast(toast, style), TOAST_DURATION_MS);
 };
 
-window.addEventListener(SHOW_TOAST_EVENT, (e: CustomEvent<ShowToastEvent>) => {
-	const {toastText, toastType} = e.detail;
+window.addEventListener(SHOW_TOAST_EVENT, (event: CustomEvent<ShowToastEvent>) => {
+	const {toastText, toastType} = event.detail;
 	showToast(toastText, toastType);
 });
