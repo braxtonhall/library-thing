@@ -1,6 +1,7 @@
-import {FORM_RENDER_EVENT, FORM_DATA_ELEMENT_TAGS} from "../constants";
+import {FORM_DATA_ELEMENT_TAGS} from "../constants";
 import {showToast, ToastType} from "../ui/toast";
 import {getElementsByTags} from "../util";
+import {FORM_RENDER_EVENT} from "../services/renderFormObserver";
 
 const COLLECTIONS_ID_PREFIX = "collection_u_";
 const SAVE_DATA_KEY = "_save-data";

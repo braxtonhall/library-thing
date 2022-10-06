@@ -1,5 +1,3 @@
-import "./services/renderFormEmitter";
-
 import "./extensions/banner";
 import "./extensions/copy";
 import "./extensions/pdf";

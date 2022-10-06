@@ -1,4 +1,4 @@
-import {FORM_RENDER_EVENT} from "../constants";
+const FORM_RENDER_EVENT = "library-thing-form-rendered";
 
 const tryToEmit = () => {
 	// This is relying on the fact that when the edit form is available, the html matches this selector,
@@ -18,3 +18,5 @@ window.addEventListener("load", () => {
 		tryToEmit();
 	}
 });
+
+export {FORM_RENDER_EVENT};
