@@ -28,9 +28,8 @@ const onPaste = (event: Event) => {
 	}
 };
 
-const getSaveData = () => {
-	const elements = getFormElements();
-	return elements.reduce((saveData: SaveData, element: any) => {
+const getSaveData = () => getFormElements()
+	.reduce((saveData: SaveData, element: any) => {
 		// We can't change hidden elements because LibraryThing relies
 		// on hidden form inputs to send additional, form-specific metadata
 		// on save
@@ -47,7 +46,7 @@ const getSaveData = () => {
 		}
 		return saveData;
 	}, {});
-};
+
 
 const extractSaveDataFor = (targetElement: Element, saveData: SaveData) => {
 	if (targetElement.id.startsWith(COLLECTIONS_ID_PREFIX)) {
@@ -58,20 +57,20 @@ const extractSaveDataFor = (targetElement: Element, saveData: SaveData) => {
 	}
 };
 
-const insertSaveData = (saveData: SaveData) => {
-	const elements = getFormElements();
-	return elements.forEach((element: any) => {
+const insertSaveData = (saveData: SaveData) => getFormElements()
+	.forEach((element: any) => {
 		// We can't change hidden elements because LibraryThing relies
 		// on hidden form inputs to send additional, form-specific metadata
 		// on save
 		if (element && element.id && element.type !== "hidden") {
 			const {value, checked} = extractSaveDataFor(element, saveData);
-			element.value = value;
-			element.checked = checked;
-			element.dispatchEvent(new Event("change"));
+			if (element.value !== value || element.checked !== checked) {
+				element.value = value;
+				element.checked = checked;
+				element.dispatchEvent(new Event("change"));
+			}
 		}
 	});
-};
 
 const appendButton = (element: HTMLElement, text: string, onClick: (event: Event) => void) => {
 	const button = document.createElement("button");
