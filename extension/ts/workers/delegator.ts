@@ -1,8 +1,8 @@
 import {TypedWorkerRequest, WorkerKind, Workers} from "./types";
-import {find} from "./finder/finder";
+import {get} from "./impl/request";
 
 const workers: Workers = {
-	[WorkerKind.Finder]: find,
+	[WorkerKind.Get]: get,
 };
 
 chrome.runtime.onMessage.addListener(<Kind extends WorkerKind>(typedRequest: TypedWorkerRequest<Kind>, sender, sendResponse) => {

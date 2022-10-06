@@ -1,8 +1,7 @@
-import {invokeWorker} from "../workers/invoker";
-import {WorkerKind} from "../workers/types";
 import {showToast, ToastType} from "../ui/toast";
 import {createLoader, removeLoader} from "../ui/loadingIndicator";
 import {FORM_RENDER_EVENT} from "../services/renderFormObserver";
+import {find} from "../services/finder/finder";
 
 const findTextContent = (id: string) => (): string =>
 	(document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement)?.value ?? "";
@@ -17,7 +16,7 @@ const onClick = (comments: HTMLTextAreaElement) => async (event: MouseEvent) => 
 	const title = findTitle();
 
 	const {overlay, style} = createLoader();
-	const links = await invokeWorker(WorkerKind.Finder, {author, title});
+	const links = await find({author, title});
 	removeLoader(overlay, style);
 
 	const commentAddition = links.map((link) => `PDF: ${link}`).join("\n");
