@@ -1,5 +1,4 @@
 import "./services/renderFormEmitter";
-import "./ui/toast";
 
 import "./extensions/banner";
 import "./extensions/copy";

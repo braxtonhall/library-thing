@@ -1,5 +1,4 @@
-import {ToastType, ShowToastEvent} from "../types";
-import {SHOW_TOAST_EVENT} from "../constants";
+import {ToastType} from "../types";
 import {styleInject, styleRemove} from "./ui-utils";
 
 const TOAST_DURATION_MS = 6000;
@@ -81,7 +80,4 @@ const showToast = (text: string, toastType: ToastType) => {
 	setTimeout(() => removeToast(toast, style), TOAST_DURATION_MS);
 };
 
-window.addEventListener(SHOW_TOAST_EVENT, (event: CustomEvent<ShowToastEvent>) => {
-	const {toastText, toastType} = event.detail;
-	showToast(toastText, toastType);
-});
+export {showToast};

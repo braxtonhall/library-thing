@@ -5,8 +5,3 @@ export enum ToastType {
 	WARNING,
 	SUCCESS,
 }
-
-export interface ShowToastEvent {
-	toastText: string;
-	toastType: ToastType;
-}
