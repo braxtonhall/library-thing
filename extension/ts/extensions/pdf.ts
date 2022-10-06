@@ -2,6 +2,7 @@ import {showToast, ToastType} from "../ui/toast";
 import {createLoader, removeLoader} from "../ui/loadingIndicator";
 import {find} from "../services/finder/finder";
 import {onFormRender} from "../objects/bookForm";
+import {createButton} from "../ui/button";
 
 const findTextContent = (id: string) => (): string =>
 	(document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement)?.value ?? "";
@@ -29,18 +30,11 @@ const onClick = (comments: HTMLTextAreaElement) => async (event: MouseEvent) => 
 	}
 };
 
-const createButton = (onClick: (event: MouseEvent) => void): HTMLButtonElement => {
-	const button = document.createElement("button");
-	button.innerHTML = "Find PDF";
-	button.addEventListener("click", onClick);
-	return button;
-};
-
 onFormRender(() => {
 	const commentsCell = document.getElementById("bookedit_comments");
 	const comments = document.getElementById("form_comments") as HTMLTextAreaElement; // not type safe -- lazy
 
 	if (commentsCell && comments) {
-		commentsCell.appendChild(createButton(onClick(comments)));
+		commentsCell.appendChild(createButton("Find PDF", "img/search.png", onClick(comments)));
 	}
 });
