@@ -1,6 +1,7 @@
 import {showToast, ToastType} from "../ui/toast";
 import {FORM_RENDER_EVENT} from "../services/renderFormObserver";
 import {getFormElements} from "../util/bookForm";
+import {createButton} from "../ui/button";
 
 const COLLECTIONS_ID_PREFIX = "collection_u_";
 const SAVE_DATA_KEY = "_save-data";
@@ -73,21 +74,17 @@ const insertSaveData = (saveData: SaveData) => {
 	});
 };
 
-const appendButton = (element: HTMLElement, text: string, onClick: (event: Event) => void) => {
-	const button = document.createElement("button");
-	button.innerHTML = text;
-	button.addEventListener("click", onClick);
-	const td = document.createElement("td");
-	td.appendChild(button);
-	element.appendChild(td);
+const appendButton = (element: HTMLElement, text: string, imgSrc: string, onClick: (event: Event) => void) => {
+	const button = createButton(text, imgSrc, onClick);
+	button.style.padding = "0px 8px";
+	const deleteButtonIndex = element.children.length - 1;
+	element.insertBefore(button, element.children[deleteButtonIndex]);
 };
 
 const appendRow = (table: HTMLTableElement) => {
-	const row = document.createElement("tr");
-	appendButton(row, "Copy book", onCopy);
-	appendButton(row, "Paste book", onPaste);
-	const [body] = Array.from(table.getElementsByTagName("tbody"));
-	body.appendChild(row);
+	const [row] = Array.from(table.getElementsByTagName("tr"));
+	appendButton(row, "Copy book", "img/save.png", onCopy);
+	appendButton(row, "Paste book", "img/paste.png", onPaste);
 };
 
 window.addEventListener(FORM_RENDER_EVENT, () => {

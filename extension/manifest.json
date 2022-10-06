@@ -23,7 +23,7 @@
 	"permissions": ["tabs"],
 	"web_accessible_resources": [
 		{
-			"resources": ["img/icon128.png", "img/favicon.ico"],
+			"resources": ["img/icon128.png", "img/favicon.ico", "img/search.png", "img/paste.png", "img/save.png"],
 			"matches": ["https://*.librarything.com/*"]
 		}
 	]
