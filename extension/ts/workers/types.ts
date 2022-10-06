@@ -6,7 +6,7 @@ enum WorkerKind {
 
 type WorkerRequest<Kind extends WorkerKind> = Kind extends WorkerKind.Finder ? FinderParameters : never;
 
-type InternalWorkerRequest<Kind extends WorkerKind> = {kind: WorkerKind} & WorkerRequest<Kind>;
+type TypedWorkerRequest<Kind extends WorkerKind> = {kind: WorkerKind, request: WorkerRequest<Kind>};
 
 type WorkerResponse<Kind extends WorkerKind> = Kind extends WorkerKind.Finder ? FinderResponse : never;
 
@@ -16,4 +16,4 @@ type Workers = {
 	[Kind in WorkerKind]: Worker<Kind>;
 };
 
-export {WorkerKind, Workers, WorkerRequest, WorkerResponse, InternalWorkerRequest};
+export {WorkerKind, Workers, WorkerRequest, WorkerResponse, TypedWorkerRequest};
