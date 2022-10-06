@@ -15,9 +15,9 @@ const onClick = (comments: HTMLTextAreaElement) => async (event: MouseEvent) => 
 	const author = findAuthor();
 	const title = findTitle();
 
-	const {overlay, style} = createLoader();
+	const overlay = createLoader();
 	const links = await find({author, title});
-	removeLoader(overlay, style);
+	removeLoader(overlay);
 
 	if (links.length > 0) {
 		const commentAddition = links.map((link) => `PDF: ${link}`).join("\n");
