@@ -64,6 +64,7 @@ const insertSaveData = (parent: HTMLElement, saveData: SaveData) => {
 			}
 			element.value = saveElement.value;
 			element.checked = saveElement.checked;
+			element.dispatchEvent(new Event("change"));
 		}
 	});
 };
