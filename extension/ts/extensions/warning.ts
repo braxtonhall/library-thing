@@ -10,7 +10,7 @@ const undoEdits = () => {
 	edited = false;
 };
 
-const addEditListener = (element) => {
+const addEditListener = (element: Element) => {
 	element.addEventListener("change", onEdit);
 	element.addEventListener("keydown", onEdit);
 };
@@ -24,7 +24,7 @@ const addUndoEditListener = () =>
 		document.getElementById("book_editTabTextDelete"), // so that it doesn't alert you when you're deleting something (?)
 	].forEach((element) => element?.addEventListener("click", undoEdits));
 
-onFormRender((ignored, forEachElement: ForEachFormElement) => {
+onFormRender((_, forEachElement: ForEachFormElement) => {
 	undoEdits();
 	forEachElement(addEditListener);
 	addUndoEditListener();
