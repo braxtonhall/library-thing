@@ -22,8 +22,8 @@ const loadData = (event: Event) => {
 	try {
 		const saveData = JSON.parse(localStorage.getItem(SAVE_DATA_KEY) ?? "{}");
 		insertSaveData(saveData);
-	} catch (e) {
-		console.error(e);
+	} catch (error) {
+		console.error(error);
 		showToast("Something went wrong when trying to paste metadata :/", ToastType.ERROR);
 	}
 };
