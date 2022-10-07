@@ -18,16 +18,14 @@ While Editing a book, leaving the page without hitting Save, Cancel, or Delete B
 
 While on the Edit book page, a Copy and Paste button appear to allow you to Copy and Paste entire book entries.
 
-_TODO walk through this entire user story with pictures._
-
+<img src="img/copy.gif" alt="warning">
 
 ### Find PDF
 
 While Editing a book, click on the `Find PDF` to search the internet for PDFs of the book.
 Results are pulled from z-lib and libgen, with more websites to be added in the future.
 
-<img src="img/find-pdf-before.png" alt="before clicking find pdf">
-<img src="img/find-pdf-after.png" alt="after clicking find pdf">
+<img src="img/pdf.gif" alt="find pdf flow gif">
 
 <sub>Please make sure to check the links! They may not be perfect!</sub>
 
@@ -39,14 +37,19 @@ When the extension is used, the LibraryThing banner is replaced with a [Vancouve
 
 ## Installation
 
-_TODO get the extension on the releases page._
-
 ### Chrome
 1. Download and unzip the extension from the [releases page](https://github.com/braxtonhall/library-thing/releases)
+1. Click `extension.zip` to download the extension zip file
 1. Navigate to [`chrome://extensions`](chrome://extensions)
 1. Toggle `Developer mode`
+<img src="img/developer-mode.png" style="padding: 12px 0px;" alt="developer mode in chrome extensions page">
 1. Click `Load unpacked`
+<img src="img/load-unpacked.png" style="padding: 12px 0px;" alt="load unpacked button in chrome extensions page">
 1. Select the unzipped extension directory
+<img src="img/load-from-file-explorer.png" style="padding: 12px 0px;" alt="opening extension from file explorer">
+1. The extension should be installed!
+<img src="img/installed.png" style="padding: 12px 0px;" alt="extension installed">
+
 
 ### Firefox
 Not yet supported
@@ -59,17 +62,22 @@ Not yet supported
 
 ### Opera
 1. Download and unzip the extension from the [releases page](https://github.com/braxtonhall/library-thing/releases)
+1. Click `extension.zip` to download the extension zip file
 1. Navigate to [`opera://extensions`](opera://extensions)
 1. Toggle `Developer mode`
 1. Click `Load unpacked`
 1. Select the unzipped extension directory
+1. The extension should be installed!
 
 ### Brave
 1. Download and unzip the extension from the [releases page](https://github.com/braxtonhall/library-thing/releases)
+1. Click `extension.zip` to download the extension zip file
 1. Navigate to [`brave://extensions`](brave://extensions)
 1. Toggle `Developer mode`
 1. Click `Load unpacked`
 1. Select the unzipped extension directory
+1. The extension should be installed!
+
 
 ## Development
 
