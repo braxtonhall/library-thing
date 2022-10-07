@@ -16,15 +16,15 @@ const addUndoEditListener = () =>
 onFormRender(() => {
 	undoEdits();
 	addUndoEditListener();
-});
 
-window.addEventListener("beforeunload", (event) => {
-	if (!formDataEquals(storedFormData, getFormData())) {
-		const confirmationMessage =
-			"It looks like you have been editing something. " +
-			"If you leave before saving, your changes will be lost.";
+	window.addEventListener("beforeunload", (event) => {
+		if (!formDataEquals(storedFormData, getFormData())) {
+			const confirmationMessage =
+				"It looks like you have been editing something. " +
+				"If you leave before saving, your changes will be lost.";
 
-		(event || window.event).returnValue = confirmationMessage; // Gecko + IE
-		return confirmationMessage; // Gecko + Webkit, Safari, Chrome etc.
-	}
+			(event || window.event).returnValue = confirmationMessage; // Gecko + IE
+			return confirmationMessage; // Gecko + Webkit, Safari, Chrome etc.
+		}
+	});
 });
