@@ -1,7 +1,7 @@
 import {showToast, ToastType} from "../ui/toast";
 import {createLoader, removeLoader} from "../ui/loadingIndicator";
-import {FORM_RENDER_EVENT} from "../services/renderFormObserver";
 import {find} from "../services/finder/finder";
+import {onFormRender} from "../objects/bookForm";
 import {createButton} from "../ui/button";
 
 const findTextContent = (id: string) => (): string =>
@@ -22,7 +22,7 @@ const onClick = (comments: HTMLTextAreaElement) => async (event: MouseEvent) => 
 
 	if (links.length > 0) {
 		const commentAddition = links.map((link) => `PDF: ${link}`).join("\n");
-		comments.value += `\n${commentAddition}`;
+		comments.value += `${comments.value ? "\n" : ""}${commentAddition}`;
 		comments.dispatchEvent(new Event("change"));
 		showToast(`Found ${links.length} PDF${links.length > 1 ? "s" : ""}!`, ToastType.SUCCESS);
 	} else {
@@ -30,7 +30,7 @@ const onClick = (comments: HTMLTextAreaElement) => async (event: MouseEvent) => 
 	}
 };
 
-window.addEventListener(FORM_RENDER_EVENT, async () => {
+onFormRender(() => {
 	const commentsCell = document.getElementById("bookedit_comments");
 	const comments = document.getElementById("form_comments") as HTMLTextAreaElement; // not type safe -- lazy
 
