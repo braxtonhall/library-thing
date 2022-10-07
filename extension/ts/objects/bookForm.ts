@@ -1,4 +1,5 @@
 type ForEachFormElement = (callback: (element: Element) => void) => void;
+type FormRenderListener = (form: HTMLElement, forEachElement: ForEachFormElement) => void;
 type FormData = Record<string, Record<string, any>>;
 
 const FORM_RENDER_EVENT = "library-thing-form-rendered";
@@ -65,8 +66,26 @@ const insertFormData = (saveData: FormData) => getFormElements()
 const forEachFormElement: ForEachFormElement = (callback: (element: Element) => void): void =>
 	getFormElements().forEach(callback);
 
-const onFormRender = (callback: (form: HTMLElement, forEachElement: ForEachFormElement) => void): void =>
-	window.addEventListener(FORM_RENDER_EVENT, () => callback(getForm(), forEachFormElement));
+const listeners = new Map<FormRenderListener, () => void>();
+
+const onFormRender = (callback: FormRenderListener): void => {
+	const listener = () => callback(getForm(), forEachFormElement);
+	listeners.set(callback, listener);
+	window.addEventListener(FORM_RENDER_EVENT, listener);
+};
+
+const offFormRender = (callback: FormRenderListener): void => {
+	window.removeEventListener(FORM_RENDER_EVENT, listeners.get(callback));
+	listeners.delete(callback);
+};
+
+const oneFormRender = (callback: FormRenderListener): void => {
+	const realCallback = (form, forEachFormElement) => {
+		offFormRender(realCallback);
+		callback(form, forEachFormElement);
+	};
+	onFormRender(realCallback);
+};
 
 /**
  * I hate that this lives here,
@@ -91,5 +110,5 @@ window.addEventListener("load", () => {
 	}
 });
 
-export type {FormData, ForEachFormElement};
-export {insertFormData, getFormData, onFormRender, formDataEquals};
+export type {FormData, ForEachFormElement, FormRenderListener};
+export {insertFormData, getFormData, onFormRender, offFormRender, oneFormRender, formDataEquals};

@@ -1,4 +1,4 @@
-import {FormData, formDataEquals, getFormData, onFormRender} from "../objects/bookForm";
+import {FormData, formDataEquals, getFormData, oneFormRender, onFormRender} from "../objects/bookForm";
 
 let storedFormData: FormData;
 
@@ -13,18 +13,18 @@ const addUndoEditListener = () =>
 		document.getElementById("book_editTabTextDelete"), // so that it doesn't alert you when you're deleting something (?)
 	].forEach((element) => element?.addEventListener("click", undoEdits));
 
+const onExit = (event: Event) => {
+	if (!formDataEquals(storedFormData, getFormData())) {
+		event.returnValue = true;
+		return "It looks like you have been editing something. " +
+			"If you leave before saving, your changes will be lost.";
+	}
+};
+
+const addUnloadListener = () => window.addEventListener("beforeunload", onExit);
+
+oneFormRender(addUnloadListener);
 onFormRender(() => {
 	undoEdits();
 	addUndoEditListener();
-
-	window.addEventListener("beforeunload", (event) => {
-		if (!formDataEquals(storedFormData, getFormData())) {
-			const confirmationMessage =
-				"It looks like you have been editing something. " +
-				"If you leave before saving, your changes will be lost.";
-
-			(event || window.event).returnValue = confirmationMessage; // Gecko + IE
-			return confirmationMessage; // Gecko + Webkit, Safari, Chrome etc.
-		}
-	});
 });
