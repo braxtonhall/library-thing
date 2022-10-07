@@ -7,6 +7,7 @@ const TOAST_CLASS_NAME = "vblblt-toast";
 enum ToastType {
 	ERROR = "error-toast",
 	WARNING = "warning-toast",
+	INFO = "info-toast",
 	SUCCESS = "success-toast",
 }
 
@@ -53,10 +54,11 @@ const prepareToDismiss = (toast: HTMLDivElement) => {
 	toast.addEventListener("click", onClick);
 };
 
-const showToast = (text: string, toastType: ToastType) => {
+const showToast = (text: string, toastType: ToastType, onClick?: (event: Event) => void) => {
 	const toast = createToast(toastType);
 	toast.innerText = text;
 	show(toast).then(prepareToDismiss);
+	onClick && toast.addEventListener("click", onClick);
 };
 
 export {showToast, ToastType};
