@@ -1,3 +1,10 @@
+import Cookies from "../objects/cookies";
+
+const LOGGED_IN_SATURATION = 1.5;
+const LOGGED_OUT_SATURATION = 0;
+const LOGGED_IN_ID = "VanBlackLibrary";
+const LOGGED_IN_COOKIE_KEY = "cookie_userid";
+
 const getElement = (document: Document, id: string): HTMLElement =>
 	document.getElementById(id) ??
 	(Array.from(document.getElementsByTagName("frame")) as HTMLIFrameElement[])
@@ -25,8 +32,13 @@ const setFavicon = () => {
 	}
 };
 
+const selectFilter = (): string =>
+	`saturate(${loggedIn() ? LOGGED_IN_SATURATION : LOGGED_OUT_SATURATION})`;
+
+const loggedIn = (): boolean => Cookies.get(LOGGED_IN_COOKIE_KEY) === LOGGED_IN_ID;
+
 window.addEventListener("load", () => {
-	setCSS("masthead", {transition: "500ms", filter: "saturate(1.5)"});
+	setCSS("masthead", {transition: "500ms", filter: selectFilter()});
 
 	const background = `url(${chrome.runtime.getURL("img/icon128.png")}) no-repeat 16px 0`;
 	setCSS("masthead_logo_wordmark", {background});
