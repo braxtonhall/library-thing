@@ -25,7 +25,7 @@ const setCSS = (id: string, css: Partial<CSSStyleDeclaration>) =>
 
 const setFavicon = () =>
 	Array.from(document.getElementsByTagName("link"))
-		.filter((element) => element?.rel === "icon")
+		.filter((element) => element.rel === "icon")
 		.map((element) => {
 			element.href = chrome.runtime.getURL("img/favicon.ico");
 			element.type = "image/x-icon";
