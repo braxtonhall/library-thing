@@ -1,0 +1,31 @@
+$overlay-colour: rgba(0, 0, 0, 0.1)
+$loader-background-colour: #f3f3f3
+$loader-foreground-colour: #A15CA0
+
+.better-library-thing-loader-overlay
+	position: fixed
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	width: 100%
+	height: 100%
+	background-color: $overlay-colour
+	display: flex
+	justify-content: center
+	align-items: center
+	z-index: 10
+
+.better-library-thing-loader
+	border: 16px solid $loader-background-colour
+	border-top-color: $loader-foreground-colour
+	border-radius: 50%
+	width: 50px
+	height: 50px
+	animation: spin 2s linear infinite
+
+@keyframes spin
+	0%
+		transform: rotate(0deg)
+	100%
+		transform: rotate(360deg)

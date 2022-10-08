@@ -6,7 +6,7 @@ const config: Configuration = {
 	entry: {
 		'bundle': './ts/index.ts',
 		'background': './ts/workers/delegator.ts',
-		},
+	},
 	output: {
 		path: path.join(__dirname, '/extension/js'),
 		filename: '[name].js'
@@ -27,6 +27,14 @@ const config: Configuration = {
 					loader: 'ts-loader'
 				},
 			},
+			{
+				test: /\.css$/,
+				use: ["style-loader", "css-loader"],
+			},
+			{
+				test: /\.s[ac]ss$/i,
+				use: ["style-loader", "css-loader", "sass-loader"],
+			}
 		]
 	},
 	resolve: {

@@ -1,0 +1,38 @@
+.vblblt-toast
+	/* Set a default minimum width */
+	min-width: 400px
+	/* Divide value of min-width by 2 */
+	margin-left: -200px
+	text-align: center
+	font-weight: bold
+	/* Rounded borders */
+	border-radius: 8px
+	padding: 16px
+	position: fixed
+	z-index: 99
+	left: 70%
+	top: 80px
+	color: #000
+	visibility: visible
+
+	&.ready
+		pointer-events: auto
+
+	&.transitioning
+		pointer-events: none
+
+	&:hover
+		cursor: pointer
+
+	&.error-toast
+		background-color: #FF6955
+
+	&.warning-toast
+		background-color: #FFB82F
+
+	&.info-toast
+		background-color: #2fa8ff
+
+	&.success-toast
+		background-color: #A0FF98
+
