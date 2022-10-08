@@ -1,6 +1,7 @@
-const path = require('path');
+import path from "path";
+import {Configuration} from "webpack";
 
-const config = {
+const config: Configuration = {
 	context: path.join(__dirname, '/extension'),
 	entry: {
 		'bundle': './ts/index.ts',
