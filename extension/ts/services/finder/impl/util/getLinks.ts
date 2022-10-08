@@ -18,6 +18,7 @@ const getLinks = async ({searchUrl, aSelector, baseUrl, maxResults}: GetLinksEnv
 			.forEach((element: HTMLLinkElement) => paths.push(element.getAttribute("href")));
 		return paths.slice(0, maxResults).map((path) => `${baseUrl}${path}`);
 	} catch (error) {
+		console.error(error);
 		return [];
 	}
 };
