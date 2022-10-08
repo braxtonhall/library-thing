@@ -23,14 +23,13 @@ const setLogo = (id: string) =>
 const setCSS = (id: string, css: Partial<CSSStyleDeclaration>) =>
 	editElement(id, (element) => Object.entries(css).forEach(([key, value]) => (element.style[key] = value)));
 
-const setFavicon = () => {
-	const element = Array.from(document.getElementsByTagName("link")).find(
-		(element) => element.rel === "icon" && element.type === "image/x-icon"
-	);
-	if (element) {
-		element.href = chrome.runtime.getURL("img/favicon.ico");
-	}
-};
+const setFavicon = () =>
+	Array.from(document.getElementsByTagName("link"))
+		.filter((element) => element?.rel === "icon")
+		.map((element) => {
+			element.href = chrome.runtime.getURL("img/favicon.ico");
+			element.type = "image/x-icon";
+		});
 
 const selectFilter = (): string =>
 	`saturate(${loggedIn() ? LOGGED_IN_SATURATION : LOGGED_OUT_SATURATION})`;
