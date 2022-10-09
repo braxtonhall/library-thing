@@ -19,7 +19,8 @@
 		"https://*.librarything.com/*",
 		"https://*.b-ok.cc/*",
 		"https://*.libgen.is/*",
-		"https://*.archive.org/*"
+		"https://*.archive.org/*",
+		"https://*.goodreads.com/*"
 	],
 	"background": {
 		"service_worker": "js/background.js"

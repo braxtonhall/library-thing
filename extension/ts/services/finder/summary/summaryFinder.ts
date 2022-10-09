@@ -1,12 +1,12 @@
-
 import {Finder, FinderParameters} from "../finder";
+import {goodreads} from "./impl/Goodreads";
 
 type SummaryFinderResponse = string;
 
 type SummaryFinder = Finder<SummaryFinderResponse>;
 
 const finders: SummaryFinder[] = [
-
+	goodreads,
 ];
 
 const findSummary: SummaryFinder = async (parameters: FinderParameters): Promise<SummaryFinderResponse> =>
