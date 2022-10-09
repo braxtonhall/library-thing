@@ -1,4 +1,4 @@
-import "../scss/index.sass";
+import "../sass/index.sass";
 
 import "./extensions/banner";
 import "./extensions/copy";

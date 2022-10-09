@@ -35,7 +35,7 @@ jobs:
                     type: "zip"
                     filename: "extension.zip"
                     path: "extension"
-                    exclusions: "/*extension/ts/* /*extension/tsconfig.json"
+                    exclusions: "/*extension/ts/* /*extension/sass/* /*extension/tsconfig.json"
             -   name: Upload Release
                 uses: ncipollo/release-action@v1
                 with:
