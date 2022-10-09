@@ -1,6 +1,6 @@
-import {Finder, FinderResponse} from "../finder";
-import {invokeWorker} from "../../../workers/invoker";
-import {WorkerKind} from "../../../workers/types";
+import {PdfFinder, PdfFinderResponse} from "../pdfFinder";
+import {invokeWorker} from "../../../../workers/invoker";
+import {WorkerKind} from "../../../../workers/types";
 
 const MAX = 3;
 
@@ -28,7 +28,7 @@ const getURL = ({author, title}) => {
 	return `${BASE_URL}${SEARCH_PATH}?${new URLSearchParams(query).toString()}`;
 };
 
-const InternetArchive: Finder = async (parameters): Promise<FinderResponse> => {
+const InternetArchive: PdfFinder = async (parameters): Promise<PdfFinderResponse> => {
 	try {
 		const response = await invokeWorker(WorkerKind.Get, getURL(parameters));
 		return getLinks(response).slice(0, MAX);

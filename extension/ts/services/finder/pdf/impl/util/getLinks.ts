@@ -1,5 +1,5 @@
-import {invokeWorker} from "../../../../workers/invoker";
-import {WorkerKind} from "../../../../workers/types";
+import {invokeWorker} from "../../../../../workers/invoker";
+import {WorkerKind} from "../../../../../workers/types";
 
 interface GetLinksEnv {
 	baseUrl: string;
