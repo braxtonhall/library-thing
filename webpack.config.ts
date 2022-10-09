@@ -1,11 +1,12 @@
-const path = require('path');
+import path from "path";
+import {Configuration} from "webpack";
 
-const config = {
+const config: Configuration = {
 	context: path.join(__dirname, '/extension'),
 	entry: {
 		'bundle': './ts/index.ts',
 		'background': './ts/workers/delegator.ts',
-		},
+	},
 	output: {
 		path: path.join(__dirname, '/extension/js'),
 		filename: '[name].js'
@@ -26,6 +27,14 @@ const config = {
 					loader: 'ts-loader'
 				},
 			},
+			{
+				test: /\.css$/,
+				use: ["style-loader", "css-loader"],
+			},
+			{
+				test: /\.s[ac]ss$/i,
+				use: ["style-loader", "css-loader", "sass-loader"],
+			}
 		]
 	},
 	resolve: {

@@ -1,15 +1,12 @@
 {
 	"compilerOptions": {
-		"esModuleInterop": true,
 		"strict": false,
 		"types": [
-			"node"
+			"chrome"
 		],
 		"lib": [
+			"DOM",
 			"ES2021"
 		]
-	},
-	"exclude": [
-		"node_modules"
-	]
+	}
 }
