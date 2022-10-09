@@ -59,9 +59,21 @@ const insertFormData = (saveData: FormData) => getFormElements()
 				element.value = value;
 				element.checked = checked;
 				element.dispatchEvent(new Event("change"));
+				ensureVisible(element);
 			}
 		}
 	});
+
+const ensureVisible = (element: Element) => {
+	// LibraryThing collections checkboxes are sometimes hidden beneath a div that is not visible
+	// THIS IS BRITTLE and relies on the specific markup tree of LibraryThing
+	if (element.id.startsWith(COLLECTIONS_ID_PREFIX)) {
+		const greatGrandParent = element?.parentElement?.parentElement?.parentElement;
+		if (greatGrandParent?.style?.display === "none") {
+			greatGrandParent.style.display = "";
+		}
+	}
+};
 
 const forEachFormElement: ForEachFormElement = (callback: (element: Element) => void): void =>
 	getFormElements().forEach(callback);
