@@ -68,9 +68,9 @@ const ensureVisible = (element: Element) => {
 	// LibraryThing collections checkboxes are sometimes hidden beneath a div that is not visible
 	// THIS IS BRITTLE and relies on the specific markup tree of LibraryThing
 	if (element.id.startsWith(COLLECTIONS_ID_PREFIX)) {
-		const greatGrandParent = element?.parentElement?.parentElement?.parentElement;
-		if (greatGrandParent?.style?.display === "none") {
-			greatGrandParent.style.display = "";
+		const hiddenAncestor = element.closest<HTMLElement>('div[style="display:none;"]');
+		if (hiddenAncestor) {
+			hiddenAncestor.style.display = "";
 		}
 	}
 };
