@@ -11,7 +11,7 @@ enum ToastType {
 	SUCCESS = "success-toast",
 }
 
-const onScreen: Keyframe = {top: '80px', opacity: 1};
+const onScreen: Keyframe = {top: "80px", opacity: 1};
 const offScreen: Keyframe = {top: 0, opacity: 0};
 
 const fadeIn: Keyframe[] = [offScreen, onScreen];

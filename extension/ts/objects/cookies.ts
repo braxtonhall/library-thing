@@ -3,7 +3,6 @@ const cookies = (): Record<string, string> => {
 	return Object.fromEntries(entries.map((entry) => entry.split("=")));
 };
 
-const get = (name: string): string =>
-	cookies()[name] ?? "";
+const get = (name: string): string => cookies()[name] ?? "";
 
 export default {get};

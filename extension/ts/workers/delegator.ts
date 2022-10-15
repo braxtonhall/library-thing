@@ -5,7 +5,9 @@ const workers: Workers = {
 	[WorkerKind.Get]: get,
 };
 
-chrome.runtime.onMessage.addListener(<Kind extends WorkerKind>(typedRequest: TypedWorkerRequest<Kind>, sender, sendResponse) => {
-	workers[typedRequest.kind](typedRequest.request).then(sendResponse);
-	return true;
-});
+chrome.runtime.onMessage.addListener(
+	<Kind extends WorkerKind>(typedRequest: TypedWorkerRequest<Kind>, sender, sendResponse) => {
+		workers[typedRequest.kind](typedRequest.request).then(sendResponse);
+		return true;
+	}
+);

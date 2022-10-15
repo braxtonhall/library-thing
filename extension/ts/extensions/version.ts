@@ -34,7 +34,7 @@ const getReleases = async (): Promise<Releases> => {
 	}
 };
 
-const getRemoteDetails = async (): Promise<{ version: Version, download: string }> => {
+const getRemoteDetails = async (): Promise<{version: Version; download: string}> => {
 	const releases = await getReleases();
 	const tag = releases?.tag_name ?? DEFAULT_VERSION;
 	const [asset] = releases?.assets ?? [];
@@ -68,10 +68,8 @@ window.addEventListener("load", async () => {
 	if (shouldCheckVersion()) {
 		const {version, download} = await getRemoteDetails();
 		if (versionLessThan(getCurrentVersion(), version) && download) {
-			showToast(
-				"New version available!\n\nClick here to download it.",
-				ToastType.INFO,
-				() => window.open(download),
+			showToast("New version available!\n\nClick here to download it.", ToastType.INFO, () =>
+				window.open(download)
 			);
 		}
 		saveLastChecked();

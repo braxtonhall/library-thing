@@ -6,7 +6,7 @@ enum WorkerKind {
 
 type WorkerRequest<Kind extends WorkerKind> = Kind extends WorkerKind.Get ? GetParameters : never;
 
-type TypedWorkerRequest<Kind extends WorkerKind> = {kind: WorkerKind, request: WorkerRequest<Kind>};
+type TypedWorkerRequest<Kind extends WorkerKind> = {kind: WorkerKind; request: WorkerRequest<Kind>};
 
 type WorkerResponse<Kind extends WorkerKind> = Kind extends WorkerKind.Get ? GetResponse : never;
 
