@@ -29,6 +29,8 @@ jobs:
                 run: yarn install
             -   name: Compile TypeScript
                 run: yarn build
+            -   name: Check release version
+                run: yarn ts-node bin/checkRelease.ts ${{ steps.vars.outputs.tag }}
             -   name: Archive Release
                 uses: thedoctor0/zip-release@main
                 with:
