@@ -15,7 +15,6 @@ const toLink = (response: any): string => {
 	} else {
 		return null;
 	}
-
 };
 
 const getLinks = (responseString: string): string[] => {

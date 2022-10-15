@@ -11,14 +11,9 @@ type FinderResponse = string[];
 
 type Finder = ({author, title}: FinderParameters) => Promise<FinderResponse>;
 
-const finders: Finder[] = [
-	bOK,
-	LibGen,
-	InternetArchive,
-];
+const finders: Finder[] = [bOK, LibGen, InternetArchive];
 
 const find: Finder = async (parameters: FinderParameters): Promise<FinderResponse> =>
-	Promise.all(finders.map((finder: Finder) => finder(parameters)))
-		.then((result: string[][]) => result.flat());
+	Promise.all(finders.map((finder: Finder) => finder(parameters))).then((result: string[][]) => result.flat());
 
 export {FinderParameters, FinderResponse, Finder, find};
