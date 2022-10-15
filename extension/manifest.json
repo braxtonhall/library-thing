@@ -20,7 +20,9 @@
 		"https://*.b-ok.cc/*",
 		"https://*.libgen.is/*",
 		"https://*.archive.org/*",
-		"https://*.goodreads.com/*"
+		"https://*.goodreads.com/*",
+		"https://*.amazon.ca/*",
+		"https://*.amazon.com/*"
 	],
 	"background": {
 		"service_worker": "js/background.js"

@@ -33,7 +33,7 @@ const createFinderExtension = <T>(options: CreateFinderExtensionOptions<T>) => {
 
 		if (options.isSuccess(response, input)) {
 			const addition = options.transform(response, input);
-			textArea.value += `${textArea.value ? "\n" : ""}${addition}`;
+			textArea.value += `${textArea.value ? "\n\n" : ""}${addition}`;
 			textArea.dispatchEvent(new Event("change"));
 			showToast(options.onSuccess(response, input), ToastType.SUCCESS);
 		} else {
