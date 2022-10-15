@@ -54,7 +54,7 @@ const appendRowToSheet = (
 		`${BASE_URL}/${spreadsheetId}/values/${range}:append?${new URLSearchParams({
 			includeValuesInResponse: "true",
 			insertDataOption: "INSERT_ROWS",
-			valueInputOption: "RAW",
+			valueInputOption: "USER_ENTERED",
 		})}`,
 		options
 	);
@@ -77,7 +77,7 @@ const updateRowInSheet = (
 	return googleFetch(
 		`${BASE_URL}/${spreadsheetId}/values/${range}?${new URLSearchParams({
 			includeValuesInResponse: "true",
-			valueInputOption: "RAW",
+			valueInputOption: "USER_ENTERED",
 		})}`,
 		options
 	);
@@ -85,4 +85,4 @@ const updateRowInSheet = (
 
 //GoogleFetch parameterized
 
-export default {readAllRowsFromSheet, appendRowToSheet, updateRowInSheet};
+export default {readRanges: readAllRowsFromSheet, appendRowToSheet, updateRowInSheet};

@@ -9,8 +9,10 @@ interface AuthorTag {
 	sheetsCellIndex?: string;
 }
 
+const authorRange = (from: string, to: string) => `Authors!${from}:${to}`;
+
 const getAllAuthorTags = async (): Promise<AuthorTag[]> => {
-	const authorTagData = await Sheets.readAllRowsFromSheet(SPREADSHEET_ID, ["A:C"]);
+	const authorTagData = await Sheets.readRanges(SPREADSHEET_ID, [authorRange("A", "C")]);
 	return authorTagData ? transformReadSheetsData(authorTagData) : null;
 };
 
@@ -22,7 +24,7 @@ const getAuthorTagsByUUID = async (uuid: string): Promise<AuthorTag | null> => {
 
 const createNewAuthorWithTags = async (uuid: string, name: string, tags: string[]): Promise<number | null> => {
 	const authorTag = {uuid, name, tags};
-	const appendRes = await Sheets.appendRowToSheet(SPREADSHEET_ID, "A:C", [
+	const appendRes = await Sheets.appendRowToSheet(SPREADSHEET_ID, authorRange("A", "C"), [
 		[authorTag.uuid, authorTag.name, authorTag.tags.join(", ")],
 	]);
 	return appendRes?.updates?.updatedRows ?? null;
@@ -41,21 +43,21 @@ const updateAuthorTags = async (uuid: string, tags: string[]): Promise<number | 
 };
 
 const transformReadSheetsData = (authorTagsData: GetSheetsDataResponse): AuthorTag[] => {
-	const authorTags: AuthorTag[] = [];
-	for (const valueRange of authorTagsData.valueRanges) {
-		// start at 1, skip title row
-		for (let i = 1; i < valueRange.values.length; i++) {
-			const value = valueRange.values[i];
-			authorTags.push({
-				uuid: value[0],
-				name: value[1],
-				tags: value[2]?.split(", ") ?? [""],
-				sheetsCellIndex: `A${i + 1}:C${i + 1}`, // cells use 1-based-indexing
-			});
-		}
-	}
-
-	return authorTags;
+	return authorTagsData.valueRanges.flatMap((valueRange) =>
+		valueRange.values.map((value, i) => ({
+			uuid: value[0],
+			name: value[1],
+			tags: value[2]?.split(",").map((tag) => tag.trim()) ?? [],
+			sheetsCellIndex: authorRange( `A${i + 1}`, `C${i + 1}`), // cells use 1-based-indexing
+		})));
 };
 
-export default {getAllAuthorTags, getAuthorTagsByUUID, createNewAuthorWithTags, updateAuthorTags};
+const getAuthor = async (uuid: string) => {
+	const update = await Sheets.updateRowInSheet(SPREADSHEET_ID, "LOOKUP!A1", [[`=MATCH("${uuid}", ${authorRange("A", "A")}, 0)`]]);
+	const [rowIndex] = update?.updatedData?.values ?? [];
+	const range = authorRange(`A${rowIndex}`, `C${rowIndex}`);
+	const author = await Sheets.readRanges(SPREADSHEET_ID, [range]);
+	return author ? transformReadSheetsData(author) : null;
+};
+
+export default {getAllAuthorTags, getAuthorTagsByUUID, createNewAuthorWithTags, updateAuthorTags, getAuthor};
