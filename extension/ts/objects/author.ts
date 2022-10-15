@@ -37,7 +37,7 @@ const updateAuthorTags = async (uuid: string, tags: string[]): Promise<number | 
 		]);
 		return updateRes?.updatedRows ?? null;
 	}
-	return 0;
+	return null;
 };
 
 const transformReadSheetsData = (authorTagsData: GetSheetsDataResponse): AuthorTag[] => {
