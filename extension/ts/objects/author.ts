@@ -14,7 +14,9 @@ const authorRange = (from: string, to: string) => `Authors!${from}:${to}`;
 
 const getAuthorRowIndex = async (uuid: string): Promise<number | null> => {
 	// TODO explain the black magic happening here
-	const update = await Sheets.updateRowInSheet(SPREADSHEET_ID, "LOOKUP!A1", [[`=MATCH("${uuid}", ${authorRange("A", "A")}, 0)`]]);
+	const update = await Sheets.updateRowInSheet(SPREADSHEET_ID, "LOOKUP!A1", [
+		[`=MATCH("${uuid}", ${authorRange("A", "A")}, 0)`],
+	]);
 	const [[rowIndexString]] = update?.updatedData?.values ?? [];
 	const rowIndex = Number(rowIndexString);
 	return isFinite(rowIndex) ? rowIndex : null;
@@ -54,11 +56,15 @@ const updateAuthorTags = async (uuid: string, tags: string[]): Promise<number | 
 };
 
 const transformReadSheetsData = (authorTagsData: GetSheetsDataResponse): AuthorRecord[] | null => {
-	return authorTagsData?.valueRanges.flatMap((valueRange) =>
-		valueRange?.values.map((value) => {
-			const [uuid, name, tags] = value;
-			return {uuid, name, tags: tags?.split(",").map((tag) => tag.trim()) ?? []};
-		}) ?? []) ?? null;
+	return (
+		authorTagsData?.valueRanges.flatMap(
+			(valueRange) =>
+				valueRange?.values.map((value) => {
+					const [uuid, name, tags] = value;
+					return {uuid, name, tags: tags?.split(",").map((tag) => tag.trim()) ?? []};
+				}) ?? []
+		) ?? null
+	);
 };
 
 const getAuthor = async (uuid: string): Promise<AuthorRecord> => {

@@ -13,7 +13,7 @@ const bOK: Finder = async ({author, title}: FinderParameters): Promise<FinderRes
 		searchUrl,
 		baseUrl: BASE_URL,
 		maxResults: MAX,
-		aSelector: ".exactMatch .bookRow .itemCover a"
+		aSelector: ".exactMatch .bookRow .itemCover a",
 	});
 };
 

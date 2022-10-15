@@ -28,11 +28,10 @@
 		"build": "webpack --mode production",
 		"lint": "eslint extension/ts/ --ext .ts",
 		"fix": "yarn lint --fix",
-		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write extension/**/*",
+		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write \"extension/ts/**/*.ts\"",
 		"prepare": "husky install"
 	},
 	"lint-staged": {
-		"extension/**/*.ts": "yarn fix --cache",
-		"extension/**/*.{ts,css,md}": "yarn pretty --cache"
+		"extension/**/*.ts": ["yarn fix --cache", "yarn pretty --cache"]
 	}
 }
