@@ -39,7 +39,6 @@ const handleError = (res: Response) => {
 
 const readAllRowsFromSheet = async (spreadsheetId: string, ranges: string[]): Promise<GetSheetsDataResponse | null> => {
 	const credentials = Auth.getAPICredentials();
-	Auth.authorize();
 
 	const queryParams = ranges.reduce((acc, range) => {
 		acc.append("ranges", range);
