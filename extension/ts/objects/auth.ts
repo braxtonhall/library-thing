@@ -70,7 +70,7 @@ const oauth2SignIn = () => {
 
 	// Add form parameters as hidden input values.
 	for (const p in params) {
-		var input = document.createElement("input");
+		const input = document.createElement("input");
 		input.setAttribute("type", "hidden");
 		input.setAttribute("name", p);
 		input.setAttribute("value", params[p]);
@@ -88,7 +88,7 @@ const authorize = () => {
 	// The token and its related parameters get appended to the redirected URL
 	// Parse query string to see if page request is coming from OAuth 2.0 server.
 	const params = {};
-	let regex = /([^&=]+)=([^&]*)/g;
+	const regex = /([^&=]+)=([^&]*)/g;
 	let m: RegExpExecArray;
 	while ((m = regex.exec(fragmentString))) {
 		params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
@@ -108,7 +108,7 @@ const authorize = () => {
 		delete params["state"]; // remove state key/value pair
 
 		localStorage.setItem(OAUTH_KEY_LOCAL_STORAGE, JSON.stringify(params));
-		if (!!url) {
+		if (url) {
 			window.location.replace(url);
 		}
 		return;
