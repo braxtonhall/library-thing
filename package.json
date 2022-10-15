@@ -11,6 +11,8 @@
 		"css-loader": "^6.7.1",
 		"eslint": "^8.24.0",
 		"eslint-config-prettier": "^8.5.0",
+		"husky": ">=6",
+		"lint-staged": "^13.0.3",
 		"prettier": "^2.7.1",
 		"sass": "^1.55.0",
 		"sass-loader": "^13.1.0",
@@ -26,6 +28,11 @@
 		"build": "webpack --mode production",
 		"lint": "eslint extension/ts/ --ext .ts",
 		"fix": "yarn lint --fix",
-		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write extension/ts/**/*.ts"
+		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write extension/**/*",
+		"prepare": "husky install"
+	},
+	"lint-staged": {
+		"extension/**/*.ts": "yarn fix --cache",
+		"extension/**/*.{ts,css,md}": "yarn pretty --cache"
 	}
 }
