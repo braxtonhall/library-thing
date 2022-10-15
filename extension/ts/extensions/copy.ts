@@ -37,5 +37,4 @@ const appendRow = (table: HTMLTableElement) => {
 	appendButton(row, "Paste book", "img/paste.png", onPaste);
 };
 
-onFormRender((form: HTMLElement) =>
-	Array.from(form.getElementsByClassName("book_bitTable")).forEach(appendRow));
+onFormRender((form: HTMLElement) => Array.from(form.getElementsByClassName("book_bitTable")).forEach(appendRow));

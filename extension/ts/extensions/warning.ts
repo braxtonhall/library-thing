@@ -16,8 +16,9 @@ const addUndoEditListener = () =>
 const onExit = (event: Event) => {
 	if (!formDataEquals(storedFormData, getFormData())) {
 		event.returnValue = true;
-		return "It looks like you have been editing something. " +
-			"If you leave before saving, your changes will be lost.";
+		return (
+			"It looks like you have been editing something. " + "If you leave before saving, your changes will be lost."
+		);
 	}
 };
 
