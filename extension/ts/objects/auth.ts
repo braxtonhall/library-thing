@@ -51,7 +51,7 @@ const oauth2SignIn = () => {
 
 	// Google's OAuth 2.0 endpoint for requesting an access token
 	const oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";
-	const scope = OAUTH_SCOPES.reduce((acc, scope) => `${acc} ${scope}`, "").trim();
+	const scope = OAUTH_SCOPES.join(" ");
 
 	// Create element to open OAuth 2.0 endpoint in new window.
 	const form = document.createElement("form");
