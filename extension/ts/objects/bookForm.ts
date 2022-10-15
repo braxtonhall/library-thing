@@ -29,8 +29,8 @@ const extractSaveDataFor = (targetElement: Element, saveData: FormData) => {
 	}
 };
 
-const getFormData = () => getFormElements()
-	.reduce((saveData: FormData, element: any) => {
+const getFormData = () =>
+	getFormElements().reduce((saveData: FormData, element: any) => {
 		// We can't change hidden elements because LibraryThing relies
 		// on hidden form inputs to send additional, form-specific metadata
 		// on save
@@ -48,8 +48,8 @@ const getFormData = () => getFormElements()
 		return saveData;
 	}, {});
 
-const insertFormData = (saveData: FormData) => getFormElements()
-	.forEach((element: any) => {
+const insertFormData = (saveData: FormData) =>
+	getFormElements().forEach((element: any) => {
 		// We can't change hidden elements because LibraryThing relies
 		// on hidden form inputs to send additional, form-specific metadata
 		// on save
@@ -110,8 +110,7 @@ const oneFormRender = (callback: FormRenderListener): void => {
  * @param formA
  * @param formB
  */
-const formDataEquals = (formA: FormData, formB: FormData): boolean =>
-	JSON.stringify(formA) === JSON.stringify(formB);
+const formDataEquals = (formA: FormData, formB: FormData): boolean => JSON.stringify(formA) === JSON.stringify(formB);
 
 window.addEventListener("load", () => {
 	const editForm = getForm();

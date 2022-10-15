@@ -31,8 +31,7 @@ const setFavicon = () =>
 			element.type = "image/x-icon";
 		});
 
-const selectFilter = (): string =>
-	`saturate(${loggedIn() ? LOGGED_IN_SATURATION : LOGGED_OUT_SATURATION})`;
+const selectFilter = (): string => `saturate(${loggedIn() ? LOGGED_IN_SATURATION : LOGGED_OUT_SATURATION})`;
 
 const loggedIn = (): boolean => Cookies.get(LOGGED_IN_COOKIE_KEY) === LOGGED_IN_ID;
 
