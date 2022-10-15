@@ -49,7 +49,7 @@ const transformReadSheetsData = (authorTagsData: GetSheetsDataResponse): AuthorT
 			authorTags.push({
 				uuid: value[0],
 				name: value[1],
-				tags: value[2].split(", "),
+				tags: value[2]?.split(", ") ?? [""],
 				sheetsCellIndex: `A${i + 1}:C${i + 1}`, // cells use 1-based-indexing
 			});
 		}
