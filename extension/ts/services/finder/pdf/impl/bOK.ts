@@ -14,7 +14,7 @@ const bOK: PdfFinder = async ({author, title}: FinderParameters): Promise<PdfFin
 		searchUrl,
 		baseUrl: BASE_URL,
 		maxResults: MAX,
-		aSelector: ".exactMatch .bookRow .itemCover a"
+		aSelector: ".exactMatch .bookRow .itemCover a",
 	});
 };
 

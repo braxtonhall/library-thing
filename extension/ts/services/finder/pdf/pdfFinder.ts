@@ -7,14 +7,9 @@ type PdfFinderResponse = string[];
 
 type PdfFinder = Finder<PdfFinderResponse>;
 
-const finders: PdfFinder[] = [
-	bOK,
-	LibGen,
-	InternetArchive,
-];
+const finders: PdfFinder[] = [bOK, LibGen, InternetArchive];
 
 const findPdf: PdfFinder = async (parameters: FinderParameters): Promise<PdfFinderResponse> =>
-	Promise.all(finders.map((finder: PdfFinder) => finder(parameters)))
-		.then((result: string[][]) => result.flat());
+	Promise.all(finders.map((finder: PdfFinder) => finder(parameters))).then((result: string[][]) => result.flat());
 
 export {PdfFinderResponse, PdfFinder, findPdf};

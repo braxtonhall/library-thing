@@ -7,12 +7,10 @@ const MAX = 3;
 const BASE_URL = "https://libgen.is";
 
 const getUrl = (base: string, queryKey: string, maxLenQuery: number, parameters: FinderParameters) =>
-	`${base}${ new URLSearchParams({[queryKey]: shorten(maxLenQuery, parameters)})}`;
+	`${base}${new URLSearchParams({[queryKey]: shorten(maxLenQuery, parameters)})}`;
 
 const simplify = (text: string): string =>
-	text
-		.replace(/[-'`~!@#$%^&*()_|+=?;:",.<>{}[\]\\/]/gi, ' ')
-		.replace(/\s+/g, ' ');
+	text.replace(/[-'`~!@#$%^&*()_|+=?;:",.<>{}[\]\\/]/gi, " ").replace(/\s+/g, " ");
 
 const shorten = (maxLenQuery: number, {author, title}: FinderParameters): string => {
 	const shorterAuthor = simplify(author);
@@ -32,7 +30,7 @@ const findFiction: PdfFinder = async (parameters: FinderParameters): Promise<Pdf
 		searchUrl,
 		baseUrl: BASE_URL,
 		maxResults: MAX,
-		aSelector: "table.catalog > tbody > tr > td:nth-child(3) a"
+		aSelector: "table.catalog > tbody > tr > td:nth-child(3) a",
 	});
 };
 
@@ -43,13 +41,14 @@ const findNonFiction: PdfFinder = async (parameters: FinderParameters): Promise<
 		searchUrl,
 		baseUrl: BASE_URL + "/", // non-fiction links are relative, not absolute
 		maxResults: MAX,
-		aSelector: "table.c > tbody > tr > td:nth-child(3) > a"
+		aSelector: "table.c > tbody > tr > td:nth-child(3) > a",
 	});
 };
 
 const LibGen: PdfFinder = async (parameters: FinderParameters): Promise<PdfFinderResponse> => {
-	return Promise.all([findFiction, findNonFiction].map((finder) => finder(parameters)))
-		.then((results: string[][]) => results.flat());
+	return Promise.all([findFiction, findNonFiction].map((finder) => finder(parameters))).then((results: string[][]) =>
+		results.flat()
+	);
 };
 
 export {LibGen};
