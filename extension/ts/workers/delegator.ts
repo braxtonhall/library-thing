@@ -1,4 +1,4 @@
-import {TypedWorkerRequest, WorkerKind, Workers} from "./types";
+import {TypedWorkerRequest, WorkerKind, Workers, WorkerStatus} from "./types";
 import {get} from "./impl/request";
 
 const workers: Workers = {
@@ -7,7 +7,13 @@ const workers: Workers = {
 
 chrome.runtime.onMessage.addListener(
 	<Kind extends WorkerKind>(typedRequest: TypedWorkerRequest<Kind>, sender, sendResponse) => {
-		workers[typedRequest.kind](typedRequest.request).then(sendResponse);
+		workers[typedRequest.kind](typedRequest.request)
+			.then((value) => {
+				return sendResponse({status: WorkerStatus.RESOLVED, value});
+			})
+			.catch(({message}) => {
+				return sendResponse({status: WorkerStatus.REJECTED, message});
+			});
 		return true;
 	}
 );

@@ -1,5 +1,6 @@
-import {Finder, FinderParameters, FinderResponse} from "../finder";
+import {PdfFinder, PdfFinderResponse} from "../pdfFinder";
 import {getLinks} from "./util/getLinks";
+import {FinderParameters} from "../../finder";
 
 const MAX = 3;
 
@@ -23,7 +24,7 @@ const shorten = (maxLenQuery: number, {author, title}: FinderParameters): string
 	}
 };
 
-const findFiction: Finder = async (parameters: FinderParameters): Promise<FinderResponse> => {
+const findFiction: PdfFinder = async (parameters: FinderParameters): Promise<PdfFinderResponse> => {
 	const searchUrl = getUrl("https://libgen.is/fiction/?", "q", Infinity, parameters);
 	return getLinks({
 		searchUrl,
@@ -33,7 +34,7 @@ const findFiction: Finder = async (parameters: FinderParameters): Promise<Finder
 	});
 };
 
-const findNonFiction: Finder = async (parameters: FinderParameters): Promise<FinderResponse> => {
+const findNonFiction: PdfFinder = async (parameters: FinderParameters): Promise<PdfFinderResponse> => {
 	// LibGen has a limit of 80 characters on its searches
 	const searchUrl = getUrl("https://libgen.is/search.php?", "req", 80, parameters);
 	return getLinks({
@@ -44,7 +45,7 @@ const findNonFiction: Finder = async (parameters: FinderParameters): Promise<Fin
 	});
 };
 
-const LibGen: Finder = async (parameters: FinderParameters): Promise<FinderResponse> => {
+const LibGen: PdfFinder = async (parameters: FinderParameters): Promise<PdfFinderResponse> => {
 	return Promise.all([findFiction, findNonFiction].map((finder) => finder(parameters))).then((results: string[][]) =>
 		results.flat()
 	);

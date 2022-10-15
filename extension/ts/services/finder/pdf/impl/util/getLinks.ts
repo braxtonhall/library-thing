@@ -1,5 +1,4 @@
-import {invokeWorker} from "../../../../workers/invoker";
-import {WorkerKind} from "../../../../workers/types";
+import {getDocument} from "../../../util/getDocument";
 
 interface GetLinksEnv {
 	baseUrl: string;
@@ -10,10 +9,8 @@ interface GetLinksEnv {
 
 const getLinks = async ({searchUrl, aSelector, baseUrl, maxResults}: GetLinksEnv): Promise<string[]> => {
 	try {
-		const content = await invokeWorker(WorkerKind.Get, searchUrl);
 		const paths: string[] = [];
-		new DOMParser()
-			.parseFromString(content, "text/html")
+		(await getDocument(searchUrl))
 			.querySelectorAll(aSelector)
 			.forEach((element: HTMLLinkElement) => paths.push(element.getAttribute("href")));
 		return paths.slice(0, maxResults).map((path) => `${baseUrl}${path}`);
