@@ -25,6 +25,9 @@ interface Author {
 const selectAll = Sheets.createRange(AUTHOR_SHEET, UUID_COLUMN, TAGS_COLUMN);
 const selectRow = (row: number) => Sheets.createRange(AUTHOR_SHEET, `${UUID_COLUMN}${row}`, `${TAGS_COLUMN}${row}`);
 
+// Used to enforce the invariant that all author tags have the word "author" at the end
+const filterTags = (tags: string[]) => tags.filter((tag) => tag.toLowerCase().endsWith("author"));
+
 const getAuthorRowIndex = async (uuid: string): Promise<number | null> => {
 	// This is a little cursed, but to query the authors, we write a formula in a hidden cell that does the query
 	// The Sheets response is the new value at the cell, which should be the result of the query
@@ -49,9 +52,9 @@ const getAllAuthors = async (): Promise<Author[]> => {
 const writeAuthor = async ({uuid, name, tags}: Author): Promise<number | null> => {
 	const rowIndex = await getAuthorRowIndex(uuid);
 	if (rowIndex === null) {
-		return createAuthor({uuid, name, tags});
+		return createAuthor({uuid, name, tags: filterTags(tags)});
 	} else {
-		return updateAuthor(rowIndex, name, tags);
+		return updateAuthor(rowIndex, name, filterTags(tags));
 	}
 };
 
@@ -71,8 +74,9 @@ const transformReadSheetsData = (authorTagsData: GetSheetsDataResponse): Author[
 		authorTagsData?.valueRanges.flatMap(
 			(valueRange) =>
 				valueRange?.values.map((value) => {
-					const [uuid, name, tags] = value;
-					return {uuid, name, tags: tags?.split(",").map((tag) => tag.trim()) ?? []};
+					const [uuid, name, tagString] = value;
+					const sheetTags = tagString?.split(",").map((tag) => tag.trim()) ?? [];
+					return {uuid, name, tags: filterTags(sheetTags)};
 				}) ?? []
 		) ?? null
 	);
