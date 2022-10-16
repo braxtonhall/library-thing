@@ -18,7 +18,7 @@ const getOtherPages = (document: Document) => getLinks(document, "#pages > span 
 const getBooksFromDocument = (document: Document) =>
 	getLinks(document, "#lt_catalog_list > tbody > tr > td > a.lt-title");
 
-const getBooksFromURL = async (url: string) => {
+const getBooksFromURL = async (url: string): Promise<string[]> => {
 	const document = await getDocument(url);
 	const otherPages = getOtherPages(document);
 	const futurePageBooks = otherPages.map((link) =>
@@ -30,6 +30,6 @@ const getBooksFromURL = async (url: string) => {
 	return [getBooksFromDocument(document), ...pageBooks].flat();
 };
 
-const getBooks = async (query: Record<string, string> = {}) => getBooksFromURL(getSearchURL(query));
+const getBooks = async (query: Record<string, string> = {}): Promise<string[]> => getBooksFromURL(getSearchURL(query));
 
 export {getBooks};
