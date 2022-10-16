@@ -52,21 +52,24 @@ const getAllAuthors = async (): Promise<Author[]> => {
 
 const writeAuthor = async ({uuid, name, tags}: Author): Promise<Author | null> => {
 	const rowIndex = await getAuthorRowIndex(uuid);
+	const author = {uuid, name, tags: filterTags(tags)};
 	if (rowIndex === null) {
-		return createAuthor({uuid, name, tags: filterTags(tags)});
+		return createAuthor(author);
 	} else {
-		return updateAuthor(rowIndex, name, filterTags(tags));
+		return updateAuthor(rowIndex, author);
 	}
 };
 
 const createAuthor = async ({uuid, name, tags}: Author): Promise<Author | null> => {
 	const appendRes = await Sheets.appendRowToSheet(SPREADSHEET_ID, selectAll, [[uuid, name, tags.join(", ")]]);
+	console.log("APPEND", appendRes);
 	return valueRangeToAuthors(appendRes?.updates?.updatedData)?.[0] ?? null;
 };
 
-const updateAuthor = async (rowIndex: number, name: string, tags: string[]): Promise<Author | null> => {
-	const range = Sheets.createRange(AUTHOR_SHEET, `${NAME_COLUMN}${rowIndex}`, `${TAGS_COLUMN}${rowIndex}`);
-	const updateRes = await Sheets.updateRowInSheet(SPREADSHEET_ID, range, [[name, tags.join(", ")]]);
+const updateAuthor = async (rowIndex: number, {uuid, name, tags}: Author): Promise<Author | null> => {
+	const range = Sheets.createRange(AUTHOR_SHEET, `${UUID_COLUMN}${rowIndex}`, `${TAGS_COLUMN}${rowIndex}`);
+	const updateRes = await Sheets.updateRowInSheet(SPREADSHEET_ID, range, [[uuid, name, tags.join(", ")]]);
+	console.log("UPDATE", updateRes);
 	return valueRangeToAuthors(updateRes?.updatedData)?.[0] ?? null;
 };
 

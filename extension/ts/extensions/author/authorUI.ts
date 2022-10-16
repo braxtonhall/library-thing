@@ -16,7 +16,7 @@ const createTagLink = (tag: string) => {
 
 const createTagButton = (text: string, onClick: () => void) => {
 	const button = createButton(text, "img/search.png", onClick);
-	button.style.float = "right";
+	button.className += " author-tag-button";
 	return button;
 };
 
@@ -29,7 +29,7 @@ const createSection = () => {
 const createEditTagsSection = (onSave: () => void) => {
 	const section = createSection();
 	section.id = TAG_INPUT_CONTAINER_ID;
-	section.innerHTML = `<input id="${TAG_INPUT_ID}" class="bookEditInput" disabled>`;
+	section.innerHTML = `<input id="${TAG_INPUT_ID}" class="bookEditInput">`;
 	section.append(createTagButton("Save", onSave));
 	return section;
 };
@@ -72,7 +72,7 @@ const toggleViews = (showId: string, hideId: string) => () => {
 	document.getElementById(hideId).style.display = "none";
 };
 
-const getInput = () => (document.getElementById(TAG_INPUT_CONTAINER_ID) as HTMLInputElement).value;
+const getInput = () => (document.getElementById(TAG_INPUT_ID) as HTMLInputElement).value;
 
 const viewExistingTags = toggleViews(TAG_LIST_CONTAINER_ID, TAG_INPUT_CONTAINER_ID);
 const viewTagEditor = toggleViews(TAG_INPUT_CONTAINER_ID, TAG_LIST_CONTAINER_ID);
