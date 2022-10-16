@@ -14,8 +14,8 @@ const createTagLink = (tag: string) => {
 	return link;
 };
 
-const createTagButton = (text: string, onClick: () => void) => {
-	const button = createButton(text, "img/search.png", onClick);
+const createTagButton = (text: string, imgSrc, onClick: () => void) => {
+	const button = createButton(text, imgSrc, onClick);
 	button.className += " author-tag-button";
 	return button;
 };
@@ -30,7 +30,7 @@ const createEditTagsSection = (onSave: () => void) => {
 	const section = createSection();
 	section.id = TAG_INPUT_CONTAINER_ID;
 	section.innerHTML = `<input id="${TAG_INPUT_ID}" class="bookEditInput">`;
-	section.append(createTagButton("Save", onSave));
+	section.append(createTagButton("Save", "img/save.png", onSave));
 	return section;
 };
 
@@ -38,7 +38,7 @@ const createCurrentTagsSection = (onEdit: () => void) => {
 	const section = createSection();
 	section.id = TAG_LIST_CONTAINER_ID;
 	section.innerHTML = `<span id="${TAG_LIST_ID}"></span>`;
-	section.append(createTagButton("Edit", onEdit));
+	section.append(createTagButton("Edit", "img/edit.png", onEdit));
 	return section;
 };
 
