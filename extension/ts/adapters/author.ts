@@ -1,7 +1,7 @@
 import Sheets, {GetSheetsDataResponse} from "./sheets";
 
 const SPREADSHEET_ID = "18I5LabO21LfV97CkBRBW6SeK5hPggitvnK-2joUJ8jU";
-const AUTHOR_SHEET = "Author";
+const AUTHOR_SHEET = "Authors";
 const QUERY_SHEET = "LOOKUP";
 
 /**
@@ -32,7 +32,7 @@ const getAuthorRowIndex = async (uuid: string): Promise<number | null> => {
 	// This is a little cursed, but to query the authors, we write a formula in a hidden cell that does the query
 	// The Sheets response is the new value at the cell, which should be the result of the query
 	const update = await Sheets.updateRowInSheet(SPREADSHEET_ID, Sheets.createRange(QUERY_SHEET, "A1"), [
-		[`=MATCH("${uuid}", ${Sheets.createRange(AUTHOR_SHEET, UUID_COLUMN)}, 0)`],
+		[`=MATCH("${uuid}", ${Sheets.createRange(AUTHOR_SHEET, UUID_COLUMN, UUID_COLUMN)}, 0)`],
 	]);
 	const [[rowIndexString]] = update?.updatedData?.values ?? [];
 	const rowIndex = Number(rowIndexString);
