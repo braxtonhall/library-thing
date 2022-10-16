@@ -1,4 +1,4 @@
-import {googleFetch} from "./googleFetch";
+import {googleFetch} from "../services/google/googleFetch";
 
 const BASE_URL = "https://sheets.googleapis.com/v4/spreadsheets";
 

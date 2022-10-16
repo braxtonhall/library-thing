@@ -1,6 +1,6 @@
 import {showToast, ToastType} from "../../ui/toast";
 import {createLoader, removeLoader} from "../../ui/loadingIndicator";
-import {onFormRender} from "../../objects/bookForm";
+import {onFormRender} from "../../entities/bookForm";
 import {createButton} from "../../ui/button";
 import {Finder, FinderParameters} from "../../services/finder/finder";
 
