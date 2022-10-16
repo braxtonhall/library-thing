@@ -36,7 +36,8 @@
 				"img/search.png",
 				"img/paste.png",
 				"img/save.png",
-				"img/edit.png"
+				"img/edit.png",
+				"img/book.png"
 			],
 			"matches": ["https://*.librarything.com/*"]
 		}

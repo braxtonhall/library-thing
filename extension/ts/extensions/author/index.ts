@@ -2,7 +2,7 @@ import Author from "../../adapters/author";
 import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from "./authorUI";
 import {createLoader, removeLoader} from "../../ui/loadingIndicator";
 
-const onEdit = async () => {
+const onEdit = () => {
 	viewTagEditor();
 };
 
@@ -13,6 +13,10 @@ const onSave = async () => {
 	author && insertTags(author.tags);
 	viewExistingTags();
 	removeLoader(loader);
+};
+
+const onSync = async () => {
+	// TODO this is the big one lol
 };
 
 const getAuthorInfo = () => {
@@ -30,7 +34,7 @@ window.addEventListener("load", async () => {
 	if (document.querySelector("body.authorpage")) {
 		const container = document.querySelector<HTMLTableCellElement>("table.authorContentTable td.middle");
 		if (container) {
-			appendUI(container, onEdit, onSave);
+			appendUI(container, onSync, onEdit, onSave);
 			await getTags();
 		}
 	}
