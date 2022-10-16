@@ -25,9 +25,17 @@ interface Author {
 const selectAll = Sheets.createRange(AUTHOR_SHEET, UUID_COLUMN, TAGS_COLUMN);
 const selectRow = (row: number) => Sheets.createRange(AUTHOR_SHEET, `${UUID_COLUMN}${row}`, `${TAGS_COLUMN}${row}`);
 
-// Used to enforce the invariant that all author tags have the word "author" at the end
-const filterTags = (tags: string[]) =>
-	tags.filter((tag) => tag.toLowerCase().endsWith("author")).map((tag) => tag.trim());
+/**
+ * Used to enforce following invariants:
+ * 1. that all author tags have the word "author" at the end
+ * 2. that there are no duplicates
+ * 3. tags have no excessive whitespace
+ */
+const filterTags = (tags: string[]) => {
+	const authorTags = tags.filter((tag) => tag.toLowerCase().endsWith("author"));
+	const trimmedTags = authorTags.map((tag) => tag.trim());
+	return [...new Set(trimmedTags)];
+};
 
 const getAuthorRowIndex = async (uuid: string): Promise<number | null> => {
 	// This is a little cursed, but to query the authors, we write a formula in a hidden cell that does the query

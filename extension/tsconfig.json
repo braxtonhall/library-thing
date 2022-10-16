@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"strict": false,
+		"target": "ES2015",
 		"types": [
 			"chrome"
 		],
