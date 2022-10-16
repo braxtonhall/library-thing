@@ -72,7 +72,9 @@ const toggleViews = (showId: string, hideId: string) => () => {
 	document.getElementById(hideId).style.display = "none";
 };
 
+const getInput = () => (document.getElementById(TAG_INPUT_CONTAINER_ID) as HTMLInputElement).value;
+
 const viewExistingTags = toggleViews(TAG_LIST_CONTAINER_ID, TAG_INPUT_CONTAINER_ID);
 const viewTagEditor = toggleViews(TAG_INPUT_CONTAINER_ID, TAG_LIST_CONTAINER_ID);
 
-export {appendUI, insertTags, viewExistingTags, viewTagEditor};
+export {appendUI, insertTags, getInput, viewExistingTags, viewTagEditor};

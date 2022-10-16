@@ -87,4 +87,5 @@ const updateRowInSheet = (
 
 const createRange = (sheet: string, from: string, to?: string): Range => `${sheet}!${from}${to ? `:${to}` : ""}`;
 
+export type {ValueRange};
 export default {readRanges, appendRowToSheet, updateRowInSheet, createRange};
