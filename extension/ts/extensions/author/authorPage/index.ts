@@ -3,7 +3,7 @@ import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from ".
 import {createLoader, removeLoader} from "../../../ui/loadingIndicator";
 import Book, {BookRecord} from "../../../adapters/book/index";
 import {showToast, ToastType} from "../../../ui/toast";
-import {createUpdateBook} from "./updateBook";
+import {createSyncBookTags} from "../util";
 
 const onEdit = () => {
 	viewTagEditor();
@@ -47,12 +47,11 @@ const onSync = async () => {
 	const {uuid, name} = getAuthorInfo();
 	let allFailed, allPassed;
 	try {
-		const [author, books] = await Promise.all([Author.getAuthor(uuid), getBooks(uuid)]);
-		const tags = author?.tags ?? [];
-		const futureUpdates = books.map(updateBook(uuid, tags));
-		const updates = await Promise.all(futureUpdates);
-		allFailed = !updates.some(isTruthy);
-		allPassed = updates.every(isTruthy);
+		const books = await getBooks(uuid);
+		const futureSyncs = books.map(updateBook);
+		const syncs = await Promise.all(futureSyncs);
+		allFailed = !syncs.some(isTruthy);
+		allPassed = syncs.every(isTruthy);
 	} catch (error) {
 		console.error(error);
 		allFailed = true;
@@ -69,7 +68,7 @@ const onSync = async () => {
 	}
 };
 
-const updateBook = createUpdateBook(Author.getAuthor, Book.saveBook);
+const updateBook = createSyncBookTags(Author.getAuthor, Book.saveBook);
 
 const getAuthorInfo = () => {
 	const [, , uuid] = window.location.pathname.split("/");
