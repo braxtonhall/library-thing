@@ -1,8 +1,8 @@
-import Auth from "./googleAuth";
+import {invokeWorker} from "../../workers/invoker";
+import {WorkerKind} from "../../workers/types";
 
 const handleError = (res: Response) => {
 	if (res.status >= 400) {
-		Auth.clearAPICredentials();
 		alert(
 			"Something went wrong when trying to process that action. Please try again and ensure the inputted API key/ Client ID credentials are correct."
 		);
@@ -12,18 +12,14 @@ const handleError = (res: Response) => {
 type GoogleFetch = <T>(...args: Parameters<typeof fetch>) => Promise<T | null>;
 
 export const googleFetch: GoogleFetch = async (input: URL, init?: RequestInit) => {
-	const credentials = Auth.getAPICredentials();
 	const url = new URL(input);
 	const params = new URLSearchParams(url.search);
-	params.append("key", credentials.apiKey);
 	url.search = params.toString();
 	init ??= {};
 	init.headers ??= {};
 
 	if (init.method !== "GET") {
-		Auth.authorize();
-		const localStorageOAuth = Auth.getOAuthCredentials();
-		const token = localStorageOAuth?.access_token ?? "";
+		const token = await invokeWorker(WorkerKind.Authorize, null);
 		init = {...init, headers: {...init.headers, Authorization: `Bearer ${token}`}};
 	}
 

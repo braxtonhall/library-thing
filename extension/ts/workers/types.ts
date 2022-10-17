@@ -1,7 +1,9 @@
 import {GetParameters, GetResponse} from "./impl/request";
+import {AuthorizeParameters, AuthorizeResponse} from "./impl/authorize";
 
 enum WorkerKind {
 	Get = "get",
+	Authorize = "authorize",
 }
 
 enum WorkerStatus {
@@ -9,7 +11,11 @@ enum WorkerStatus {
 	REJECTED,
 }
 
-type WorkerRequest<Kind extends WorkerKind> = Kind extends WorkerKind.Get ? GetParameters : never;
+type WorkerRequest<Kind extends WorkerKind> = Kind extends WorkerKind.Get
+	? GetParameters
+	: Kind extends WorkerKind.Authorize
+	? AuthorizeParameters
+	: never;
 
 type TypedWorkerRequest<Kind extends WorkerKind> = {kind: WorkerKind; request: WorkerRequest<Kind>};
 
@@ -21,7 +27,11 @@ type WorkerResponseResolved<Kind extends WorkerKind> = {
 };
 type WorkerResponseRejected = {status: WorkerStatus.REJECTED; message: string};
 
-type WorkerResponseValue<Kind extends WorkerKind> = Kind extends WorkerKind.Get ? GetResponse : never;
+type WorkerResponseValue<Kind extends WorkerKind> = Kind extends WorkerKind.Get
+	? GetResponse
+	: Kind extends WorkerKind.Authorize
+	? AuthorizeResponse
+	: never;
 
 type Worker<Kind extends WorkerKind> = (request: WorkerRequest<Kind>) => Promise<WorkerResponseValue<Kind>>;
 
@@ -29,4 +39,13 @@ type Workers = {
 	[Kind in WorkerKind]: Worker<Kind>;
 };
 
-export {WorkerKind, Workers, WorkerRequest, WorkerResponse, WorkerResponseValue, TypedWorkerRequest, WorkerStatus};
+export {
+	WorkerKind,
+	Worker,
+	Workers,
+	WorkerRequest,
+	WorkerResponse,
+	WorkerResponseValue,
+	TypedWorkerRequest,
+	WorkerStatus,
+};
