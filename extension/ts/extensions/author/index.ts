@@ -1,2 +1,2 @@
 import "./authorPage";
-import "./bookSideSync";
+import "./bookPage";

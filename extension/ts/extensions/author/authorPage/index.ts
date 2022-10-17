@@ -1,7 +1,7 @@
 import Author from "../../../adapters/author";
 import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from "./authorUI";
 import {createLoader, removeLoader} from "../../../ui/loadingIndicator";
-import Book, {BookRecord} from "../../../adapters/book/index";
+import Book, {BookRecord} from "../../../adapters/book";
 import {showToast, ToastType} from "../../../ui/toast";
 import {createSyncBookTags} from "../util";
 

@@ -1,5 +1,5 @@
 import {AuthorRecord} from "../../adapters/author";
-import {BookRecord} from "../../adapters/book/index";
+import {BookRecord} from "../../adapters/book";
 import {filterAuthorTags} from "../../util/filterAuthorTags";
 
 const getAuthorTags = async (authorIds: string[], getAuthor: (uuid: string) => Promise<AuthorRecord>) => {
