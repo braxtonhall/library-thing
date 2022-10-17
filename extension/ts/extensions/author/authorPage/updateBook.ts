@@ -12,6 +12,11 @@ const getOtherAuthorTags = async (
 	return filterAuthorTags(otherAuthors.flatMap((author) => author?.tags ?? []));
 };
 
+const getBookOnlyTags = (tags: string[]) => {
+	const authorTags = filterAuthorTags(tags);
+	return tags.filter((tag) => !authorTags.includes(tag));
+};
+
 /**
  * yes, i know this code is unreadable, hence the comments
  *
@@ -35,6 +40,28 @@ const createUpdateBook =
 			book.tags = allTags.filter((tag) => !deleteTags.includes(tag));
 			await saveBook(book);
 			return book;
+		} catch (error) {
+			console.error(book, error);
+			return null;
+		}
+	};
+
+/**
+ * This version syncs every book with all of its authors! And it's easier to read!
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const alternate =
+	(getAuthor: (currentAuthorId: string) => Promise<AuthorRecord>, saveBook: (book: BookRecord) => Promise<void>) =>
+	(uuid: string, tags: string[]) =>
+	async (book: BookRecord): Promise<BookRecord> => {
+		try {
+			const bookTags = getBookOnlyTags(book.tags);
+			const otherAuthorTags = await getOtherAuthorTags(book, uuid, getAuthor);
+			const keepAuthorTags = filterAuthorTags([...otherAuthorTags, ...tags]);
+			const allTagsSet = new Set([...bookTags, ...keepAuthorTags]);
+			const newBook = {...book, tags: [...allTagsSet]};
+			await saveBook(newBook);
+			return newBook;
 		} catch (error) {
 			console.error(book, error);
 			return null;
