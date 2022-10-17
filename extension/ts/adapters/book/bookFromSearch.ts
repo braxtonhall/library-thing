@@ -13,7 +13,7 @@ const getSearchURL = (query: Record<string, string>) => {
 
 const getId = (link: string): string => new URL(link).pathname.split("/")[4];
 
-const getOtherPages = (document: Document): string[] => {
+const getOtherSearchPages = (document: Document): string[] => {
 	const links = document.querySelectorAll<HTMLLinkElement>("#pages > span > a");
 	return Array.from(links).map((link) => link.href);
 };
@@ -45,7 +45,7 @@ const getBooksFromDocument = (document: Document): Promise<BookRecord[]> => {
 
 const getBooksFromURL = async (url: string): Promise<BookRecord[]> => {
 	const document = await getDocument(url);
-	const otherPages = getOtherPages(document);
+	const otherPages = getOtherSearchPages(document);
 	const futurePageBooks = otherPages.map((link) =>
 		getDocument(link)
 			.then(getBooksFromDocument)
