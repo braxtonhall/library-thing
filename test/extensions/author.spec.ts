@@ -38,22 +38,22 @@ describe("author extension", () => {
 
 		it("should add tags to a book with multiple authors", async () => {
 			const result = await updateBook("1", ["Baz author"])(createBook(["foo", "bar"], ["1", "2"]));
-			expect(result).to.deep.equal(createBook(["foo", "bar", "Baz author"], ["1", "2"]));
+			expect(result).to.deep.equal(createBook(["foo", "bar", "B author", "C author", "Baz author"], ["1", "2"]));
 		});
 
 		it("should remove an author tag that isn't on any other authors", async () => {
 			const result = await updateBook("1", [])(createBook(["foo", "bar", "Foobar author"], ["1", "2"]));
-			expect(result).to.deep.equal(createBook(["foo", "bar"], ["1", "2"]));
+			expect(result).to.deep.equal(createBook(["foo", "bar", "B author", "C author"], ["1", "2"]));
 		});
 
 		it("should not remove an author tag that is on another author", async () => {
 			const result = await updateBook("1", [])(createBook(["foo", "bar", "C author"], ["1", "2"]));
-			expect(result).to.deep.equal(createBook(["foo", "bar", "C author"], ["1", "2"]));
+			expect(result).to.deep.equal(createBook(["foo", "bar", "B author", "C author"], ["1", "2"]));
 		});
 
 		it("should add and remove and retain tags at the same time", async () => {
 			const result = await updateBook("1", ["Baz author"])(createBook(["foo", "bar", "Foobar author", "C author"], ["1", "2"]));
-			expect(result).to.deep.equal(createBook(["foo", "bar", "C author", "Baz author"], ["1", "2"]));
+			expect(result).to.deep.equal(createBook(["foo", "bar", "B author", "C author", "Baz author"], ["1", "2"]));
 		});
 	});
 });
