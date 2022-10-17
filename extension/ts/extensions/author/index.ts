@@ -57,7 +57,7 @@ const createUpdateBook =
 			// other_author_tags = book.authors.filter(_ not equals author_id).flat(google_doc.get_tags)
 			const futureOtherAuthors = book.authorIds.filter((author) => author !== uuid).map(getAuthor);
 			const otherAuthors = await Promise.all(futureOtherAuthors);
-			const otherAuthorTags = Author.filterAuthorTags(otherAuthors.flatMap((author) => author.tags));
+			const otherAuthorTags = Author.filterAuthorTags(otherAuthors.flatMap((author) => author?.tags ?? []));
 			// delete_tags = maybe_delete_tags.filter(_ not in other_author_tags)
 			const deleteTags = maybeDeleteTags.filter((tag) => !otherAuthorTags.includes(tag));
 			// book.author_tags = (book_tags + author_tags) - delete_tags

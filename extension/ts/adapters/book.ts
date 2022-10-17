@@ -20,7 +20,9 @@ const getOtherPages = (document: Document): string[] => {
 };
 
 const getTags = (element: HTMLTableRowElement): string[] =>
-	Array.from(element.querySelectorAll<HTMLLinkElement>("a.lt-tag")).map((link) => link.innerText);
+	Array.from(element.querySelectorAll<HTMLLinkElement>("a.lt-tag"))
+		.map((link) => link.innerText)
+		.filter((tag) => !!tag);
 
 const getAuthors = async (link: string): Promise<string[]> => {
 	const document = await getDocument(link);
