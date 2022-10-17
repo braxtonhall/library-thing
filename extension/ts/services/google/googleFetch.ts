@@ -23,7 +23,7 @@ export const googleFetch: GoogleFetch = async (input: URL, init?: RequestInit) =
 	if (init.method !== "GET") {
 		Auth.authorize();
 		const localStorageOAuth = Auth.getOAuthCredentials();
-		const token = localStorageOAuth.access_token;
+		const token = localStorageOAuth?.access_token ?? "";
 		init = {...init, headers: {...init.headers, Authorization: `Bearer ${token}`}};
 	}
 

@@ -6,10 +6,15 @@ const authorIds = () =>
 	getAuthorIdsFromLinks(document.querySelectorAll<HTMLLinkElement>("div.headsummary > h2 a[href]"));
 
 const getAuthorTags = async () => {
-	const futureAuthors = authorIds().map(Author.getAuthor);
-	const authors = await Promise.all(futureAuthors);
-	const tags = authors.flatMap((author) => author?.tags ?? []);
-	return Author.filterAuthorTags(tags);
+	try {
+		const futureAuthors = authorIds().map(Author.getAuthor);
+		const authors = await Promise.all(futureAuthors);
+		const tags = authors.flatMap((author) => author?.tags ?? []);
+		return Author.filterAuthorTags(tags);
+	} catch (error) {
+		console.error(error);
+		return [];
+	}
 };
 
 // TODO if not authed, and there are changes, disable the button
