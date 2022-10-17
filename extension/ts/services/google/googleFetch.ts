@@ -1,11 +1,10 @@
 import {invokeWorker} from "../../workers/invoker";
 import {WorkerKind} from "../../workers/types";
+import {showToast, ToastType} from "../../ui/toast";
 
 const handleError = (res: Response) => {
-	if (res.status >= 400) {
-		alert(
-			"Something went wrong when trying to process that action. Please try again and ensure the inputted API key/ Client ID credentials are correct."
-		);
+	if (!res.ok) {
+		showToast("Could not complete action", ToastType.ERROR);
 	}
 };
 

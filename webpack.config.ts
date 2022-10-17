@@ -5,7 +5,6 @@ const config: Configuration = {
 	context: path.join(__dirname, '/extension'),
 	entry: {
 		'bundle': './ts/index.ts',
-		'options': './ts/options/index.ts',
 		'background': './ts/workers/delegator.ts',
 	},
 	output: {
