@@ -14,4 +14,5 @@ createFinderExtension<string[]>({
 			.filter((summary) => !!summary)
 			.map((summary) => `SUMMARY: ${summary}`)
 			.join("\n\n"),
+	delimiter: "\n\n",
 });

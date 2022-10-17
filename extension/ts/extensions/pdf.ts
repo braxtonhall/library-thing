@@ -10,4 +10,5 @@ createFinderExtension<string[]>({
 	textAreaContainerId: "bookedit_comments",
 	textAreaId: "form_comments",
 	transform: (links: string[]) => links.map((link) => `PDF: ${link}`).join("\n"),
+	delimiter: "\n",
 });

@@ -1,5 +1,5 @@
-import {createButton} from "../../ui/button";
-import {createHeader} from "../../ui/header";
+import {createButton} from "../../../ui/button";
+import {createHeader} from "../../../ui/header";
 
 const TAG_LIST_ID = "vbl-tag-list";
 const TAG_INPUT_ID = "vbl-tag-input";

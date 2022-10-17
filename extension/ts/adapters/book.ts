@@ -1,4 +1,5 @@
 import {getDocument} from "../services/finder/util/getDocument";
+import {getAuthorIdsFromLinks} from "../util/getAuthorIdsFromLinks";
 
 const SEARCH_URL = "https://www.librarything.com/catalog_bottom.php";
 
@@ -26,10 +27,7 @@ const getTags = (element: HTMLTableRowElement): string[] =>
 
 const getAuthors = async (link: string): Promise<string[]> => {
 	const document = await getDocument(link);
-	const links = Array.from(document.querySelectorAll<HTMLLinkElement>("td.bibliographicinfo a"));
-	const paths = links.map((link) => new URL(link.href).pathname);
-	const authorPaths = paths.filter((path) => path.startsWith("/author/"));
-	return authorPaths.map((path) => path.split("/")[2]);
+	return getAuthorIdsFromLinks(document.querySelectorAll<HTMLLinkElement>("td.bibliographicinfo a"));
 };
 
 const toBook = async (element: HTMLTableRowElement): Promise<BookRecord> => {
@@ -56,6 +54,8 @@ const getBooksFromURL = async (url: string): Promise<BookRecord[]> => {
 	return allBooks.flat();
 };
 
+// TODO getting the books doesn't work if you are not the first author
+// TODO make this work if you are not the first author
 const getBooks = async (query: Record<string, string> = {}): Promise<BookRecord[]> =>
 	getBooksFromURL(getSearchURL(query));
 
