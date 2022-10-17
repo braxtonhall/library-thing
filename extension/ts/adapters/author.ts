@@ -12,9 +12,11 @@ const QUERY_SHEET = "LOOKUP";
  *            Much of the code in this file assumes this order
  *            And that they are neighbours
  */
-const UUID_COLUMN = "A";
-const NAME_COLUMN = "B";
-const TAGS_COLUMN = "C";
+enum Columns {
+	UUID = "A",
+	NAME = "B",
+	TAGS = "C",
+}
 
 type Tags = string[];
 
@@ -24,8 +26,8 @@ interface AuthorRecord {
 	tags: Tags;
 }
 
-const selectAll = Sheets.createRange(AUTHOR_SHEET, UUID_COLUMN, TAGS_COLUMN);
-const selectRow = (row: number) => Sheets.createRange(AUTHOR_SHEET, `${UUID_COLUMN}${row}`, `${TAGS_COLUMN}${row}`);
+const selectAll = Sheets.createRange(AUTHOR_SHEET, Columns.UUID, Columns.TAGS);
+const selectRow = (row: number) => Sheets.createRange(AUTHOR_SHEET, `${Columns.UUID}${row}`, `${Columns.TAGS}${row}`);
 
 /**
  * Used to enforce following invariants:
@@ -43,7 +45,7 @@ const getAuthorRowIndex = async (uuid: string): Promise<number | null> => {
 	// This is a little cursed, but to query the authors, we write a formula in a hidden cell that does the query
 	// The Sheets response is the new value at the cell, which should be the result of the query
 	const update = await Sheets.updateRowInSheet(SPREADSHEET_ID, Sheets.createRange(QUERY_SHEET, "A1"), [
-		[`=MATCH("${uuid}", ${Sheets.createRange(AUTHOR_SHEET, UUID_COLUMN, UUID_COLUMN)}, 0)`],
+		[`=MATCH("${uuid}", ${Sheets.createRange(AUTHOR_SHEET, Columns.UUID, Columns.UUID)}, 0)`],
 	]);
 	const [[rowIndexString]] = update?.updatedData?.values ?? [];
 	const rowIndex = Number(rowIndexString);
@@ -76,7 +78,7 @@ const createAuthor = async ({uuid, name, tags}: AuthorRecord): Promise<AuthorRec
 };
 
 const updateAuthor = async (rowIndex: number, {uuid, name, tags}: AuthorRecord): Promise<AuthorRecord | null> => {
-	const range = Sheets.createRange(AUTHOR_SHEET, `${UUID_COLUMN}${rowIndex}`, `${TAGS_COLUMN}${rowIndex}`);
+	const range = Sheets.createRange(AUTHOR_SHEET, `${Columns.UUID}${rowIndex}`, `${Columns.TAGS}${rowIndex}`);
 	const updateRes = await Sheets.updateRowInSheet(SPREADSHEET_ID, range, [[uuid, name, tags.join(", ")]]);
 	return valueRangeToAuthors(updateRes?.updatedData)?.[0] ?? null;
 };
