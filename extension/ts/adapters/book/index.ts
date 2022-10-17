@@ -2,6 +2,7 @@ import {BookRecord} from "./types";
 import {getBooks} from "./bookFromSearch";
 import {getBooksFromWork} from "./bookFromWork";
 import {getBook} from "./bookFromEdition";
+import {setCache} from "./bookCache";
 
 const saveBook = async (book: BookRecord): Promise<void> => {
 	const body = new URLSearchParams({
@@ -12,6 +13,7 @@ const saveBook = async (book: BookRecord): Promise<void> => {
 	if (!response.ok) {
 		throw new Error("Could not save book");
 	}
+	setCache(book.id, book);
 };
 
 const removeDuplicates = (books: BookRecord[]): BookRecord[] => {

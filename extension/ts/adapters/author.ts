@@ -1,11 +1,12 @@
 import Sheets, {GetSheetsDataResponse, ValueRange} from "./sheets";
 import {filterAuthorTags} from "../util/filterAuthorTags";
+import {makeCache} from "../util/cache";
 
 const SPREADSHEET_ID = "18I5LabO21LfV97CkBRBW6SeK5hPggitvnK-2joUJ8jU";
 const AUTHOR_SHEET = "Authors";
 const QUERY_SHEET = "LOOKUP";
 
-// TODO: there are potentially a LOT of reads happening. We should be caching what we get back from Google
+const {asyncCached, setCache} = makeCache<AuthorRecord>();
 
 /**
  * These are the columns as stored in the Google Sheet
@@ -76,7 +77,7 @@ const valueRangeToAuthors = (valueRange: ValueRange): AuthorRecord[] =>
 	valueRange?.values.map((value) => {
 		const [uuid, name, tagString] = value;
 		const sheetTags = tagString?.split(",") ?? [];
-		return {uuid, name, tags: filterAuthorTags(sheetTags)};
+		return setCache(uuid, {uuid, name, tags: filterAuthorTags(sheetTags)});
 	}) ?? [];
 
 const transformReadSheetsData = (authorTagsData: GetSheetsDataResponse): AuthorRecord[] | null => {
@@ -84,12 +85,14 @@ const transformReadSheetsData = (authorTagsData: GetSheetsDataResponse): AuthorR
 };
 
 const getAuthor = async (uuid: string): Promise<AuthorRecord> => {
-	const range = await getAuthorRange(uuid);
-	if (range !== null) {
-		const author = await Sheets.readRanges(SPREADSHEET_ID, [range]);
-		return transformReadSheetsData(author)?.[0] ?? null;
-	}
-	return null;
+	return asyncCached(uuid, async () => {
+		const range = await getAuthorRange(uuid);
+		if (range !== null) {
+			const author = await Sheets.readRanges(SPREADSHEET_ID, [range]);
+			return transformReadSheetsData(author)?.[0] ?? null;
+		}
+		return null;
+	});
 };
 
 export type {AuthorRecord};

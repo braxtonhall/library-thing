@@ -1,3 +1,5 @@
+const LOCK = {}; // Nothing else in the system will ever === this
+
 const makeCache = <T>() => {
 	const cache = new Map<string, T>();
 
@@ -5,7 +7,7 @@ const makeCache = <T>() => {
 
 	const pollForBook = async (id: string): Promise<T> => {
 		const value = cache.get(id);
-		if (value === null) {
+		if (value === LOCK) {
 			await _yield();
 			return pollForBook(id);
 		} else {
@@ -22,7 +24,7 @@ const makeCache = <T>() => {
 
 	const asyncCached = async (id: string, implementation: () => Promise<T>): Promise<T> => {
 		if (!cache.has(id)) {
-			cache.set(id, null); // Lock!
+			cache.set(id, LOCK as T); // Lock!
 			const newValue = await implementation();
 			cache.set(id, newValue);
 			return newValue;
@@ -31,8 +33,9 @@ const makeCache = <T>() => {
 		}
 	};
 
-	const setCache = (id: string, value: T): void => {
+	const setCache = (id: string, value: T): T => {
 		cache.set(id, value);
+		return value;
 	};
 
 	return {syncCached, asyncCached, setCache};
