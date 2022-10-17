@@ -1,6 +1,7 @@
 import {createFinderExtension} from "../util/finderExtension";
 import {getAuthorIdsFromLinks} from "../../util/getAuthorIdsFromLinks";
 import Author from "../../adapters/author";
+import {filterAuthorTags} from "../../util/filterAuthorTags";
 
 const authorIds = () =>
 	getAuthorIdsFromLinks(document.querySelectorAll<HTMLLinkElement>("div.headsummary > h2 a[href]"));
@@ -10,7 +11,7 @@ const getAuthorTags = async () => {
 		const futureAuthors = authorIds().map(Author.getAuthor);
 		const authors = await Promise.all(futureAuthors);
 		const tags = authors.flatMap((author) => author?.tags ?? []);
-		return Author.filterAuthorTags(tags);
+		return filterAuthorTags(tags);
 	} catch (error) {
 		console.error(error);
 		return [];
