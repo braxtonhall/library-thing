@@ -83,6 +83,25 @@ const oauth2SignIn = () => {
 };
 
 const authorize = () => {
+	handleOAuthRedirect();
+	if (!isSavedCredentialsValid()) {
+		oauth2SignIn();
+	}
+};
+
+const isSavedCredentialsValid = (): boolean => {
+	// If OAuth credentials already exist in localStorage
+	if (isOAuthCredentialsSavedToLocalStorage()) {
+		if (isOAuthTokenExpired()) {
+			clearOAuthCredentials();
+			return false;
+		}
+		return true;
+	}
+	return false;
+};
+
+const handleOAuthRedirect = () => {
 	const fragmentString = location.hash.substring(1);
 
 	// The token and its related parameters get appended to the redirected URL
@@ -111,20 +130,7 @@ const authorize = () => {
 		if (url) {
 			window.location.replace(url);
 		}
-		return;
 	}
-
-	// If OAuth credentials already exist in localStorage
-	if (isOAuthCredentialsSavedToLocalStorage()) {
-		if (isOAuthTokenExpired()) {
-			clearOAuthCredentials();
-			return oauth2SignIn(); // reauthorize and get a new token
-		}
-		return;
-	}
-
-	// Otherwise, go through the OAuth flow
-	oauth2SignIn();
 };
 
 const getOAuthCredentials = (): OAuthParams => JSON.parse(localStorage.getItem(OAUTH_KEY_LOCAL_STORAGE));
@@ -137,5 +143,10 @@ const isOAuthTokenExpired = () => {
 	const expiryDate = new Date(localStorageOAuth.expiry_date);
 	return now.getTime() >= expiryDate.getTime();
 };
+
+// Have to run this as soon as the file is imported to ensure that redirect happens
+// before any other business logic reads the href which has an unexpected hashroute
+// thanks to the redirect uri with encoded state
+handleOAuthRedirect();
 
 export default {authorize, clearAPICredentials, getAPICredentials, getOAuthCredentials};
