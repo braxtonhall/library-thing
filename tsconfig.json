@@ -1,9 +1,11 @@
 {
 	"compilerOptions": {
 		"esModuleInterop": true,
+		"target": "ES2015",
 		"strict": false,
 		"types": [
-			"node"
+			"node",
+			"mocha"
 		],
 		"lib": [
 			"ES2021"

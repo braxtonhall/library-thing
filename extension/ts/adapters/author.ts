@@ -1,4 +1,5 @@
 import Sheets, {GetSheetsDataResponse, ValueRange} from "./sheets";
+import {filterAuthorTags} from "../util/filterAuthorTags";
 
 const SPREADSHEET_ID = "18I5LabO21LfV97CkBRBW6SeK5hPggitvnK-2joUJ8jU";
 const AUTHOR_SHEET = "Authors";
@@ -28,18 +29,6 @@ interface AuthorRecord {
 
 const selectAll = Sheets.createRange(AUTHOR_SHEET, Columns.UUID, Columns.TAGS);
 const selectRow = (row: number) => Sheets.createRange(AUTHOR_SHEET, `${Columns.UUID}${row}`, `${Columns.TAGS}${row}`);
-
-/**
- * Used to enforce following invariants:
- * 1. that all author tags have the word "author" at the end
- * 2. that there are no duplicates
- * 3. tags have no excessive whitespace
- */
-const filterAuthorTags = (tags: string[]) => {
-	const authorTags = tags.filter((tag) => tag.toLowerCase().endsWith("author"));
-	const trimmedTags = authorTags.map((tag) => tag.trim());
-	return [...new Set(trimmedTags)];
-};
 
 const getAuthorRowIndex = async (uuid: string): Promise<number | null> => {
 	// This is a little cursed, but to query the authors, we write a formula in a hidden cell that does the query
@@ -104,4 +93,4 @@ const getAuthor = async (uuid: string): Promise<AuthorRecord> => {
 };
 
 export type {AuthorRecord};
-export default {getAllAuthors, writeAuthor, getAuthor, filterAuthorTags};
+export default {getAllAuthors, writeAuthor, getAuthor};
