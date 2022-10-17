@@ -84,12 +84,12 @@ const oauth2SignIn = () => {
 
 const authorize = () => {
 	handleOAuthRedirect();
-	if (!isSavedCredentialsValid()) {
+	if (!isAuthenticated()) {
 		oauth2SignIn();
 	}
 };
 
-const isSavedCredentialsValid = (): boolean => {
+const isAuthenticated = (): boolean => {
 	// If OAuth credentials already exist in localStorage
 	if (isOAuthCredentialsSavedToLocalStorage()) {
 		if (isOAuthTokenExpired()) {

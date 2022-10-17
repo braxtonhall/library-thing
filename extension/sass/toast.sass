@@ -1,3 +1,5 @@
+@use "colours"
+
 .vblblt-toast
 	/* Set a default minimum width */
 	min-width: 400px
@@ -25,14 +27,14 @@
 		cursor: pointer
 
 	&.error-toast
-		background-color: #FF6955
+		background-color: colours.$red
 
 	&.warning-toast
-		background-color: #FFB82F
+		background-color: colours.$amber
 
 	&.info-toast
-		background-color: #2fa8ff
+		background-color: colours.$blue
 
 	&.success-toast
-		background-color: #A0FF98
+		background-color: colours.$green
 

@@ -1,6 +1,6 @@
 import {createUpdateBook} from "../../extension/ts/extensions/author/authorPage/updateBook";
 import {AuthorRecord} from "../../extension/ts/adapters/author";
-import {BookRecord} from "../../extension/ts/adapters/book/index";
+import {BookRecord} from "../../extension/ts/adapters/book";
 import {expect} from "chai";
 
 const testAuthors = new Map<string, AuthorRecord>([

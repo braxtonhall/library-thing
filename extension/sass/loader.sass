@@ -1,6 +1,8 @@
-$overlay-colour: rgba(0, 0, 0, 0.1)
-$loader-background-colour: #f3f3f3
-$loader-foreground-colour: #A15CA0
+@use "colours"
+
+$overlay-colour: colours.$transparent
+$loader-background-colour: colours.$light-grey
+$loader-foreground-colour: colours.$purple
 
 .better-library-thing-loader-overlay
 	position: fixed

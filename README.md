@@ -3,7 +3,7 @@
 A browser extension to improve the LibraryThing cataloguing experience. Made in support of the [Vancouver Black Library](https://www.vancouverblacklibrary.org/).
 
 <p align="center">
-	<img src="img/vbl.png" alt="vancouver black library" style="width: 100px; height: auto">
+	<img src="extension/img/vbl.png" alt="vancouver black library" style="width: 100px; height: auto">
 </p>
 
 ## Features

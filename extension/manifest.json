@@ -27,6 +27,7 @@
 	"background": {
 		"service_worker": "js/background.js"
 	},
+	"options_page": "html/options.html",
 	"permissions": ["tabs"],
 	"web_accessible_resources": [
 		{
@@ -37,7 +38,8 @@
 				"img/paste.png",
 				"img/save.png",
 				"img/edit.png",
-				"img/book.png"
+				"img/book.png",
+				"img/vbl.png"
 			],
 			"matches": ["https://*.librarything.com/*"]
 		}
