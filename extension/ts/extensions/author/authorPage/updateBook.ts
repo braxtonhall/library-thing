@@ -23,20 +23,20 @@ const getBookOnlyTags = (tags: string[]) => {
  * perhaps one day i will come in and clean it up -- i think it could be simpler
  */
 const createUpdateBook =
-	(getAuthor: (currentAuthorId: string) => Promise<AuthorRecord>, saveBook: (book: BookRecord) => Promise<void>) =>
-	(uuid: string, tags: string[]) =>
+	(getAuthor: (uuid: string) => Promise<AuthorRecord>, saveBook: (book: BookRecord) => Promise<void>) =>
+	(currentAuthorId: string, currentAuthorTags: string[]) =>
 	async (book: BookRecord): Promise<BookRecord> => {
 		try {
 			// get only the author tags for current book
 			const bookTags = filterAuthorTags(book.tags);
 			// might need to delete author tags not on this author
-			const maybeDeleteTags = bookTags.filter((tag) => !tags.includes(tag));
+			const maybeDeleteTags = bookTags.filter((tag) => !currentAuthorTags.includes(tag));
 			// first get all authors that aren't the current one
-			const otherAuthorTags = await getOtherAuthorTags(book, uuid, getAuthor);
+			const otherAuthorTags = await getOtherAuthorTags(book, currentAuthorId, getAuthor);
 			// if a tag isn't on any author, it should be deleted
 			const deleteTags = maybeDeleteTags.filter((tag) => !otherAuthorTags.includes(tag));
 			// finally, all tags except the deleted ones
-			const allTags = [...new Set([...book.tags, ...filterAuthorTags(tags)])];
+			const allTags = [...new Set([...book.tags, ...filterAuthorTags(currentAuthorTags)])];
 			book.tags = allTags.filter((tag) => !deleteTags.includes(tag));
 			await saveBook(book);
 			return book;
@@ -51,13 +51,13 @@ const createUpdateBook =
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const alternate =
-	(getAuthor: (currentAuthorId: string) => Promise<AuthorRecord>, saveBook: (book: BookRecord) => Promise<void>) =>
-	(uuid: string, tags: string[]) =>
+	(getAuthor: (uuid: string) => Promise<AuthorRecord>, saveBook: (book: BookRecord) => Promise<void>) =>
+	(currentAuthorId: string, currentAuthorTags: string[]) =>
 	async (book: BookRecord): Promise<BookRecord> => {
 		try {
 			const bookTags = getBookOnlyTags(book.tags);
-			const otherAuthorTags = await getOtherAuthorTags(book, uuid, getAuthor);
-			const keepAuthorTags = filterAuthorTags([...otherAuthorTags, ...tags]);
+			const otherAuthorTags = await getOtherAuthorTags(book, currentAuthorId, getAuthor);
+			const keepAuthorTags = filterAuthorTags([...otherAuthorTags, ...currentAuthorTags]);
 			const allTagsSet = new Set([...bookTags, ...keepAuthorTags]);
 			const newBook = {...book, tags: [...allTagsSet]};
 			await saveBook(newBook);
