@@ -1,6 +1,7 @@
 import {BookRecord} from "./types";
 import {getDocument} from "../../services/finder/util/getDocument";
 import {getAuthorIdsFromLinks} from "../../util/getAuthorIdsFromLinks";
+import {asyncCached} from "./bookCache";
 
 const SEARCH_URL = "https://www.librarything.com/catalog_bottom.php";
 
@@ -29,10 +30,12 @@ const getAuthors = async (link: string): Promise<string[]> => {
 
 const toBook = async (element: HTMLTableRowElement): Promise<BookRecord> => {
 	const link = element.querySelector<HTMLLinkElement>("td > a.lt-title").href;
-	const tags = getTags(element);
-	const authorIds = await getAuthors(link);
 	const id = getId(link);
-	return {id, tags, authorIds};
+	return asyncCached(id, async () => {
+		const tags = getTags(element);
+		const authorIds = await getAuthors(link);
+		return {id, tags, authorIds};
+	});
 };
 
 const getBooksFromDocument = (document: Document): Promise<BookRecord[]> => {

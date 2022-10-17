@@ -11,7 +11,9 @@ const getTags = (document: Document): string[] => {
 const scrapeCopy = (id: string, document: Document) => {
 	const authorIds = getAuthorIdsFromLinks(document.querySelectorAll("#middleColumn > div.headsummary > h2 a"));
 	const tags = getTags(document);
-	return {id, tags, authorIds};
+	const book = {id, tags, authorIds};
+
+	return book;
 };
 
 export {scrapeCopy};
