@@ -1,7 +1,7 @@
 import Author, {AuthorRecord} from "../../../adapters/author";
 import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from "./authorUI";
 import {createLoader, removeLoader} from "../../../ui/loadingIndicator";
-import Book, {BookRecord} from "../../../adapters/book";
+import Book, {BookRecord} from "../../../adapters/book/index";
 import {showToast, ToastType} from "../../../ui/toast";
 
 const onEdit = () => {
@@ -17,13 +17,36 @@ const onSave = async () => {
 	removeLoader(loader);
 };
 
+const getExpectedBookCount = () => {
+	const booksBy = document.querySelector("p.booksby > a")?.textContent ?? "";
+	const [countString] = booksBy.split(" ");
+	const count = Number(countString);
+	return isFinite(count) ? count : 0;
+};
+
+const getCoauthorBooks = async (): Promise<BookRecord[]> => {
+	const workLinks = Array.from(document.querySelectorAll(".li_have > a"));
+	const workHrefs = workLinks.map((link: HTMLLinkElement) => link.href);
+	const futureCoauthorBooks = workHrefs.map(Book.getBooksFromWork);
+	return (await Promise.all(futureCoauthorBooks)).flat();
+};
+
+const getBooks = async (uuid: string): Promise<BookRecord[]> => {
+	const books = await Book.getBooks({author: uuid});
+	if (books.length >= getExpectedBookCount()) {
+		return books;
+	} else {
+		return Book.removeDuplicates([...books, ...(await getCoauthorBooks())]);
+	}
+};
+
 const onSync = async () => {
 	const identity = (success) => success;
 	const loader = createLoader();
 	const {uuid, name} = getAuthorInfo();
 	let allFailed, allPassed;
 	try {
-		const [author, books] = await Promise.all([Author.getAuthor(uuid), Book.getBooks({author: uuid})]);
+		const [author, books] = await Promise.all([Author.getAuthor(uuid), getBooks(uuid)]);
 		const tags = author?.tags ?? [];
 		const futureUpdates = books.map(updateBook(uuid, tags));
 		const updates = await Promise.all(futureUpdates);

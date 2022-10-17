@@ -1,13 +1,8 @@
-import {getDocument} from "../services/finder/util/getDocument";
-import {getAuthorIdsFromLinks} from "../util/getAuthorIdsFromLinks";
+import {BookRecord} from "./types";
+import {getDocument} from "../../services/finder/util/getDocument";
+import {getAuthorIdsFromLinks} from "../../util/getAuthorIdsFromLinks";
 
 const SEARCH_URL = "https://www.librarything.com/catalog_bottom.php";
-
-interface BookRecord {
-	id: string;
-	tags: string[];
-	authorIds: string[];
-}
 
 const getSearchURL = (query: Record<string, string>) => {
 	const url = new URL(SEARCH_URL);
@@ -57,21 +52,7 @@ const getBooksFromURL = async (url: string): Promise<BookRecord[]> => {
 	return allBooks.flat();
 };
 
-// TODO getting the books doesn't work if you are not the first author
-// TODO make this work if you are not the first author
 const getBooks = async (query: Record<string, string> = {}): Promise<BookRecord[]> =>
 	getBooksFromURL(getSearchURL(query));
 
-const saveBook = async (book: BookRecord): Promise<void> => {
-	const body = new URLSearchParams({
-		form_id: book.id,
-		form_tags: book.tags.join(", "),
-	});
-	const response = await fetch("/ajax_changetags2.php", {method: "POST", body});
-	if (!response.ok) {
-		throw new Error("Could not save book");
-	}
-};
-
-export type {BookRecord};
-export default {getBooks, saveBook};
+export {getBooks};
