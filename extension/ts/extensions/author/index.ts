@@ -1,7 +1,7 @@
-import Author from "../../adapters/author";
+import Author, {AuthorRecord} from "../../adapters/author";
 import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from "./authorUI";
 import {createLoader, removeLoader} from "../../ui/loadingIndicator";
-import {getBooks} from "../../adapters/book";
+import Book, {BookRecord} from "../../adapters/book";
 import {showToast, ToastType} from "../../ui/toast";
 
 const onEdit = () => {
@@ -23,7 +23,7 @@ const onSync = async () => {
 	const {uuid, name} = getAuthorInfo();
 	let allFailed, allPassed;
 	try {
-		const [author, books] = await Promise.all([Author.getAuthor(uuid), getBooks({author: uuid})]);
+		const [author, books] = await Promise.all([Author.getAuthor(uuid), Book.getBooks({author: uuid})]);
 		const tags = author?.tags ?? [];
 		const futureUpdates = books.map(updateBook(uuid, tags));
 		const updates = await Promise.all(futureUpdates);
@@ -41,20 +41,37 @@ const onSync = async () => {
 	} else if (allPassed) {
 		showToast(`Synced tags for ${name}`, ToastType.SUCCESS);
 	} else {
-		showToast(`Failed to sync tags for some books`, ToastType.WARNING);
+		showToast("Failed to sync tags for some books", ToastType.WARNING);
 	}
 };
 
-const updateBook =
+const createUpdateBook =
+	(getAuthor: (uuid: string) => Promise<AuthorRecord>, saveBook: (book: BookRecord) => Promise<void>) =>
 	(uuid: string, tags: string[]) =>
-	(book: string): Promise<boolean> => {
-		// book_tags = book.author_tags
-		// maybe_delete_tags = book_tags - author_tags
-		// other_author_tags = book.authors.filter(_ not equals author_id).flat(google_doc.get_tags)
-		// delete_tags = maybe_delete_tags.filter(_ not in other_author_tags)
-		// book.author_tags = (book_tags + author_tags) - delete_tags
-		return Promise.resolve(true);
+	async (book: BookRecord): Promise<boolean> => {
+		try {
+			// book_tags = book.author_tags
+			const bookTags = Author.filterAuthorTags(book.tags);
+			// maybe_delete_tags = book_tags - author_tags
+			const maybeDeleteTags = bookTags.filter((tag) => !tags.includes(tag));
+			// other_author_tags = book.authors.filter(_ not equals author_id).flat(google_doc.get_tags)
+			const futureOtherAuthors = book.authorIds.filter((author) => author !== uuid).map(getAuthor);
+			const otherAuthors = await Promise.all(futureOtherAuthors);
+			const otherAuthorTags = Author.filterAuthorTags(otherAuthors.flatMap((author) => author.tags));
+			// delete_tags = maybe_delete_tags.filter(_ not in other_author_tags)
+			const deleteTags = maybeDeleteTags.filter((tag) => !otherAuthorTags.includes(tag));
+			// book.author_tags = (book_tags + author_tags) - delete_tags
+			const allTags = [...new Set([...book.tags, ...tags])];
+			book.tags = allTags.filter((tag) => !deleteTags.includes(tag));
+			await saveBook(book);
+			return true;
+		} catch (error) {
+			console.error(error);
+			return false;
+		}
 	};
+
+const updateBook = createUpdateBook(Author.getAuthor, Book.saveBook);
 
 const getAuthorInfo = () => {
 	const [, , uuid] = window.location.pathname.split("/");
@@ -76,3 +93,6 @@ window.addEventListener("load", async () => {
 		}
 	}
 });
+
+// Exported for testing
+export {createUpdateBook};

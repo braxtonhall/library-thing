@@ -4,6 +4,8 @@ const SPREADSHEET_ID = "18I5LabO21LfV97CkBRBW6SeK5hPggitvnK-2joUJ8jU";
 const AUTHOR_SHEET = "Authors";
 const QUERY_SHEET = "LOOKUP";
 
+// TODO: there are potentially a LOT of reads happening. We should be caching what we get back from Google
+
 /**
  * These are the columns as stored in the Google Sheet
  * INVARIANT: UUID is just left of NAME is just left of TAGS
@@ -16,7 +18,7 @@ const TAGS_COLUMN = "C";
 
 type Tags = string[];
 
-interface Author {
+interface AuthorRecord {
 	uuid: string;
 	name: string;
 	tags: Tags;
@@ -31,7 +33,7 @@ const selectRow = (row: number) => Sheets.createRange(AUTHOR_SHEET, `${UUID_COLU
  * 2. that there are no duplicates
  * 3. tags have no excessive whitespace
  */
-const filterTags = (tags: string[]) => {
+const filterAuthorTags = (tags: string[]) => {
 	const authorTags = tags.filter((tag) => tag.toLowerCase().endsWith("author"));
 	const trimmedTags = authorTags.map((tag) => tag.trim());
 	return [...new Set(trimmedTags)];
@@ -53,14 +55,14 @@ const getAuthorRange = async (uuid: string): Promise<string> => {
 	return rowIndex ? selectRow(rowIndex) : null;
 };
 
-const getAllAuthors = async (): Promise<Author[]> => {
+const getAllAuthors = async (): Promise<AuthorRecord[]> => {
 	const authorTagData = await Sheets.readRanges(SPREADSHEET_ID, [selectAll]);
 	return transformReadSheetsData(authorTagData);
 };
 
-const writeAuthor = async ({uuid, name, tags}: Author): Promise<Author | null> => {
+const writeAuthor = async ({uuid, name, tags}: AuthorRecord): Promise<AuthorRecord | null> => {
 	const rowIndex = await getAuthorRowIndex(uuid);
-	const author = {uuid, name, tags: filterTags(tags)};
+	const author = {uuid, name, tags: filterAuthorTags(tags)};
 	if (rowIndex === null) {
 		return createAuthor(author);
 	} else {
@@ -68,29 +70,29 @@ const writeAuthor = async ({uuid, name, tags}: Author): Promise<Author | null> =
 	}
 };
 
-const createAuthor = async ({uuid, name, tags}: Author): Promise<Author | null> => {
+const createAuthor = async ({uuid, name, tags}: AuthorRecord): Promise<AuthorRecord | null> => {
 	const appendRes = await Sheets.appendRowToSheet(SPREADSHEET_ID, selectAll, [[uuid, name, tags.join(", ")]]);
 	return valueRangeToAuthors(appendRes?.updates?.updatedData)?.[0] ?? null;
 };
 
-const updateAuthor = async (rowIndex: number, {uuid, name, tags}: Author): Promise<Author | null> => {
+const updateAuthor = async (rowIndex: number, {uuid, name, tags}: AuthorRecord): Promise<AuthorRecord | null> => {
 	const range = Sheets.createRange(AUTHOR_SHEET, `${UUID_COLUMN}${rowIndex}`, `${TAGS_COLUMN}${rowIndex}`);
 	const updateRes = await Sheets.updateRowInSheet(SPREADSHEET_ID, range, [[uuid, name, tags.join(", ")]]);
 	return valueRangeToAuthors(updateRes?.updatedData)?.[0] ?? null;
 };
 
-const valueRangeToAuthors = (valueRange: ValueRange): Author[] =>
+const valueRangeToAuthors = (valueRange: ValueRange): AuthorRecord[] =>
 	valueRange?.values.map((value) => {
 		const [uuid, name, tagString] = value;
 		const sheetTags = tagString?.split(",") ?? [];
-		return {uuid, name, tags: filterTags(sheetTags)};
+		return {uuid, name, tags: filterAuthorTags(sheetTags)};
 	}) ?? [];
 
-const transformReadSheetsData = (authorTagsData: GetSheetsDataResponse): Author[] | null => {
+const transformReadSheetsData = (authorTagsData: GetSheetsDataResponse): AuthorRecord[] | null => {
 	return authorTagsData?.valueRanges.flatMap(valueRangeToAuthors) ?? null;
 };
 
-const getAuthor = async (uuid: string): Promise<Author> => {
+const getAuthor = async (uuid: string): Promise<AuthorRecord> => {
 	const range = await getAuthorRange(uuid);
 	if (range !== null) {
 		const author = await Sheets.readRanges(SPREADSHEET_ID, [range]);
@@ -99,4 +101,5 @@ const getAuthor = async (uuid: string): Promise<Author> => {
 	return null;
 };
 
-export default {getAllAuthors, writeAuthor, getAuthor};
+export type {AuthorRecord};
+export default {getAllAuthors, writeAuthor, getAuthor, filterAuthorTags};

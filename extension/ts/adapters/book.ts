@@ -2,23 +2,47 @@ import {getDocument} from "../services/finder/util/getDocument";
 
 const SEARCH_URL = "https://www.librarything.com/catalog_bottom.php";
 
+interface BookRecord {
+	link: string;
+	tags: string[];
+	authorIds: string[];
+}
+
 const getSearchURL = (query: Record<string, string>) => {
 	const url = new URL(SEARCH_URL);
 	url.search = new URLSearchParams(query).toString();
 	return url.toString();
 };
 
-const getLinks = (document: Document, aSelector: string): string[] => {
-	const links = document.querySelectorAll<HTMLLinkElement>(aSelector);
+const getOtherPages = (document: Document): string[] => {
+	const links = document.querySelectorAll<HTMLLinkElement>("#pages > span > a");
 	return Array.from(links).map((link) => link.href);
 };
 
-const getOtherPages = (document: Document) => getLinks(document, "#pages > span > a");
+const getTags = (element: HTMLTableRowElement): string[] =>
+	Array.from(element.querySelectorAll<HTMLLinkElement>("a.lt-tag")).map((link) => link.innerText);
 
-const getBooksFromDocument = (document: Document) =>
-	getLinks(document, "#lt_catalog_list > tbody > tr > td > a.lt-title");
+const getAuthors = async (link: string): Promise<string[]> => {
+	const document = await getDocument(link);
+	const links = Array.from(document.querySelectorAll<HTMLLinkElement>("td.bibliographicinfo a"));
+	const paths = links.map((link) => new URL(link.href).pathname);
+	const authorPaths = paths.filter((path) => path.startsWith("/author/"));
+	return authorPaths.map((path) => path.split("/")[2]);
+};
 
-const getBooksFromURL = async (url: string): Promise<string[]> => {
+const toBook = async (element: HTMLTableRowElement): Promise<BookRecord> => {
+	const link = element.querySelector<HTMLLinkElement>("td > a.lt-title").href;
+	const tags = getTags(element);
+	const authorIds = await getAuthors(link);
+	return {link, tags, authorIds};
+};
+
+const getBooksFromDocument = (document: Document): Promise<BookRecord[]> => {
+	const rows = document.querySelectorAll<HTMLTableRowElement>("#lt_catalog_list > tbody > tr");
+	return Promise.all(Array.from(rows).map(toBook));
+};
+
+const getBooksFromURL = async (url: string): Promise<BookRecord[]> => {
 	const document = await getDocument(url);
 	const otherPages = getOtherPages(document);
 	const futurePageBooks = otherPages.map((link) =>
@@ -26,10 +50,17 @@ const getBooksFromURL = async (url: string): Promise<string[]> => {
 			.then(getBooksFromDocument)
 			.catch(() => [])
 	);
-	const pageBooks = await Promise.all(futurePageBooks);
-	return [getBooksFromDocument(document), ...pageBooks].flat();
+	const allBooks = await Promise.all([getBooksFromDocument(document), ...futurePageBooks]);
+	return allBooks.flat();
 };
 
-const getBooks = async (query: Record<string, string> = {}): Promise<string[]> => getBooksFromURL(getSearchURL(query));
+const getBooks = async (query: Record<string, string> = {}): Promise<BookRecord[]> =>
+	getBooksFromURL(getSearchURL(query));
 
-export {getBooks};
+const saveBook = async (book: BookRecord): Promise<void> => {
+	// TODO
+	console.log(book);
+};
+
+export type {BookRecord};
+export default {getBooks, saveBook};
