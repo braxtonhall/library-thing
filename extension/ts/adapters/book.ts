@@ -4,7 +4,7 @@ import {getAuthorIdsFromLinks} from "../util/getAuthorIdsFromLinks";
 const SEARCH_URL = "https://www.librarything.com/catalog_bottom.php";
 
 interface BookRecord {
-	link: string;
+	id: string;
 	tags: string[];
 	authorIds: string[];
 }
@@ -14,6 +14,8 @@ const getSearchURL = (query: Record<string, string>) => {
 	url.search = new URLSearchParams(query).toString();
 	return url.toString();
 };
+
+const getId = (link: string): string => new URL(link).pathname.split("/")[4];
 
 const getOtherPages = (document: Document): string[] => {
 	const links = document.querySelectorAll<HTMLLinkElement>("#pages > span > a");
@@ -34,7 +36,8 @@ const toBook = async (element: HTMLTableRowElement): Promise<BookRecord> => {
 	const link = element.querySelector<HTMLLinkElement>("td > a.lt-title").href;
 	const tags = getTags(element);
 	const authorIds = await getAuthors(link);
-	return {link, tags, authorIds};
+	const id = getId(link);
+	return {id, tags, authorIds};
 };
 
 const getBooksFromDocument = (document: Document): Promise<BookRecord[]> => {
@@ -60,8 +63,33 @@ const getBooks = async (query: Record<string, string> = {}): Promise<BookRecord[
 	getBooksFromURL(getSearchURL(query));
 
 const saveBook = async (book: BookRecord): Promise<void> => {
-	// TODO
-	console.log(book);
+	const params = {
+		form_id: book.id,
+		form_tags: book.tags.join(", "),
+	};
+	console.log(params);
+	// const response = await fetch("/ajax_changetags2.php",
+	// 	{method: "POST", body: new URLSearchParams(params).toString()});
+
+	const formData = new FormData();
+	formData.append("form_id", book.id);
+	formData.append("form_tags", book.tags.join(", "));
+
+	const request = new XMLHttpRequest();
+	request.open("POST", "/ajax_changetags2.php");
+	request.send(formData);
+
+	// console.log(await response.text());
+	// return new Promise((resolve, reject) => {
+	// 	return (window as any).basic_ajax("/ajax_changetags2.php", params, (response) => {
+	// 		console.log(params, response);
+	// 		if (Number(response.responseText) === -1) {
+	// 			return reject(new Error("Failed to save book"));
+	// 		} else {
+	// 			return resolve();
+	// 		}
+	// 	});
+	// });
 };
 
 export type {BookRecord};
