@@ -63,33 +63,14 @@ const getBooks = async (query: Record<string, string> = {}): Promise<BookRecord[
 	getBooksFromURL(getSearchURL(query));
 
 const saveBook = async (book: BookRecord): Promise<void> => {
-	const params = {
+	const body = new URLSearchParams({
 		form_id: book.id,
 		form_tags: book.tags.join(", "),
-	};
-	console.log(params);
-	// const response = await fetch("/ajax_changetags2.php",
-	// 	{method: "POST", body: new URLSearchParams(params).toString()});
-
-	const formData = new FormData();
-	formData.append("form_id", book.id);
-	formData.append("form_tags", book.tags.join(", "));
-
-	const request = new XMLHttpRequest();
-	request.open("POST", "/ajax_changetags2.php");
-	request.send(formData);
-
-	// console.log(await response.text());
-	// return new Promise((resolve, reject) => {
-	// 	return (window as any).basic_ajax("/ajax_changetags2.php", params, (response) => {
-	// 		console.log(params, response);
-	// 		if (Number(response.responseText) === -1) {
-	// 			return reject(new Error("Failed to save book"));
-	// 		} else {
-	// 			return resolve();
-	// 		}
-	// 	});
-	// });
+	});
+	const response = await fetch("/ajax_changetags2.php", {method: "POST", body});
+	if (!response.ok) {
+		throw new Error("Could not save book");
+	}
 };
 
 export type {BookRecord};

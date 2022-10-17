@@ -66,7 +66,7 @@ const createUpdateBook =
 			await saveBook(book);
 			return true;
 		} catch (error) {
-			console.error(error);
+			console.error(book, error);
 			return false;
 		}
 	};
