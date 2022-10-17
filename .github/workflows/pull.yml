@@ -1,4 +1,4 @@
-name: Run linter # & tests
+name: Run linter & tests
 
 on:
     pull_request:
