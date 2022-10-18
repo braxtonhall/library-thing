@@ -28,7 +28,7 @@ const getAuthors = async (link: string): Promise<string[]> => {
 	return getAuthorIdsFromLinks(document.querySelectorAll<HTMLLinkElement>("td.bibliographicinfo a"));
 };
 
-const toBook = async (element: HTMLTableRowElement): Promise<BookRecord> => {
+const toBook = (element: HTMLTableRowElement): Promise<BookRecord> => {
 	const link = element.querySelector<HTMLLinkElement>("td > a.lt-title").href;
 	const id = getId(link);
 	return asyncCached(id, async () => {
@@ -55,7 +55,6 @@ const getBooksFromURL = async (url: string): Promise<BookRecord[]> => {
 	return allBooks.flat();
 };
 
-const getBooks = async (query: Record<string, string> = {}): Promise<BookRecord[]> =>
-	getBooksFromURL(getSearchURL(query));
+const getBooks = (query: Record<string, string> = {}): Promise<BookRecord[]> => getBooksFromURL(getSearchURL(query));
 
 export {getBooks};

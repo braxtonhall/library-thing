@@ -4,12 +4,14 @@ import {getBooksFromWork} from "./bookFromWork";
 import {getBook} from "./bookFromEdition";
 import {setCache} from "./bookCache";
 
+const POST_TAGS_URI = "/ajax_changetags2.php";
+
 const saveBook = async (book: BookRecord): Promise<void> => {
 	const body = new URLSearchParams({
 		form_id: book.id,
 		form_tags: book.tags.join(", "),
 	});
-	const response = await fetch("/ajax_changetags2.php", {method: "POST", body});
+	const response = await fetch(POST_TAGS_URI, {method: "POST", body});
 	if (!response.ok) {
 		throw new Error("Could not save book");
 	}
