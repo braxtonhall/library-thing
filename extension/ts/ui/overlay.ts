@@ -1,3 +1,5 @@
+import "../../sass/overlay.sass";
+
 const OVERLAY_CLASS_NAME = "better-library-thing-overlay";
 
 const createOverlay = () => {

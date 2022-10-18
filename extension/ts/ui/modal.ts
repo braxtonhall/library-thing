@@ -1,3 +1,5 @@
+import "../../sass/modal.sass";
+
 import {createOverlay} from "./overlay";
 
 enum ModalColour {

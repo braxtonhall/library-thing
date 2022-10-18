@@ -1,3 +1,5 @@
+import "../../sass/loader.sass";
+
 import {createOverlay} from "./overlay";
 
 const LOADER_CLASS_NAME = "better-library-thing-loader";
