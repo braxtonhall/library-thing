@@ -7,7 +7,7 @@ const authorIds = () =>
 	getAuthorIdsFromLinks(document.querySelectorAll<HTMLLinkElement>("div.headsummary > h2 a[href]"));
 
 createFinderExtension<string[]>({
-	buttonName: "Sync Author Tags",
+	buttonName: "Pull Author Tags",
 	finder: () => getAuthorTags(authorIds(), Author.getAuthor),
 	onFail: () => "No author tags found for this book",
 	onSuccess: () => "Author tags synced",
