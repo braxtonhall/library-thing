@@ -1,9 +1,9 @@
-const OVERLAY_CLASS_NAME = "better-library-thing-loader-overlay";
+import {createOverlay} from "./overlay";
+
 const LOADER_CLASS_NAME = "better-library-thing-loader";
 
 const createLoader = () => {
-	const overlay = document.createElement("div");
-	overlay.className = OVERLAY_CLASS_NAME;
+	const overlay = createOverlay();
 
 	const loader = document.createElement("div");
 	loader.className = LOADER_CLASS_NAME;

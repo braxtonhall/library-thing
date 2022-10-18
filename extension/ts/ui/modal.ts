@@ -1,8 +1,10 @@
+import {createOverlay} from "./overlay";
+
 enum ModalColour {
-	GREEN = "green",
-	AMBER = "amber",
-	BLUE = "blue",
 	RED = "red",
+	AMBER = "amber",
+	GREEN = "green",
+	BLUE = "blue",
 	PURPLE = "purple",
 	GREY = "grey",
 }
@@ -15,16 +17,18 @@ interface ModalButton {
 
 interface ModalOptions {
 	text: string;
+	subText?: string;
 	buttons: ModalButton[];
 	onCancel: () => Promise<void>;
 	colour: ModalColour;
 }
 
-const OVERLAY_CLASS_NAME = "better-library-thing-modal-overlay";
 const MODAL_CLASS_NAME = "better-library-thing-modal";
-const MODAL_TEXT_CLASS_NAME = "better-library-thing-modal";
+const MODAL_TEXT_CLASS_NAME = "better-library-thing-modal-text-container";
+const MODAL_MAIN_TEXT_CLASS_NAME = "better-library-thing-modal-main-text";
+const MODAL_SUB_TEXT_CLASS_NAME = "better-library-thing-modal-sub-text";
 const MODAL_BUTTON_CLASS_NAME = "better-library-thing-modal-button";
-const MODAL_BUTTON_CONTAINER_CLASS_NAME = "better-library-thing-modal-button";
+const MODAL_BUTTON_CONTAINER_CLASS_NAME = "better-library-thing-modal-button-container";
 
 const createWithClass = <K extends keyof HTMLElementTagNameMap>(
 	tag: K,
@@ -46,18 +50,32 @@ const createButton =
 		return button;
 	};
 
-const createModal = ({text, buttons, onCancel, colour}: ModalOptions): void => {
+const createTextContainer = (text: string, subText?: string) => {
+	const container = createWithClass("div", MODAL_TEXT_CLASS_NAME);
+	container.append(createWithClass("span", MODAL_MAIN_TEXT_CLASS_NAME, text));
+	if (subText) {
+		container.append(createWithClass("p", MODAL_SUB_TEXT_CLASS_NAME, subText));
+	}
+	return container;
+};
+
+const createModal = ({text, subText, buttons, onCancel, colour}: ModalOptions): void => {
 	const exit = () => document.body.removeChild(overlay);
 
-	const overlay = createWithClass("div", OVERLAY_CLASS_NAME);
+	const overlay = createOverlay();
+	overlay.className += " modal";
 	overlay.addEventListener("click", () => onCancel().finally(exit));
+
 	const modal = createWithClass("div", `${MODAL_CLASS_NAME} ${colour}`);
-	const span = createWithClass("span", MODAL_TEXT_CLASS_NAME, text);
+	modal.addEventListener("click", (event) => event.stopPropagation());
+
+	const textContainer = createTextContainer(text, subText);
+
 	const buttonContainer = createWithClass("div", MODAL_BUTTON_CONTAINER_CLASS_NAME);
 	const buttonElements = buttons.map(createButton(exit));
 
 	buttonContainer.append(...buttonElements);
-	modal.append(span, buttonContainer);
+	modal.append(textContainer, buttonContainer);
 	overlay.append(modal);
 	document.body.appendChild(overlay);
 };

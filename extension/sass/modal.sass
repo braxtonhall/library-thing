@@ -1,0 +1,70 @@
+@use "colours"
+
+$modal-background-colour: colours.$white
+
+.better-library-thing-overlay.modal
+	cursor: pointer
+
+	.better-library-thing-modal
+		text-align: center
+		cursor: auto
+		background-color: $modal-background-colour
+		border-bottom: 10px solid
+		border-radius: 4px
+		width: 400px
+		padding: 30px
+		display: flex
+		flex-direction: column
+
+		&.red
+			border-bottom-color: colours.$red
+		&.amber
+			border-bottom-color: colours.$amber
+		&.green
+			border-bottom-color: colours.$green
+		&.blue
+			border-bottom-color: colours.$blue
+		&.purple
+			border-bottom-color: colours.$purple
+		&.grey
+			border-bottom-color: colours.$grey
+
+		.better-library-thing-modal-text-container
+			padding: 10px
+			.better-library-thing-modal-main-text
+				font-size: 20px
+			.better-library-thing-modal-sub-text
+				font-size: 15px
+				padding: 0 20px
+				margin-bottom: 0
+
+		.better-library-thing-modal-button-container
+			width: 100%
+			margin-top: 20px
+
+			.better-library-thing-modal-button
+				margin-bottom: 10px
+				color: colours.$white
+				height: 36px
+				border: none
+				border-radius: 2px
+				width: 100%
+				text-transform: uppercase
+				transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+				line-height: 36px
+				&:hover
+					filter: saturate(110%) brightness(110%)
+					cursor: pointer
+
+				&.red
+					background-color: colours.$red
+				&.amber
+					background-color: colours.$amber
+				&.green
+					background-color: colours.$green
+				&.blue
+					background-color: colours.$blue
+				&.purple
+					background-color: colours.$purple
+				&.grey
+					background-color: colours.$grey
