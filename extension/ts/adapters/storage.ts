@@ -6,8 +6,11 @@ import {makeCache} from "../util/cache";
 
 const {asyncCached, setCache} = makeCache<any>();
 
-const set = async <T>(key: string, value: T): Promise<T> =>
-	setCache(key, await chrome.storage.sync.set({[key]: value}));
+const set = async <T>(key: string, value: T): Promise<T> => {
+	const update = {[key]: setCache(key, value)};
+	await chrome.storage.sync.set(update);
+	return value;
+};
 
 const get = <T>(key: string): Promise<T> => {
 	return asyncCached(key, async () => {
