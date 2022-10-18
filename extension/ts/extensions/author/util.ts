@@ -14,18 +14,19 @@ const getAuthorTags = async (authorIds: string[], getAuthor: (uuid: string) => P
 	}
 };
 
-const getBookOnlyTags = (tags: string[]) => {
+const getBookOnlyTags = (tags: string[]): string[] => {
 	const authorTags = filterAuthorTags(tags);
 	return tags.filter((tag) => !authorTags.includes(tag));
 };
 
-const createSyncBookTags =
+const createBookEditor =
+	(filterBookTags: (tags: string[]) => string[]) =>
 	(getAuthor: (uuid: string) => Promise<AuthorRecord>, saveBook: (book: BookRecord) => Promise<void>) =>
 	async ({id, authorIds, tags: bookTags}: BookRecord): Promise<BookRecord> => {
 		try {
-			const bookOnlyTags = getBookOnlyTags(bookTags);
+			const keepBookTags = filterBookTags(bookTags);
 			const authorTags = filterAuthorTags(await getAuthorTags(authorIds, getAuthor));
-			const allTagsSet = new Set([...bookOnlyTags, ...authorTags]);
+			const allTagsSet = new Set([...keepBookTags, ...authorTags]);
 			const newBook = {id, authorIds, tags: [...allTagsSet]};
 			await saveBook(newBook);
 			return newBook;
@@ -35,4 +36,7 @@ const createSyncBookTags =
 		}
 	};
 
-export {createSyncBookTags, getAuthorTags};
+const createSyncBookTags = createBookEditor(getBookOnlyTags);
+const createPushBookTags = createBookEditor((tags) => tags);
+
+export {createSyncBookTags, createPushBookTags, getAuthorTags};

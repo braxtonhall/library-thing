@@ -1,9 +1,10 @@
 import Author from "../../../adapters/author";
 import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from "./authorUI";
 import {loaderOverlaid} from "../../../ui/loadingIndicator";
-import Book, {BookRecord} from "../../../adapters/book";
-import {showToast, ToastType} from "../../../ui/toast";
-import {createSyncBookTags} from "../util";
+import Book from "../../../adapters/book";
+import {createPushBookTags, createSyncBookTags} from "../util";
+import {getAuthorInfo, getTags} from "./util";
+import {onEditAllBooks} from "./editAllBooks";
 
 const onEdit = () => {
 	viewTagEditor();
@@ -18,69 +19,19 @@ const onSave = () => {
 	});
 };
 
-const getExpectedBookCount = () => {
-	const booksBy = document.querySelector("p.booksby > a")?.textContent ?? "";
-	const [countString] = booksBy.split(" ");
-	const count = Number(countString);
-	return isFinite(count) ? count : 0;
-};
+const onPush = onEditAllBooks({
+	onSuccess: (name) => `Pushed tags for ${name}`,
+	onWarning: () => "Failed to push tags for some books",
+	updateBook: createPushBookTags(Author.getAuthor, Book.saveBook),
+	onError: (name) => `Failed to push tags for ${name}`,
+});
 
-const getCoauthorBooks = async (): Promise<BookRecord[]> => {
-	const workLinks = Array.from(document.querySelectorAll(".li_have > a"));
-	const workHrefs = workLinks.map((link: HTMLLinkElement) => link.href);
-	const futureCoauthorBooks = workHrefs.map(Book.getBooksFromWork);
-	return (await Promise.all(futureCoauthorBooks)).flat();
-};
-
-const getBooks = async (uuid: string): Promise<BookRecord[]> => {
-	const books = await Book.getBooks({author: uuid});
-	if (books.length >= getExpectedBookCount()) {
-		return books;
-	} else {
-		return Book.removeDuplicates([...books, ...(await getCoauthorBooks())]);
-	}
-};
-
-const onSync = async () => {
-	const isTruthy = (book) => !!book;
-	const {uuid, name} = getAuthorInfo();
-	let allFailed, allPassed;
-
-	await loaderOverlaid(async () => {
-		try {
-			const books = await getBooks(uuid);
-			const futureSyncs = books.map(updateBook);
-			const syncs = await Promise.all(futureSyncs);
-			allFailed = !syncs.some(isTruthy);
-			allPassed = syncs.every(isTruthy);
-		} catch (error) {
-			console.error(error);
-			allFailed = true;
-			allPassed = false;
-		}
-	});
-
-	if (allFailed) {
-		showToast(`Failed to sync tags for ${name}`, ToastType.ERROR);
-	} else if (allPassed) {
-		showToast(`Synced tags for ${name}`, ToastType.SUCCESS);
-	} else {
-		showToast("Failed to sync tags for some books", ToastType.WARNING);
-	}
-};
-
-const updateBook = createSyncBookTags(Author.getAuthor, Book.saveBook);
-
-const getAuthorInfo = () => {
-	const [, , uuid] = window.location.pathname.split("/");
-	const name = document.querySelector("div.authorIdentification > h1").textContent;
-	return {name, uuid};
-};
-
-const getTags = async () => {
-	const author = await Author.getAuthor(getAuthorInfo().uuid);
-	author && insertTags(author.tags);
-};
+const onSync = onEditAllBooks({
+	onSuccess: (name) => `Synced tags for ${name}`,
+	onWarning: () => "Failed to sync tags for some books",
+	updateBook: createSyncBookTags(Author.getAuthor, Book.saveBook),
+	onError: (name) => `Failed to sync tags for ${name}`,
+});
 
 window.addEventListener("load", async () => {
 	if (document.querySelector("body.authorpage")) {
