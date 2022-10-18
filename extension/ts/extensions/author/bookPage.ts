@@ -8,6 +8,7 @@ const authorIds = () =>
 
 createFinderExtension<string[]>({
 	buttonName: "Pull Author Tags",
+	buttonImage: "img/book.png",
 	finder: () => getAuthorTags(authorIds(), Author.getAuthor),
 	onFail: () => "No author tags found for this book",
 	onSuccess: () => "Author tags synced",

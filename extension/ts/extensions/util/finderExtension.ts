@@ -16,6 +16,7 @@ interface CreateFinderExtensionOptions<T> {
 	textAreaId: string;
 	textAreaContainerId: string;
 	buttonName: string;
+	buttonImage?: string;
 	isSuccess: (response: T, input: FinderParameters) => boolean;
 	onSuccess: (response: T, input: FinderParameters) => string;
 	onFail: (response: T, input: FinderParameters) => string;
@@ -44,7 +45,9 @@ const createFinderExtension = <T>(options: CreateFinderExtensionOptions<T>) => {
 		const textAreaContainer = document.getElementById(options.textAreaContainerId);
 		const textArea = document.getElementById(options.textAreaId) as HTMLTextAreaElement; // not type safe -- lazy
 		if (textAreaContainer && textArea) {
-			textAreaContainer.appendChild(createButton(options.buttonName, "img/search.png", onClick(textArea)));
+			textAreaContainer.appendChild(
+				createButton(options.buttonName, options.buttonImage ?? "img/search.png", onClick(textArea))
+			);
 		}
 	});
 };
