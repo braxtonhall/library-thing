@@ -3,12 +3,12 @@ import "../../sass/modal.sass";
 import {createOverlay} from "./overlay";
 
 enum ModalColour {
-	RED = "red",
-	AMBER = "amber",
-	GREEN = "green",
-	BLUE = "blue",
-	PURPLE = "purple",
-	GREY = "grey",
+	RED = "vbl-red",
+	AMBER = "vbl-amber",
+	GREEN = "vbl-green",
+	BLUE = "vbl-blue",
+	PURPLE = "vbl-purple",
+	GREY = "vbl-grey",
 }
 
 interface ModalButton {
