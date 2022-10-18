@@ -1,6 +1,8 @@
 {
 	"compilerOptions": {
 		"strict": false,
+		"moduleResolution": "node",
+		"target": "ES2015",
 		"types": [
 			"chrome"
 		],

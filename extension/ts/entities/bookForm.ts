@@ -80,8 +80,10 @@ const forEachFormElement: ForEachFormElement = (callback: (element: Element) => 
 
 const listeners = new Map<FormRenderListener, () => void>();
 
+const encloseCallbackArguments = (callback: FormRenderListener) => () => callback(getForm(), forEachFormElement);
+
 const onFormRender = (callback: FormRenderListener): void => {
-	const listener = () => callback(getForm(), forEachFormElement);
+	const listener = encloseCallbackArguments(callback);
 	listeners.set(callback, listener);
 	window.addEventListener(FORM_RENDER_EVENT, listener);
 };
@@ -91,13 +93,8 @@ const offFormRender = (callback: FormRenderListener): void => {
 	listeners.delete(callback);
 };
 
-const oneFormRender = (callback: FormRenderListener): void => {
-	const realCallback = (form, forEachFormElement) => {
-		offFormRender(realCallback);
-		callback(form, forEachFormElement);
-	};
-	onFormRender(realCallback);
-};
+const oneFormRender = (callback: FormRenderListener): void =>
+	window.addEventListener(FORM_RENDER_EVENT, encloseCallbackArguments(callback), {once: true});
 
 /**
  * I hate that this lives here,

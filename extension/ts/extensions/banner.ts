@@ -1,4 +1,6 @@
-import Cookies from "../objects/cookies";
+import "../../sass/banner.sass";
+
+import Cookies from "../adapters/cookies";
 
 const LOGGED_IN_SATURATION = 1.5;
 const LOGGED_OUT_SATURATION = 0;

@@ -27,10 +27,29 @@
 	"background": {
 		"service_worker": "js/background.js"
 	},
-	"permissions": ["tabs"],
+	"permissions": ["tabs", "storage", "identity"],
+	"oauth2": {
+		"client_id": "1065384085182-ojd9eluba1ht2lrp6jnfmj295uihlhdc.apps.googleusercontent.com",
+		"scopes": [
+			"https://www.googleapis.com/auth/drive",
+			"https://www.googleapis.com/auth/drive.file",
+			"https://www.googleapis.com/auth/spreadsheets"
+		]
+	},
+	"key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkz1ANxPg/mvwlv/fn49lKqA85w3z4LSi6StTSZgQXXioU8Ij9FBR6oQCqrU3GH+5Zgjwd55m6ssf+db9Hvinr6pQJUtZXu1QvDET7BcukGka1YgKNLk2HyuhIxYAqa8u2PvUWgrX23DL1iiC6DAQ8y/ARzUbdUs7HA1CwzuWA4L5wsXBC4Cdrostrj4HntcyTVQjCp8kF1zoR5S1G4iLVDGWs/1SPGVJi804XoIBJs43+YzrOrTKQQcwnPI/MY3TO6Fg2ht7oSd4WjVrzVgkxwsuQHuL1zbq7vDSTKWuQgQdU390X9tbWFyzco6O1Lezd1LH5IEt8rCRctiFTXnwkQIDAQAB",
 	"web_accessible_resources": [
 		{
-			"resources": ["img/icon128.png", "img/favicon.ico", "img/search.png", "img/paste.png", "img/save.png"],
+			"resources": [
+				"img/icon128.png",
+				"img/favicon.ico",
+				"img/search.png",
+				"img/paste.png",
+				"img/save.png",
+				"img/edit.png",
+				"img/book.png",
+				"img/enchanted-book.png",
+				"img/vbl.png"
+			],
 			"matches": ["https://*.librarything.com/*"]
 		}
 	]

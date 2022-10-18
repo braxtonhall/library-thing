@@ -1,5 +1,5 @@
 import {showToast, ToastType} from "../ui/toast";
-import {getFormData, insertFormData, onFormRender} from "../objects/bookForm";
+import {getFormData, insertFormData, onFormRender} from "../entities/bookForm";
 import {createButton} from "../ui/button";
 
 const SAVE_DATA_KEY = "_save-data";

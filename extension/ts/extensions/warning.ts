@@ -1,4 +1,4 @@
-import {FormData, formDataEquals, getFormData, oneFormRender, onFormRender} from "../objects/bookForm";
+import {FormData, formDataEquals, getFormData, oneFormRender, onFormRender} from "../entities/bookForm";
 
 let storedFormData: FormData;
 

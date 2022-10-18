@@ -101,3 +101,4 @@ To contribute just make a PR into the `main` branch!
 - **`yarn lint`**: Lints the `extension/ts/` files.
 - **`yarn fix`**: Fixes all automatically fixable lint errors in the `extension/ts/` files.
 - **`yarn pretty`**: Prettifies the `extension/ts/` files.
+- **`yarn test`**: Runs all `*.spec.ts` files the `test/` directory.

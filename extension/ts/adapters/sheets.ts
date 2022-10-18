@@ -1,6 +1,8 @@
-import {googleFetch} from "./googleFetch";
+import {googleFetch} from "../services/google/googleFetch";
 
 const BASE_URL = "https://sheets.googleapis.com/v4/spreadsheets";
+
+type Range = `${string}!${string}` | `${string}!${string}:${string}`;
 
 interface ValueRange {
 	range: string;
@@ -27,7 +29,7 @@ export interface AppendSheetsDataResponse {
 	updates: UpdateSheetsDataResponse;
 }
 
-const readAllRowsFromSheet = (spreadsheetId: string, ranges: string[]): Promise<GetSheetsDataResponse | null> => {
+const readRanges = (spreadsheetId: string, ranges: string[]): Promise<GetSheetsDataResponse | null> => {
 	const queryParams = ranges.reduce((acc, range) => {
 		acc.append("ranges", range);
 		return acc;
@@ -83,6 +85,7 @@ const updateRowInSheet = (
 	);
 };
 
-//GoogleFetch parameterized
+const createRange = (sheet: string, from: string, to?: string): Range => `${sheet}!${from}${to ? `:${to}` : ""}`;
 
-export default {readRanges: readAllRowsFromSheet, appendRowToSheet, updateRowInSheet};
+export type {ValueRange};
+export default {readRanges, appendRowToSheet, updateRowInSheet, createRange};

@@ -1,9 +1,11 @@
-const OVERLAY_CLASS_NAME = "better-library-thing-loader-overlay";
+import "../../sass/loader.sass";
+
+import {createOverlay} from "./overlay";
+
 const LOADER_CLASS_NAME = "better-library-thing-loader";
 
-export const createLoader = () => {
-	const overlay = document.createElement("div");
-	overlay.className = OVERLAY_CLASS_NAME;
+const createLoader = () => {
+	const overlay = createOverlay();
 
 	const loader = document.createElement("div");
 	loader.className = LOADER_CLASS_NAME;
@@ -14,6 +16,17 @@ export const createLoader = () => {
 	return overlay;
 };
 
-export const removeLoader = (overlay: HTMLDivElement) => {
+const removeLoader = (overlay: HTMLDivElement) => {
 	document.body.removeChild(overlay);
 };
+
+const loaderOverlaid = async <T>(callback: () => Promise<T>): Promise<T> => {
+	const overlay = createLoader();
+	try {
+		return await callback();
+	} finally {
+		removeLoader(overlay);
+	}
+};
+
+export {loaderOverlaid};

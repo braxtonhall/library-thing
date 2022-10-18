@@ -1,3 +1,5 @@
+import "../../sass/toast.sass";
+
 const TOAST_ON_SCREEN_MS = 6000;
 const TOAST_TRANSITION_MS = 500;
 const TRANSITION_CLASS_NAME = "transitioning";
