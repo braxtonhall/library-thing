@@ -1,5 +1,5 @@
 import {showToast, ToastType} from "../../ui/toast";
-import {createLoader, removeLoader} from "../../ui/loadingIndicator";
+import {loaderOverlaid} from "../../ui/loadingIndicator";
 import {onFormRender} from "../../entities/bookForm";
 import {createButton} from "../../ui/button";
 import {Finder, FinderParameters} from "../../services/finder/finder";
@@ -28,9 +28,7 @@ const createFinderExtension = <T>(options: CreateFinderExtensionOptions<T>) => {
 		event.preventDefault();
 		const input = {author: findAuthor(), title: findTitle(), isbn: findISBN()};
 
-		const overlay = createLoader();
-		const response: T = await options.finder(input);
-		removeLoader(overlay);
+		const response: T = await loaderOverlaid(() => options.finder(input));
 
 		if (options.isSuccess(response, input)) {
 			const addition = options.transform(response, input);

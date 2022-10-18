@@ -1,6 +1,6 @@
 import Author from "../../../adapters/author";
 import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from "./authorUI";
-import {createLoader, removeLoader} from "../../../ui/loadingIndicator";
+import {loaderOverlaid} from "../../../ui/loadingIndicator";
 import Book, {BookRecord} from "../../../adapters/book";
 import {showToast, ToastType} from "../../../ui/toast";
 import {createSyncBookTags} from "../util";
@@ -9,13 +9,13 @@ const onEdit = () => {
 	viewTagEditor();
 };
 
-const onSave = async () => {
+const onSave = () => {
 	const tags = getInput().split(",");
-	const loader = createLoader();
-	const author = await Author.writeAuthor({...getAuthorInfo(), tags});
-	author && insertTags(author.tags);
-	viewExistingTags();
-	removeLoader(loader);
+	return loaderOverlaid(async () => {
+		const author = await Author.writeAuthor({...getAuthorInfo(), tags});
+		author && insertTags(author.tags);
+		viewExistingTags();
+	});
 };
 
 const getExpectedBookCount = () => {
@@ -43,21 +43,22 @@ const getBooks = async (uuid: string): Promise<BookRecord[]> => {
 
 const onSync = async () => {
 	const isTruthy = (book) => !!book;
-	const loader = createLoader();
 	const {uuid, name} = getAuthorInfo();
 	let allFailed, allPassed;
-	try {
-		const books = await getBooks(uuid);
-		const futureSyncs = books.map(updateBook);
-		const syncs = await Promise.all(futureSyncs);
-		allFailed = !syncs.some(isTruthy);
-		allPassed = syncs.every(isTruthy);
-	} catch (error) {
-		console.error(error);
-		allFailed = true;
-		allPassed = false;
-	}
-	removeLoader(loader);
+
+	await loaderOverlaid(async () => {
+		try {
+			const books = await getBooks(uuid);
+			const futureSyncs = books.map(updateBook);
+			const syncs = await Promise.all(futureSyncs);
+			allFailed = !syncs.some(isTruthy);
+			allPassed = syncs.every(isTruthy);
+		} catch (error) {
+			console.error(error);
+			allFailed = true;
+			allPassed = false;
+		}
+	});
 
 	if (allFailed) {
 		showToast(`Failed to sync tags for ${name}`, ToastType.ERROR);
