@@ -22,6 +22,7 @@ interface CreateFinderExtensionOptions<T> {
 	onFail: (response: T, input: FinderParameters) => string;
 	transform: (response: T, input: FinderParameters) => string;
 	delimiter: string;
+	condition?: () => Promise<boolean>;
 }
 
 const createFinderExtension = <T>(options: CreateFinderExtensionOptions<T>) => {
@@ -41,13 +42,15 @@ const createFinderExtension = <T>(options: CreateFinderExtensionOptions<T>) => {
 		}
 	};
 
-	onFormRender(() => {
-		const textAreaContainer = document.getElementById(options.textAreaContainerId);
-		const textArea = document.getElementById(options.textAreaId) as HTMLTextAreaElement; // not type safe -- lazy
-		if (textAreaContainer && textArea) {
-			textAreaContainer.appendChild(
-				createButton(options.buttonName, options.buttonImage ?? "img/search.png", onClick(textArea))
-			);
+	onFormRender(async () => {
+		if (!options.condition || (await options.condition())) {
+			const textAreaContainer = document.getElementById(options.textAreaContainerId);
+			const textArea = document.getElementById(options.textAreaId) as HTMLTextAreaElement; // not type safe -- lazy
+			if (textAreaContainer && textArea) {
+				textAreaContainer.appendChild(
+					createButton(options.buttonName, options.buttonImage ?? "img/search.png", onClick(textArea))
+				);
+			}
 		}
 	});
 };

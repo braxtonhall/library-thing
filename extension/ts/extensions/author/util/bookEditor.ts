@@ -1,18 +1,7 @@
-import {AuthorRecord} from "../../adapters/author";
-import {BookRecord} from "../../adapters/book";
-import {filterAuthorTags} from "../../util/filterAuthorTags";
-
-const getAuthorTags = async (authorIds: string[], getAuthor: (uuid: string) => Promise<AuthorRecord>) => {
-	try {
-		const futureAuthors = authorIds.map(getAuthor);
-		const authors = await Promise.all(futureAuthors);
-		const tags = authors.flatMap((author) => author?.tags ?? []);
-		return filterAuthorTags(tags);
-	} catch (error) {
-		console.error(error);
-		return [];
-	}
-};
+import {filterAuthorTags} from "../../../util/filterAuthorTags";
+import {AuthorRecord} from "../../../adapters/author";
+import {BookRecord} from "../../../adapters/book";
+import {getAuthorTags} from "./getAuthorTags";
 
 const getBookOnlyTags = (tags: string[]): string[] => {
 	const authorTags = filterAuthorTags(tags);
@@ -39,4 +28,4 @@ const createBookEditor =
 const createSyncBookTags = createBookEditor(getBookOnlyTags);
 const createPushBookTags = createBookEditor((tags) => tags);
 
-export {createSyncBookTags, createPushBookTags, getAuthorTags};
+export {createSyncBookTags, createPushBookTags};

@@ -2,11 +2,12 @@ import Author from "../../../adapters/author";
 import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from "./authorUI";
 import {loaderOverlaid} from "../../../ui/loadingIndicator";
 import Book from "../../../adapters/book";
-import {createPushBookTags, createSyncBookTags} from "../util";
+import {createPushBookTags, createSyncBookTags} from "../util/bookEditor";
 import {getAuthorInfo, getTags} from "./util";
 import {onEditAllBooks} from "./editAllBooks";
 import {createModal, ModalColour} from "../../../ui/modal";
 import {showToast, ToastType} from "../../../ui/toast";
+import {isAuthorized} from "../util/isAuthorized";
 
 const onEdit = () => {
 	viewTagEditor();
@@ -59,7 +60,7 @@ const onSync = async () => {
 };
 
 window.addEventListener("load", async () => {
-	if (document.querySelector("body.authorpage")) {
+	if (document.querySelector("body.authorpage") && (await isAuthorized())) {
 		const container = document.querySelector<HTMLTableCellElement>("table.authorContentTable td.middle");
 		if (container) {
 			appendUI(container, {onSync, onEdit, onSave, onPush});

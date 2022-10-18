@@ -1,4 +1,4 @@
-import {createPushBookTags, createSyncBookTags} from "../../extension/ts/extensions/author/util";
+import {createPushBookTags, createSyncBookTags} from "../../extension/ts/extensions/author/util/bookEditor";
 import {AuthorRecord} from "../../extension/ts/adapters/author";
 import {BookRecord} from "../../extension/ts/adapters/book";
 import {expect} from "chai";

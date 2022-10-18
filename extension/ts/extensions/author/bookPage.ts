@@ -1,6 +1,7 @@
 import {createFinderExtension} from "../util/finderExtension";
 import {getAuthorIdsFromLinks} from "../../util/getAuthorIdsFromLinks";
-import {getAuthorTags} from "./util";
+import {isAuthorized} from "./util/isAuthorized";
+import {getAuthorTags} from "./util/getAuthorTags";
 import Author from "../../adapters/author";
 
 const authorIds = () =>
@@ -17,4 +18,5 @@ createFinderExtension<string[]>({
 	textAreaId: "form_tags",
 	transform: (tags: string[]) => tags.join(", "),
 	delimiter: ", ",
+	condition: isAuthorized,
 });
