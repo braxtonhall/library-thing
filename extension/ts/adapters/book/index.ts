@@ -1,7 +1,7 @@
 import {BookRecord} from "./types";
-import {getBooks} from "./bookFromSearch";
-import {getBooksFromWork} from "./bookFromWork";
-import {getBook} from "./bookFromEdition";
+import {getBooks} from "./webscrapers/bookFromSearch";
+import {getBooksFromWork} from "./webscrapers/bookFromWork";
+import {getBook} from "./webscrapers/bookFromEdition";
 import {setCache} from "./bookCache";
 
 const POST_TAGS_URI = "/ajax_changetags2.php";

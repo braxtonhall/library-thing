@@ -1,8 +1,8 @@
-import {BookRecord} from "./types";
-import {getDocument} from "../../services/finder/util/getDocument";
+import {BookRecord} from "../types";
+import {getDocument} from "../../../services/finder/util/getDocument";
 import {getBook} from "./bookFromEdition";
 import {scrapeCopy} from "./scrapeCopy";
-import {syncCached} from "./bookCache";
+import {syncCached} from "../bookCache";
 
 const getCopy = (document: Document): BookRecord => {
 	const editionLink = document.querySelector<HTMLLinkElement>(

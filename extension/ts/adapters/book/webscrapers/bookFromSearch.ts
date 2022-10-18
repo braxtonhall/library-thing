@@ -1,7 +1,7 @@
-import {BookRecord} from "./types";
-import {getDocument} from "../../services/finder/util/getDocument";
-import {getAuthorIdsFromLinks} from "../../util/getAuthorIdsFromLinks";
-import {asyncCached} from "./bookCache";
+import {BookRecord} from "../types";
+import {getDocument} from "../../../services/finder/util/getDocument";
+import {getAuthorIdsFromLinks} from "../../../util/getAuthorIdsFromLinks";
+import {asyncCached} from "../bookCache";
 
 const SEARCH_URL = "https://www.librarything.com/catalog_bottom.php";
 

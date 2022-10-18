@@ -1,4 +1,4 @@
-import {getAuthorIdsFromLinks} from "../../util/getAuthorIdsFromLinks";
+import {getAuthorIdsFromLinks} from "../../../util/getAuthorIdsFromLinks";
 
 const getTags = (document: Document): string[] => {
 	const collection = document.querySelectorAll(
