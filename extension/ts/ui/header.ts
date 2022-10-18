@@ -1,14 +1,3 @@
-/*
-*
-<div id="u_c19a6a5e" class="quickedit light">
-	<div class="nav">
-		<span class="navInfoTitle" style="margin-left: .75em;">
-			Your books
-		</span>
-	</div>
-</div>
-* */
-
 const createInfo = (text: string) => {
 	const info = document.createElement("div");
 	info.className = "navInfoTitle";
