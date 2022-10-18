@@ -56,11 +56,11 @@ const onEditAllBooks =
 		});
 
 		if (allFailed) {
-			showToast(`Failed to sync tags for ${name}`, ToastType.ERROR);
+			showToast(onError(name), ToastType.ERROR);
 		} else if (allPassed) {
-			showToast(`Synced tags for ${name}`, ToastType.SUCCESS);
+			showToast(onSuccess(name), ToastType.SUCCESS);
 		} else {
-			showToast("Failed to sync tags for some books", ToastType.WARNING);
+			showToast(onWarning(name), ToastType.WARNING);
 		}
 	};
 
