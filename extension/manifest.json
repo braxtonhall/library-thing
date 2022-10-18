@@ -47,6 +47,7 @@
 				"img/save.png",
 				"img/edit.png",
 				"img/book.png",
+				"img/enchanted-book.png",
 				"img/vbl.png"
 			],
 			"matches": ["https://*.librarything.com/*"]

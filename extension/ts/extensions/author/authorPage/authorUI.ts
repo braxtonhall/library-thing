@@ -47,7 +47,7 @@ const createCurrentTagsButtons = ({onPush, onSync, onEdit}: ButtonHandlers) => {
 	const container = document.createElement("div");
 	container.id = TAG_LIST_BUTTON_CONTAINER_ID;
 	container.append(createTagButton("Push", "img/book.png", onPush));
-	container.append(createTagButton("Sync", "img/book.png", onSync));
+	container.append(createTagButton("Sync", "img/enchanted-book.png", onSync));
 	container.append(createTagButton("Edit", "img/edit.png", onEdit));
 	return container;
 };
