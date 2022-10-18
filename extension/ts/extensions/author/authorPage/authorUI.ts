@@ -9,6 +9,13 @@ const TAG_LIST_BUTTON_CONTAINER_ID = "vbl-tag-list-buttons";
 const TAG_LIST_CONTAINER_ID = "vbl-tag-list-container";
 const TAG_INPUT_CONTAINER_ID = "vbl-tag-input-container";
 
+interface ButtonHandlers {
+	onPush: () => void;
+	onSync: () => void;
+	onEdit: () => void;
+	onSave: () => void;
+}
+
 const createTagLink = (tag: string) => {
 	const link = document.createElement("a");
 	link.innerText = tag;
@@ -36,27 +43,28 @@ const createEditTagsSection = (onSave: () => void) => {
 	return section;
 };
 
-const createCurrentTagsButtons = (onSync: () => void, onEdit: () => void) => {
+const createCurrentTagsButtons = ({onPush, onSync, onEdit}: ButtonHandlers) => {
 	const container = document.createElement("div");
 	container.id = TAG_LIST_BUTTON_CONTAINER_ID;
+	container.append(createTagButton("Push", "img/book.png", onPush));
 	container.append(createTagButton("Sync", "img/book.png", onSync));
 	container.append(createTagButton("Edit", "img/edit.png", onEdit));
 	return container;
 };
 
-const createCurrentTagsSection = (onSync: () => void, onEdit: () => void) => {
+const createCurrentTagsSection = (handlers: ButtonHandlers) => {
 	const section = createSection();
 	section.id = TAG_LIST_CONTAINER_ID;
 	section.innerHTML = `<span id="${TAG_LIST_ID}"></span>`;
-	const buttons = createCurrentTagsButtons(onSync, onEdit);
+	const buttons = createCurrentTagsButtons(handlers);
 	section.append(buttons);
 	return section;
 };
 
-const appendUI = (container: Element, onSync: () => void, onEdit: () => void, onSave: () => void) => {
+const appendUI = (container: Element, handlers: ButtonHandlers) => {
 	const header = createHeader("Tags");
-	const currentTagsSection = createCurrentTagsSection(onSync, onEdit);
-	const editTagsSection = createEditTagsSection(onSave);
+	const currentTagsSection = createCurrentTagsSection(handlers);
+	const editTagsSection = createEditTagsSection(handlers.onSave);
 	container.insertBefore(editTagsSection, container.children[2]);
 	container.insertBefore(currentTagsSection, editTagsSection);
 	container.insertBefore(header, currentTagsSection);

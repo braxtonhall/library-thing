@@ -37,7 +37,7 @@ window.addEventListener("load", async () => {
 	if (document.querySelector("body.authorpage")) {
 		const container = document.querySelector<HTMLTableCellElement>("table.authorContentTable td.middle");
 		if (container) {
-			appendUI(container, onSync, onEdit, onSave);
+			appendUI(container, {onSync, onEdit, onSave, onPush});
 			await getTags();
 		}
 	}
