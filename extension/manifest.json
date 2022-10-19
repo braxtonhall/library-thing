@@ -45,9 +45,12 @@
 				"img/search.png",
 				"img/paste.png",
 				"img/save.png",
-				"img/edit.png",
+				"img/edit.gif",
+				"img/cross.gif",
 				"img/book.png",
 				"img/enchanted-book.png",
+				"img/written-book.png",
+				"img/book-and-quill.png",
 				"img/vbl.png"
 			],
 			"matches": ["https://*.librarything.com/*"]

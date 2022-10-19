@@ -1,4 +1,4 @@
-import Author from "../../../adapters/author";
+import Author, {AuthorRecord} from "../../../adapters/author";
 import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from "./authorUI";
 import {loaderOverlaid} from "../../../ui/loadingIndicator";
 import Book from "../../../adapters/book";
@@ -8,19 +8,22 @@ import {onEditAllBooks} from "./editAllBooks";
 import {createModal, ModalColour} from "../../../ui/modal";
 import {showToast, ToastType} from "../../../ui/toast";
 import {isAuthorized} from "../util/isAuthorized";
+import {onPull} from "./pull";
 
 const onEdit = () => {
 	viewTagEditor();
 };
 
-const onSave = () => {
-	const tags = getInput().split(",");
-	return loaderOverlaid(async () => {
-		const author = await Author.writeAuthor({...getAuthorInfo(), tags});
+const onBackToExistingTags = (getAuthor: () => Promise<AuthorRecord>) => () =>
+	loaderOverlaid(async () => {
+		const author = await getAuthor();
 		author && insertTags(author.tags);
 		viewExistingTags();
 	});
-};
+
+const onSave = onBackToExistingTags(() => Author.writeAuthor({...getAuthorInfo(), tags: getInput()}));
+
+const onCancel = onBackToExistingTags(() => Author.getAuthor(getAuthorInfo().uuid));
 
 const onPush = onEditAllBooks({
 	onSuccess: (name) => `Pushed tags for ${name}`,
@@ -40,8 +43,9 @@ const userIsSure = (): Promise<boolean> =>
 	new Promise<boolean>((resolve) => {
 		createModal({
 			text: "Are you sure you want to Sync?",
-			subText:
+			subText: [
 				"Syncing will remove all author tags not associated with any author of a book. Ensure that your tags are complete!",
+			],
 			onCancel: async () => resolve(false),
 			colour: ModalColour.PURPLE,
 			buttons: [
@@ -63,7 +67,7 @@ window.addEventListener("load", async () => {
 	if (document.querySelector("body.authorpage") && (await isAuthorized())) {
 		const container = document.querySelector<HTMLTableCellElement>("table.authorContentTable td.middle");
 		if (container) {
-			appendUI(container, {onSync, onEdit, onSave, onPush});
+			appendUI(container, {onSync, onEdit, onSave, onPush, onPull, onCancel});
 			await getTags();
 		}
 	}

@@ -13,15 +13,15 @@ enum ModalColour {
 
 interface ModalButton {
 	text: string;
-	onClick: () => Promise<void>;
+	onClick?: () => Promise<void>;
 	colour: ModalColour;
 }
 
 interface ModalOptions {
 	text: string;
-	subText?: string;
+	subText?: string[];
 	buttons: ModalButton[];
-	onCancel: () => Promise<void>;
+	onCancel?: () => Promise<void>;
 	colour: ModalColour;
 }
 
@@ -48,17 +48,22 @@ const createButton =
 	({text, onClick, colour}: ModalButton) => {
 		const button = createWithClass("button", `${MODAL_BUTTON_CLASS_NAME} ${colour}`);
 		button.innerText = text;
-		button.addEventListener("click", async () => onClick().finally(exit));
+		addOnClick(button, exit, onClick);
 		return button;
 	};
 
-const createTextContainer = (text: string, subText?: string) => {
+const createTextContainer = (text: string, subTexts?: string[]) => {
 	const container = createWithClass("div", MODAL_TEXT_CLASS_NAME);
 	container.append(createWithClass("span", MODAL_MAIN_TEXT_CLASS_NAME, text));
-	if (subText) {
-		container.append(createWithClass("p", MODAL_SUB_TEXT_CLASS_NAME, subText));
+	if (subTexts && subTexts.length > 0) {
+		container.append(...subTexts.map((subText) => createWithClass("p", MODAL_SUB_TEXT_CLASS_NAME, subText)));
 	}
 	return container;
+};
+
+const addOnClick = (element: HTMLElement, exit: () => void, onClick?: () => Promise<void>) => {
+	const callback = onClick ?? (() => Promise.resolve());
+	element.addEventListener("click", () => callback().finally(exit));
 };
 
 const createModal = ({text, subText, buttons, onCancel, colour}: ModalOptions): void => {
@@ -66,7 +71,7 @@ const createModal = ({text, subText, buttons, onCancel, colour}: ModalOptions): 
 
 	const overlay = createOverlay();
 	overlay.className += " modal";
-	overlay.addEventListener("click", () => onCancel().finally(exit));
+	addOnClick(overlay, exit, onCancel);
 
 	const modal = createWithClass("div", `${MODAL_CLASS_NAME} ${colour}`);
 	modal.addEventListener("click", (event) => event.stopPropagation());

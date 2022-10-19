@@ -1,5 +1,7 @@
 import Author from "../../../adapters/author";
 import {insertTags} from "./authorUI";
+import {filterAuthorTags} from "../../../util/filterAuthorTags";
+import {BookRecord} from "../../../adapters/book";
 
 const getAuthorInfo = () => {
 	const [, , uuid] = window.location.pathname.split("/");
@@ -12,4 +14,7 @@ const getTags = async () => {
 	author && insertTags(author.tags);
 };
 
-export {getAuthorInfo, getTags};
+const authorTagsFromBooksWhere = (books: BookRecord[], where: (book: BookRecord) => boolean) =>
+	filterAuthorTags(books.filter(where).flatMap((book) => book.tags));
+
+export {getAuthorInfo, getTags, authorTagsFromBooksWhere};
