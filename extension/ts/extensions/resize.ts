@@ -25,7 +25,7 @@ interface Size {
 }
 
 interface SizeData {
-	[id: string]: {width: string; height: string};
+	[id: string]: Size;
 }
 
 const observer = new ResizeObserver((entries) =>
