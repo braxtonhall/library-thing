@@ -1,11 +1,19 @@
 import {ForEachFormElement, onFormRender} from "../entities/bookForm";
 import {debounce} from "../util/debounce";
+import {getLastFormRender} from "../util/lastFormRender";
+
+/**
+ * This file is dedicated to saving the sizes of the text areas in the book form
+ * If you double-click the text area while it is REALLY small, or if you don't
+ * use the website for a day, then it will go back to normal
+ */
 
 const RESIZE_EVENT = "resize";
 const SIZE_LOCAL_STORAGE_KEY = "_resize-data";
 const MIN_HEIGHT = 10;
 const MIN_WIDTH = 40;
 const RESIZE_DEBOUNCE_MS = 10;
+const ONE_DAY_MS = 86400000;
 
 interface SizeRecord extends Size {
 	id: string;
@@ -78,6 +86,10 @@ const ifTextArea =
 	(element: Element): void =>
 		element.tagName.toUpperCase() === "TEXTAREA" && callback(element as HTMLTextAreaElement);
 
-onFormRender((form: HTMLElement, forEachElement: ForEachFormElement) =>
-	forEachElement(ifTextArea(mutateTextArea(getSizeData())))
-);
+const beenAWhile = () => getLastFormRender() + ONE_DAY_MS < Date.now();
+const clearSizeData = () => localStorage.setItem(SIZE_LOCAL_STORAGE_KEY, "{}");
+
+onFormRender((form: HTMLElement, forEachElement: ForEachFormElement) => {
+	beenAWhile() && clearSizeData();
+	forEachElement(ifTextArea(mutateTextArea(getSizeData())));
+});
