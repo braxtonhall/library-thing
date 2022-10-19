@@ -5,3 +5,4 @@ import "./extensions/warning";
 import "./extensions/version";
 import "./extensions/summary";
 import "./extensions/author";
+import "./extensions/resize";

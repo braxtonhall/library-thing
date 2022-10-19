@@ -1,4 +1,5 @@
-type ForEachFormElement = (callback: (element: Element) => void) => void;
+type FormAreaElement = HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement;
+type ForEachFormElement = (callback: (element: FormAreaElement) => void) => void;
 type FormRenderListener = (form: HTMLElement, forEachElement: ForEachFormElement) => void;
 type FormData = Record<string, Record<string, any>>;
 
@@ -11,7 +12,8 @@ const getElementsByTag = (parent: HTMLElement) => (tag: string) => Array.from(pa
 
 const getElementsByTags = (parent: HTMLElement, tags: string[]) => tags.flatMap(getElementsByTag(parent));
 
-const getFormElements = (): Element[] => getElementsByTags(getForm(), FORM_DATA_ELEMENT_TAGS);
+const getFormElements = (): FormAreaElement[] =>
+	getElementsByTags(getForm(), FORM_DATA_ELEMENT_TAGS) as FormAreaElement[];
 
 // This is relying on the fact that when the edit form is available, the html matches this selector,
 // and fails to match in all other cases. This IS brittle. If LibraryThing changes
@@ -75,7 +77,7 @@ const ensureVisible = (element: Element) => {
 	}
 };
 
-const forEachFormElement: ForEachFormElement = (callback: (element: Element) => void): void =>
+const forEachFormElement: ForEachFormElement = (callback: (element: FormAreaElement) => void): void =>
 	getFormElements().forEach(callback);
 
 const listeners = new Map<FormRenderListener, () => void>();
