@@ -5,7 +5,7 @@ import {WorkerKind} from "../workers/types";
 const RELEASES_URL = "https://api.github.com/repos/braxtonhall/library-thing/releases/latest";
 const DEFAULT_VERSION = "0.0.0";
 const ONE_DAY_MS = 86400000;
-const LAST_CHECKED_KEY = "__last-checked-version";
+const LAST_CHECKED_KEY = "_last-checked-version";
 
 interface Releases {
 	tag_name?: string;
