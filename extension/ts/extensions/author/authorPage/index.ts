@@ -1,4 +1,4 @@
-import Author from "../../../adapters/author";
+import Author, {AuthorRecord} from "../../../adapters/author";
 import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from "./authorUI";
 import {loaderOverlaid} from "../../../ui/loadingIndicator";
 import Book from "../../../adapters/book";
@@ -14,12 +14,16 @@ const onEdit = () => {
 	viewTagEditor();
 };
 
-const onSave = () =>
+const onBackToExistingTags = (getAuthor: () => Promise<AuthorRecord>) => () =>
 	loaderOverlaid(async () => {
-		const author = await Author.writeAuthor({...getAuthorInfo(), tags: getInput()});
+		const author = await getAuthor();
 		author && insertTags(author.tags);
 		viewExistingTags();
 	});
+
+const onSave = onBackToExistingTags(() => Author.writeAuthor({...getAuthorInfo(), tags: getInput()}));
+
+const onCancel = onBackToExistingTags(() => Author.getAuthor(getAuthorInfo().uuid));
 
 const onPush = onEditAllBooks({
 	onSuccess: (name) => `Pushed tags for ${name}`,
@@ -63,7 +67,7 @@ window.addEventListener("load", async () => {
 	if (document.querySelector("body.authorpage") && (await isAuthorized())) {
 		const container = document.querySelector<HTMLTableCellElement>("table.authorContentTable td.middle");
 		if (container) {
-			appendUI(container, {onSync, onEdit, onSave, onPush, onPull});
+			appendUI(container, {onSync, onEdit, onSave, onPush, onPull, onCancel});
 			await getTags();
 		}
 	}

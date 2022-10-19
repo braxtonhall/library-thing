@@ -15,6 +15,7 @@ interface ButtonHandlers {
 	onEdit: () => void;
 	onSave: () => void;
 	onPull: () => void;
+	onCancel: () => void;
 }
 
 const createTagLink = (tag: string) => {
@@ -36,12 +37,13 @@ const createSection = () => {
 	return section;
 };
 
-const createEditTagsSection = ({onSave, onPull}: ButtonHandlers) => {
+const createEditTagsSection = ({onSave, onPull, onCancel}: ButtonHandlers) => {
 	const section = createSection();
 	section.id = TAG_INPUT_CONTAINER_ID;
 	section.innerHTML = `<input id="${TAG_INPUT_ID}" class="bookEditInput">`;
 	section.append(createTagButton("Pull", "img/book.png", onPull));
 	section.append(createTagButton("Save", "img/save.png", onSave));
+	section.append(createTagButton("Cancel", "img/cross.gif", onCancel));
 	return section;
 };
 
@@ -50,7 +52,7 @@ const createCurrentTagsButtons = ({onPush, onSync, onEdit}: ButtonHandlers) => {
 	container.id = TAG_LIST_BUTTON_CONTAINER_ID;
 	container.append(createTagButton("Push", "img/book.png", onPush));
 	container.append(createTagButton("Sync", "img/enchanted-book.png", onSync));
-	container.append(createTagButton("Edit", "img/edit.png", onEdit));
+	container.append(createTagButton("Edit", "img/edit.gif", onEdit));
 	return container;
 };
 
