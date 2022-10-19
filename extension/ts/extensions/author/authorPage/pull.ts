@@ -59,7 +59,7 @@ const onPull = async () =>
 		const [author, books] = await Promise.all([Author.getAuthor(uuid), Book.getBooks({author: uuid})]);
 		const singleAuthorTags = authorTagsFromBooksWhere(books, (book) => book.authorIds.length === 1);
 		const multiAuthorTags = authorTagsFromBooksWhere(books, (book) => book.authorIds.length !== 1);
-		const certainTags = new Set([...getInput(), ...author.tags, ...singleAuthorTags]);
+		const certainTags = new Set([...getInput(), ...(author?.tags ?? []), ...singleAuthorTags]);
 		const uncertainTags = new Set(multiAuthorTags.filter((tag) => !certainTags.has(tag)));
 		insertTags([...certainTags]);
 		return {certainTags, uncertainTags, name};
