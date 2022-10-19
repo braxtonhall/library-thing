@@ -1,7 +1,11 @@
 import {ForEachFormElement, onFormRender} from "../entities/bookForm";
+import {debounce} from "../util/debounce";
 
 const RESIZE_EVENT = "resize";
 const SIZE_LOCAL_STORAGE_KEY = "_resize-data";
+const MIN_HEIGHT = 10;
+const MIN_WIDTH = 40;
+const RESIZE_DEBOUNCE_MS = 10;
 
 interface SizeRecord extends Size {
 	id: string;
@@ -44,16 +48,21 @@ const saveSizeData = (sizeData: SizeData): void =>
 
 const addListener = (element: HTMLTextAreaElement): void => {
 	observer.observe(element);
-	element.addEventListener("resize", handleResize);
+	element.addEventListener("resize", () => handleResize(element));
+	element.addEventListener("dblclick", () => handleUnsetSize(element));
 };
 
-const handleResize = (event: Event): void => {
-	const element = event.target as HTMLTextAreaElement;
-	if (element && element.id && (element.style?.width || element.style?.height)) {
-		const width = element.style?.width ?? "";
-		const height = element.style?.height ?? "";
-		const id = element.id;
-		saveSize({id, width, height});
+const handleResize = debounce((element: HTMLTextAreaElement): void => {
+	const width = element.style?.width ?? "";
+	const height = element.style?.height ?? "";
+	const id = element.id;
+	saveSize({id, width, height});
+}, RESIZE_DEBOUNCE_MS);
+
+const handleUnsetSize = (element: HTMLTextAreaElement): void => {
+	if (element.clientHeight < MIN_HEIGHT || element.clientWidth < MIN_WIDTH) {
+		element.style.width = "";
+		element.style.height = "";
 	}
 };
 
