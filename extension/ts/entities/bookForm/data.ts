@@ -1,12 +1,12 @@
 import {FormData} from "./types";
 import {getFormElements} from "./util";
-import {ensureAuthorInputCount, show} from "./ui";
+import {ensureRolesInputCount, show} from "./ui";
 
 const COLLECTIONS_ID_PREFIX = "collection_u_";
 const COLLECTIONS_KEY = "___collections_";
 
 const FORM_META_DATA_KEY = "___metadata_";
-const AUTHOR_INPUT_COUNT_KEY = "___author-count_";
+const ROLES_INPUT_COUNT_KEY = "___roles-count_";
 
 const extractSaveDataFor = (targetElement: Element, formData: FormData) => {
 	if (targetElement.id.startsWith(COLLECTIONS_ID_PREFIX)) {
@@ -19,9 +19,10 @@ const extractSaveDataFor = (targetElement: Element, formData: FormData) => {
 
 // form metadata is data ABOUT the form. this could be extended in the future,
 // like ... for physical description
-const getFormMetadata = (): FormData => ({[FORM_META_DATA_KEY]: {[AUTHOR_INPUT_COUNT_KEY]: getAuthorInputCount()}});
+const getFormMetadata = (): FormData => ({[FORM_META_DATA_KEY]: {[ROLES_INPUT_COUNT_KEY]: getRolesInputCount()}});
 
-const getAuthorInputCount = (): number => document.querySelectorAll("input.bookEditInput.bookPersonName").length;
+// We subtract one to omit the main author, who is not part of the roles section
+const getRolesInputCount = (): number => document.querySelectorAll("input.bookEditInput.bookPersonName").length - 1;
 
 const getFormData = () =>
 	getFormElements().reduce((saveData: FormData, element: any) => {
@@ -43,7 +44,7 @@ const getFormData = () =>
 	}, getFormMetadata());
 
 const insertFormData = (saveData: FormData) => {
-	ensureAuthorInputCount(saveData?.[FORM_META_DATA_KEY]?.[AUTHOR_INPUT_COUNT_KEY] ?? 0);
+	ensureRolesInputCount(saveData?.[FORM_META_DATA_KEY]?.[ROLES_INPUT_COUNT_KEY] ?? 0);
 	getFormElements().forEach((element: any) => {
 		// We can't change hidden elements because LibraryThing relies
 		// on hidden form inputs to send additional, form-specific metadata
