@@ -5,9 +5,11 @@ import {asyncCached} from "../bookCache";
 
 const SEARCH_URL = "https://www.librarything.com/catalog_bottom.php";
 
+const BASE_QUERY = {viewstyle: "4", collection: "-1"};
+
 const getSearchURL = (query: Record<string, string>) => {
 	const url = new URL(SEARCH_URL);
-	url.search = new URLSearchParams(query).toString();
+	url.search = new URLSearchParams({...query, ...BASE_QUERY}).toString();
 	return url.toString();
 };
 

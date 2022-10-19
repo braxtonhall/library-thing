@@ -21,7 +21,7 @@ interface ButtonHandlers {
 const createTagLink = (tag: string) => {
 	const link = document.createElement("a");
 	link.innerText = tag;
-	link.href = `/catalog/?tag=${encodeURI(tag)}`;
+	link.href = `/catalog/&tag=${encodeURIComponent(tag)}`;
 	return link;
 };
 
