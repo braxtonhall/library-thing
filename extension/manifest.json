@@ -48,6 +48,8 @@
 				"img/edit.png",
 				"img/book.png",
 				"img/enchanted-book.png",
+				"img/written-book.png",
+				"img/book-and-quill.png",
 				"img/vbl.png"
 			],
 			"matches": ["https://*.librarything.com/*"]
