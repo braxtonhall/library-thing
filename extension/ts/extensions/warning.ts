@@ -1,4 +1,4 @@
-import {FormData, formDataEquals, getFormData, oneFormRender, onFormRender} from "../entities/bookForm";
+import {FormData, formDataEquals, formExists, getFormData, oneFormRender, onFormRender} from "../entities/bookForm";
 
 let storedFormData: FormData;
 
@@ -14,7 +14,7 @@ const addUndoEditListener = () =>
 	].forEach((element) => element?.addEventListener("click", undoEdits));
 
 const onExit = (event: Event) => {
-	if (!formDataEquals(storedFormData, getFormData())) {
+	if (formExists() && !formDataEquals(storedFormData, getFormData())) {
 		event.returnValue = true;
 		return (
 			"It looks like you have been editing something. " + "If you leave before saving, your changes will be lost."
