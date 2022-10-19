@@ -41,6 +41,13 @@ const editRoleHTML = (n: number) => `
 	<option value="xxxOTHERxxx">Other...</option>
 </select>`;
 
+/**
+ * In order for us to paste in `count` number of authors, we need to have `count` number of input fields,
+ * and they might not exist because users can dynamically add more fields to a form.
+ * SO, `count` times, we check if an input exists. If it doesn't, we create a new one
+ * This only works because the ids for these elements are predictable
+ * @param count
+ */
 const ensureRolesInputCount = (count: number): void => {
 	const parent = document.getElementById("bookedit_roles");
 	const control = parent.querySelector("#addPersonControl");
