@@ -23,11 +23,18 @@ While on the Edit book page, a Copy and Paste button appear to allow you to Copy
 ### Find PDF
 
 While Editing a book, click on the `Find PDF` to search the internet for PDFs of the book.
-Results are pulled from z-lib and libgen, with more websites to be added in the future.
+Results are pulled from z-lib, libgen, and The Internet Archive, with more websites to be added in the future.
 
 <img src="img/pdf.gif" alt="find pdf flow gif">
 
 <sub>Please make sure to check the links! They may not be perfect!</sub>
+
+### Find Summary
+
+While Editing a book, click on the `Find Summary` to search the internet for summaries of the book.
+Results are pulled from Goodreads and Amazon, with more websites to be added in the future.
+
+<sub>Please make sure to review the summaries! They may not be perfect!</sub>
 
 ### VBL Banner
 
