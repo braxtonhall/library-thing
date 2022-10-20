@@ -36,11 +36,20 @@ Results are pulled from Goodreads and Amazon, with more websites to be added in 
 
 <sub>Please make sure to review the summaries! They may not be perfect!</sub>
 
+### Author Pages (Google Chrome only!)
+
+Edit an author's tags from the Author page!
+
+TODO: describe this in more detail in its own document in the docs/ directory, and link to it here.
+
 ### VBL Banner
 
 When the extension is used, the LibraryThing banner is replaced with a [Vancouver Black Library](https://www.vancouverblacklibrary.org/), so you can discern whether the extension is active at a glance.
 
 <img src="img/banner.png" alt="banner">
+
+### Misc. Improvements
+- **Resizes**: When you resize a text area in a book form, the new size saved for the next time you visit!
 
 ## Installation
 
