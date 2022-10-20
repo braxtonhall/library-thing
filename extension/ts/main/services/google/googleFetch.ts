@@ -14,7 +14,7 @@ type GoogleFetch = <T>(...args: Parameters<typeof fetch>) => Promise<T | null>;
 const appendAuthorization = async (init?: RequestInit): Promise<RequestInit> => {
 	init ??= {};
 	init.headers ??= {};
-	const token = await invokeWorker(WorkerKind.Authorize, null);
+	const token = await invokeWorker(WorkerKind.Authorize, false);
 	init = {...init, headers: {...init.headers, Authorization: `Bearer ${token}`}};
 	return init;
 };
