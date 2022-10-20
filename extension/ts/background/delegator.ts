@@ -1,4 +1,4 @@
-import {TypedWorkerRequest, WorkerKind, WorkerRequest, Workers, Worker, WorkerStatus} from "./types";
+import {TypedWorkerRequest, WorkerKind, WorkerRequest, Workers, Worker, WorkerStatus} from "../common/workers/types";
 import {get} from "./impl/request";
 import {authorize} from "./impl/authorize";
 

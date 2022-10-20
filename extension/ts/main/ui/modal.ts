@@ -1,4 +1,4 @@
-import "../../sass/modal.sass";
+import "../../../sass/modal.sass";
 
 import {createOverlay} from "./overlay";
 

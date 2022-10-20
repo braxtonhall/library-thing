@@ -4,9 +4,9 @@ import {Configuration} from "webpack";
 const config: Configuration = {
 	context: path.join(__dirname, '/extension'),
 	entry: {
-		'bundle': './ts/index.ts',
+		'bundle': './ts/main/index.ts',
 		'options': './ts/options/index.ts',
-		'background': './ts/workers/delegator.ts',
+		'background': './ts/background/delegator.ts',
 	},
 	output: {
 		path: path.join(__dirname, '/extension/js'),

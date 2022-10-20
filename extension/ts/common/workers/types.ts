@@ -1,5 +1,5 @@
-import {GetParameters, GetResponse} from "./impl/request";
-import {AuthorizeParameters, AuthorizeResponse} from "./impl/authorize";
+import {GetParameters, GetResponse} from "../../background/impl/request";
+import {AuthorizeParameters, AuthorizeResponse} from "../../background/impl/authorize";
 
 enum WorkerKind {
 	Get = "get",

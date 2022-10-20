@@ -1,4 +1,4 @@
-import "../../sass/loader.sass";
+import "../../../sass/loader.sass";
 
 import {createOverlay} from "./overlay";
 
