@@ -3,7 +3,7 @@
 body
 	font-size: 15px
 
-#save-button
+.log-button
 	margin-top: 20px
 	background-image: linear-gradient(140deg, colours.$purple 0%, colours.$amber 50%, colours.$red 75%)
 	color: colours.$white
@@ -16,9 +16,13 @@ body
 	line-height: 36px
 	filter: saturate(0)
 
-	&:hover
-		filter: saturate(120%)
-		cursor: pointer
+	&:disabled
+		display: none
+
+	&:not(:disabled)
+		&:hover
+			filter: saturate(120%)
+			cursor: pointer
 
 .title
 	display: inline-block
@@ -29,13 +33,9 @@ body
 	margin-bottom: 1em
 	background: colours.$light-grey
 
-.data-input
-	margin-top: 0.5em
-	width: 98%
-
-.data-entry
-	padding: 0.5em
-	margin-bottom: 1em
+	.label
+		padding: 0.5em
+		margin-bottom: 0
 
 .footer
 	text-align: center

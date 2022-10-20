@@ -1,10 +1,11 @@
 import {TypedWorkerRequest, WorkerKind, WorkerRequest, Workers, Worker, WorkerStatus} from "../common/workers/types";
 import {get} from "./workers/request";
-import {authorize} from "./workers/authorize";
+import {authorize, deAuthorize} from "./workers/authorize";
 
 const workers: Workers = {
 	[WorkerKind.Get]: get,
 	[WorkerKind.Authorize]: authorize,
+	[WorkerKind.DeAuthorize]: deAuthorize,
 };
 
 chrome.runtime.onMessage.addListener(
