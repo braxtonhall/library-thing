@@ -58,13 +58,13 @@ When the extension is used, the LibraryThing banner is replaced with a [Vancouve
 1. Click `extension.zip` to download the extension zip file
 1. Navigate to [`chrome://extensions`](chrome://extensions)
 1. Toggle `Developer mode`
-<img src="img/developer-mode.png" style="padding: 12px 0px;" alt="developer mode in chrome extensions page">
+   <img src="img/developer-mode.png" style="padding: 12px 0px;" alt="developer mode in chrome extensions page">
 1. Click `Load unpacked`
-<img src="img/load-unpacked.png" style="padding: 12px 0px;" alt="load unpacked button in chrome extensions page">
+   <img src="img/load-unpacked.png" style="padding: 12px 0px;" alt="load unpacked button in chrome extensions page">
 1. Select the unzipped extension directory
-<img src="img/load-from-file-explorer.png" style="padding: 12px 0px;" alt="opening extension from file explorer">
+   <img src="img/load-from-file-explorer.png" style="padding: 12px 0px;" alt="opening extension from file explorer">
 1. The extension should be installed!
-<img src="img/installed.png" style="padding: 12px 0px;" alt="extension installed">
+   <img src="img/installed.png" style="padding: 12px 0px;" alt="extension installed">
 
 
 ### Firefox
