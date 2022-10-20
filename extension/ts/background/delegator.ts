@@ -1,6 +1,6 @@
 import {TypedWorkerRequest, WorkerKind, WorkerRequest, Workers, Worker, WorkerStatus} from "../common/workers/types";
-import {get} from "./impl/request";
-import {authorize} from "./impl/authorize";
+import {get} from "./workers/request";
+import {authorize} from "./workers/authorize";
 
 const workers: Workers = {
 	[WorkerKind.Get]: get,
