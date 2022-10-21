@@ -1,4 +1,4 @@
-import "../../sass/banner.sass";
+import "../../../sass/banner.sass";
 
 import Cookies from "../adapters/cookies";
 

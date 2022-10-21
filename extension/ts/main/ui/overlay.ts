@@ -1,4 +1,4 @@
-import "../../sass/overlay.sass";
+import "../../../sass/overlay.sass";
 
 const OVERLAY_CLASS_NAME = "better-library-thing-overlay";
 
