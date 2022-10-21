@@ -14,6 +14,11 @@
 			"js": ["js/bundle.js"]
 		}
 	],
+	"options_page": "html/options.html",
+	"action": {
+		"default_title": "Click Me",
+		"default_popup": "html/options.html"
+	},
 	"content_security_policy": {},
 	"host_permissions": [
 		"https://*.librarything.com/*",
