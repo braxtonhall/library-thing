@@ -20,7 +20,7 @@ const deAuthorize = async (): Promise<DeAuthorizeResponse> => {
 		const token = await authorize(false);
 		const url = `https://accounts.google.com/o/oauth2/revoke?token=${token}`;
 		await fetch(url);
-		await chrome.identity.removeCachedAuthToken({token});
+		return new Promise((resolve) => chrome.identity.removeCachedAuthToken({token}, resolve));
 	} catch (error) {
 		console.error(error);
 		throw new Error("Could not de-authorize");
