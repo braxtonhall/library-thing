@@ -3,7 +3,7 @@
 A browser extension to improve the LibraryThing cataloguing experience. Made in support of the [Vancouver Black Library](https://www.vancouverblacklibrary.org/).
 
 <p align="center">
-	<img src="img/vbl.png" alt="vancouver black library" style="width: 100px; height: auto">
+	<img src="extension/img/vbl.png" alt="vancouver black library" style="width: 100px; height: auto">
 </p>
 
 ## Features
@@ -12,20 +12,20 @@ A browser extension to improve the LibraryThing cataloguing experience. Made in 
 
 While Editing a book, leaving the page without hitting Save, Cancel, or Delete Book cause a warning if there is unsaved work.
 
-<img src="img/warning.png" alt="warning">
+<img src="docs/img/warning.png" alt="warning">
 
 ### Copy/Paste
 
 While on the Edit book page, a Copy and Paste button appear to allow you to Copy and Paste entire book entries.
 
-<img src="img/copy.gif" alt="warning">
+<img src="docs/img/copy.gif" alt="warning">
 
 ### Find PDF
 
 While Editing a book, click on the `Find PDF` to search the internet for PDFs of the book.
 Results are pulled from z-lib, libgen, and The Internet Archive, with more websites to be added in the future.
 
-<img src="img/pdf.gif" alt="find pdf flow gif">
+<img src="docs/img/pdf.gif" alt="find pdf flow gif">
 
 <sub>Please make sure to check the links! They may not be perfect!</sub>
 
@@ -38,15 +38,13 @@ Results are pulled from Goodreads and Amazon, with more websites to be added in 
 
 ### Author Pages (Google Chrome only!)
 
-Edit an author's tags from the Author page!
-
-TODO: describe this in more detail in its own document in the docs/ directory, and link to it here.
+Edit an author's tags from the Author page! For more information, see the instructions [here](./docs/librarian/authors.md).
 
 ### VBL Banner
 
 When the extension is used, the LibraryThing banner is replaced with a [Vancouver Black Library](https://www.vancouverblacklibrary.org/), so you can discern whether the extension is active at a glance.
 
-<img src="img/banner.png" alt="banner">
+<img src="docs/img/banner.png" alt="banner">
 
 ### Misc. Improvements
 - **Resizes**: When you resize a text area in a book form, the new size saved for the next time you visit!
@@ -58,13 +56,13 @@ When the extension is used, the LibraryThing banner is replaced with a [Vancouve
 1. Click `extension.zip` to download the extension zip file
 1. Navigate to [`chrome://extensions`](chrome://extensions)
 1. Toggle `Developer mode`
-   <img src="img/developer-mode.png" style="padding: 12px 0px;" alt="developer mode in chrome extensions page">
+   <img src="docs/img/developer-mode.png" style="padding: 12px 0px;" alt="developer mode in chrome extensions page">
 1. Click `Load unpacked`
-   <img src="img/load-unpacked.png" style="padding: 12px 0px;" alt="load unpacked button in chrome extensions page">
+   <img src="docs/img/load-unpacked.png" style="padding: 12px 0px;" alt="load unpacked button in chrome extensions page">
 1. Select the unzipped extension directory
-   <img src="img/load-from-file-explorer.png" style="padding: 12px 0px;" alt="opening extension from file explorer">
+   <img src="docs/img/load-from-file-explorer.png" style="padding: 12px 0px;" alt="opening extension from file explorer">
 1. The extension should be installed!
-   <img src="img/installed.png" style="padding: 12px 0px;" alt="extension installed">
+   <img src="docs/img/installed.png" style="padding: 12px 0px;" alt="extension installed">
 
 
 ### Firefox
