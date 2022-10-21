@@ -14,14 +14,21 @@ body
 	text-transform: uppercase
 	transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1)
 	line-height: 36px
-	filter: saturate(0)
 
 	&:disabled
 		display: none
 
 	&:not(:disabled)
-		&:hover
+		&#log-in-button
+			filter: saturate(0)
+			&:hover
+				filter: saturate(120%)
+		&#log-out-button
 			filter: saturate(120%)
+			&:hover
+				filter: saturate(0)
+
+		&:hover
 			cursor: pointer
 
 .title
@@ -46,4 +53,4 @@ body
 		padding: 15px 10px
 
 		.footer-image
-			width: 10%
+			width: 50px
