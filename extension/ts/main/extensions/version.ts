@@ -1,6 +1,6 @@
 import {showToast, ToastType} from "../ui/toast";
-import {invokeWorker} from "../workers/invoker";
-import {WorkerKind} from "../workers/types";
+import {invokeWorker} from "../../common/workers/invoker";
+import {WorkerKind} from "../../common/workers/types";
 
 const RELEASES_URL = "https://api.github.com/repos/braxtonhall/library-thing/releases/latest";
 const DEFAULT_VERSION = "0.0.0";
