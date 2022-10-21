@@ -48,6 +48,6 @@ The edit view (pictured above) has three additional buttons, described below:
 
 Author tags can also be used while editing a book!
 
-<img src="../img/authors/book-side-edit.png" alt="book edit">
+<img src="../img/authors/book-side-edit.gif" alt="book edit">
 
 Click "Pull Author Tags" to copy all tags associated with every author of the book into the Tags field in the edit form.
