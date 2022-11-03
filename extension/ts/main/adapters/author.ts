@@ -2,7 +2,7 @@ import Sheets, {GetSheetsDataResponse, ValueRange} from "./sheets";
 import {filterAuthorTags} from "../util/filterAuthorTags";
 import {makeCache} from "../util/cache";
 
-const SPREADSHEET_ID = "1EfwBhY56M8OwgVjFTWxxxdoIxK8osw2vfgsXnCyGGuA";
+declare const SPREADSHEET_ID: string; // Declared in webpack DefinePlugin
 const AUTHOR_SHEET = "Authors";
 const QUERY_SHEET = "LOOKUP";
 

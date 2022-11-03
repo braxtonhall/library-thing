@@ -1,7 +1,8 @@
 import path from "path";
-import {Configuration} from "webpack";
+import {Configuration, DefinePlugin} from "webpack";
 
-const config: Configuration = {
+module.exports = (env, options): Configuration => ({
+	devtool: options.mode !== 'production' ? 'source-map' : undefined,
 	context: path.join(__dirname, '/extension'),
 	entry: {
 		'bundle': './ts/main/index.ts',
@@ -41,12 +42,11 @@ const config: Configuration = {
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js'],
 	},
-};
-
-module.exports = (env, options) => {
-	if (options.mode !== 'production') {
-		config.devtool = 'source-map';
-	}
-
-	return config;
-};
+	plugins: [
+		new DefinePlugin({
+			SPREADSHEET_ID: options.mode !== 'production'
+				? JSON.stringify("18I5LabO21LfV97CkBRBW6SeK5hPggitvnK-2joUJ8jU")
+				: JSON.stringify("1EfwBhY56M8OwgVjFTWxxxdoIxK8osw2vfgsXnCyGGuA"),
+		})
+	]
+});
