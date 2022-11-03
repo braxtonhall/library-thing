@@ -8,18 +8,14 @@ describe("cache", () => {
 	let setCache: (id: string, value: string) => string;
 	let sideEffectCounter = 0;
 
-	const syncGetValue = (value: string) => () => {
+	const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+	const syncGetValue = (value: string) => (): string => {
 		sideEffectCounter++;
 		return value;
 	};
 
-	const asyncGetValue = (value: string, ms = 0) => {
-		const getValue = syncGetValue(value);
-		return async () => {
-			await new Promise((resolve) => setTimeout(resolve, ms));
-			return getValue();
-		};
-	};
+	const asyncGetValue = (value: string, ms = 0) => () => sleep(ms).then(syncGetValue(value));
 
 	beforeEach(() => {
 		const cache = makeCache<string>();
