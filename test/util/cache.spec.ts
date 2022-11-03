@@ -25,6 +25,11 @@ describe("cache", () => {
 		setCache = cache.setCache;
 	});
 
+	it("should be able to get item through set cache", () => {
+		const value = setCache(id, "foo");
+		expect(value).to.deep.equal("foo");
+	});
+
 	it("should be able to get item through caching invocation", () => {
 		const value = syncCached(id, syncGetValue("foo"));
 		expect(value).to.deep.equal("foo");
