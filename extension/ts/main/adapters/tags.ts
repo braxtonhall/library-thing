@@ -16,10 +16,6 @@ interface ParserOptions {
 	parent?: TagNode;
 }
 
-interface ParserResponse {
-	last: number;
-}
-
 const {asyncCached} = makeCache<TagTree>();
 
 const getTagRanges = async (): Promise<string[]> => {
@@ -28,29 +24,28 @@ const getTagRanges = async (): Promise<string[]> => {
 	return response.valueRanges.flatMap((valueRange) => valueRange.values.map((value) => value[0]));
 };
 
-const recursiveParseRows = ({rows, fromRow, depth, tree, parent}: ParserOptions): ParserResponse => {
+const recursiveParseRows = ({rows, fromRow, depth, tree, parent}: ParserOptions): number => {
 	let row = fromRow;
 	while (row < rows.length) {
 		const tag = rows[row][depth];
 		if (tag) {
 			const node = {tag, parent};
 			tree.set(tag, node);
-			const {last} = recursiveParseRows({rows, fromRow: row + 1, depth: depth + 1, tree, parent: node});
-			row = last;
+			row = recursiveParseRows({rows, fromRow: row + 1, depth: depth + 1, tree, parent: node});
 		} else {
 			break;
 		}
 	}
-	return {last: row};
+	return row;
 };
 
 const parseTree = (rows: string[][]) => {
 	const tree: TagTree = new Map();
-	let fromRow = 0;
-	while (fromRow < rows.length) {
-		const {last} = recursiveParseRows({rows, fromRow, depth: 0, tree});
-		fromRow = last + 1;
-	}
+	for (
+		let fromRow = 0;
+		fromRow < rows.length;
+		fromRow = recursiveParseRows({rows, fromRow, depth: 0, tree} as ParserOptions) + 1
+	);
 	return tree;
 };
 
