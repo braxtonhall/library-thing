@@ -93,4 +93,20 @@ describe("cache", () => {
 		expect(value).to.deep.equal("foo");
 		expect(sideEffectCounter).to.equal(1);
 	});
+
+	it("should ignore the locking mechanism if synchronous", async () => {
+		const futureValue = asyncCached(id, asyncGetValue("bar", 10));
+		const syncValue = syncCached(id, syncGetValue("foo"));
+		const asyncValue = await futureValue;
+		expect(syncValue).to.deep.equal("foo");
+		expect(asyncValue).to.deep.equal("foo");
+		expect(sideEffectCounter).to.equal(2);
+	});
+
+	it("should ignore the locking mechanism if using set cache", async () => {
+		const futureValue = asyncCached(id, asyncGetValue("bar", 10));
+		setCache(id, "foo");
+		expect(await futureValue).to.deep.equal("foo");
+		expect(sideEffectCounter).to.equal(1);
+	});
 });
