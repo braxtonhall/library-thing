@@ -24,14 +24,14 @@ const getTagRanges = async (): Promise<string[]> => {
 	return response.valueRanges.flatMap((valueRange) => valueRange.values.map((value) => value[0]));
 };
 
-const recursiveParseRows = ({rows, fromRow, depth, tree, parent}: ParserOptions): number => {
+const parseRows = ({rows, fromRow, depth, tree, parent}: ParserOptions): number => {
 	let row = fromRow;
 	while (row < rows.length) {
 		const tag = rows[row][depth];
 		if (tag) {
 			const node = {tag, parent};
 			tree.set(tag, node);
-			row = recursiveParseRows({rows, fromRow: row + 1, depth: depth + 1, tree, parent: node});
+			row = parseRows({rows, fromRow: row + 1, depth: depth + 1, tree, parent: node});
 		} else {
 			break;
 		}
@@ -41,11 +41,7 @@ const recursiveParseRows = ({rows, fromRow, depth, tree, parent}: ParserOptions)
 
 const parseTree = (rows: string[][]) => {
 	const tree: TagTree = new Map();
-	for (
-		let fromRow = 0;
-		fromRow < rows.length;
-		fromRow = recursiveParseRows({rows, fromRow, depth: 0, tree} as ParserOptions) + 1
-	);
+	for (let fromRow = 0; fromRow < rows.length; fromRow = parseRows({rows, fromRow, depth: 0, tree}) + 1);
 	return tree;
 };
 
@@ -59,7 +55,7 @@ const getTagTree = () => asyncCached("", async () => parseTree(await getSheetsTa
 const getAncestry = async (tag: string): Promise<string[]> => {
 	const tree = await getTagTree();
 	const ancestry = [];
-	for (let node = tree.get(tag); node; node = tree.get(node.parent?.tag)) {
+	for (let node = tree.get(tag); node; node = node.parent) {
 		ancestry.push(node.tag);
 	}
 	return ancestry;
