@@ -25,7 +25,9 @@ const makeCache = <T>() => {
 	};
 
 	const syncCached = (id: string, implementation: () => T): T => {
-		if (!cache.get(id)) {
+		// Sync calls have no way to yield if "locked" so we just override
+		// Technically this means double computation but oh well
+		if (!cache.has(id) || cache.get(id) === LOCK) {
 			cache.set(id, implementation());
 		}
 		return cache.get(id);
@@ -33,16 +35,20 @@ const makeCache = <T>() => {
 
 	const asyncCached = async (id: string, implementation: () => Promise<T>): Promise<T> => {
 		if (!cache.has(id)) {
-			cache.set(id, LOCK as T); // Lock!
+			cache.set(id, LOCK as T); // Lock for other async calls!
 			const newValue = await implementation();
-			cache.set(id, newValue); // Unlock!
-			return newValue;
+			// Must check for lock in case Sync/Set cache
+			if (cache.get(id) === LOCK) {
+				cache.set(id, newValue); // Unlock other async calls!
+			}
+			return cache.get(id);
 		} else {
 			return pollForBook(id);
 		}
 	};
 
 	const setCache = (id: string, value: T): T => {
+		// Set cache calls have no way to yield if "locked" so we just override
 		cache.set(id, value);
 		return value;
 	};
