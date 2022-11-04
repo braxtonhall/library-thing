@@ -1,7 +1,7 @@
 import "../../../sass/tags.sass";
 
 import {onFormRender, onSave} from "../entities/bookForm";
-import {getAllTags} from "../adapters/tags";
+import {getAllTags, getAncestry} from "../adapters/tags";
 import {createModal, ModalColour} from "../ui/modal";
 import {loaderOverlaid} from "../ui/loadingIndicator";
 
@@ -58,7 +58,7 @@ const getInvalidTags = async (tags: string[]): Promise<string[]> => {
 	return tags.filter((tag) => !validTags.has(tag));
 };
 
-const getUserAcceptance = (invalidTags: string[], tagChecker: () => Promise<boolean>): Promise<boolean> =>
+const getUserAcceptance = (invalidTags: string[], saveHandler: () => Promise<boolean>): Promise<boolean> =>
 	new Promise<boolean>((resolve) =>
 		createModal({
 			text: "Are you sure? The following tags are not in the Tag Index",
@@ -66,41 +66,59 @@ const getUserAcceptance = (invalidTags: string[], tagChecker: () => Promise<bool
 			buttons: [
 				{
 					text: "Open the Tag Index",
-					colour: ModalColour.PURPLE,
-					onClick: async () => resolve(getSecondaryAcceptance(tagChecker)),
+					colour: ModalColour.GREY,
+					onClick: async () => resolve(getSecondaryAcceptance(saveHandler)),
 				},
-				{text: "Save anyway", colour: ModalColour.RED, onClick: async () => resolve(true)},
+				{text: "Save anyway", colour: ModalColour.GREY, onClick: async () => resolve(true)},
 				{text: "Cancel", colour: ModalColour.BLUE, onClick: async () => resolve(false)},
 			],
-			colour: ModalColour.GREY,
+			colour: ModalColour.AMBER,
 		})
 	);
 
-const getSecondaryAcceptance = (tagChecker: () => Promise<boolean>): Promise<boolean> => {
+const getSecondaryAcceptance = (saveHandler: () => Promise<boolean>): Promise<boolean> => {
 	window.open(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}`);
 	return new Promise<boolean>((resolve) =>
 		createModal({
 			text: "Did you put the new tags in the Tag Index?",
 			buttons: [
-				{text: "Yes!", colour: ModalColour.AMBER, onClick: async () => resolve(tagChecker())},
+				{text: "Yes!", colour: ModalColour.GREY, onClick: async () => resolve(saveHandler())},
 				{text: "Cancel", colour: ModalColour.BLUE, onClick: async () => resolve(false)},
 			],
-			colour: ModalColour.PURPLE,
+			colour: ModalColour.AMBER,
 		})
 	);
 };
 
-const checkTags = (tagInput: HTMLTextAreaElement) => {
-	const tagChecker = async (): Promise<boolean> => {
-		const tags = tagInput.value.split(",").map((part) => part.trim());
-		const invalidTags = await loaderOverlaid(() => getInvalidTags(tags));
-		if (invalidTags.length > 0) {
-			return getUserAcceptance(invalidTags, tagChecker);
-		} else {
-			return true;
-		}
-	};
-	return tagChecker;
+const getTags = (tagInput: HTMLTextAreaElement) => tagInput.value.split(",").map((part) => part.trim());
+
+const getAncestorTags = async (tags: string[]): Promise<Set<string>> => {
+	const futureAncestors = tags.map((tag) => getAncestry(tag));
+	const ancestors = await Promise.all(futureAncestors);
+	return new Set([...tags, ...ancestors.flat()]);
+};
+
+const setTags = (tagInput: HTMLTextAreaElement, tags: Iterable<string>) => {
+	tagInput.value = [...tags].join(", ");
+	tagInput.dispatchEvent(new Event("change"));
+};
+
+const checkTags = async (tagInput: HTMLTextAreaElement) =>
+	loaderOverlaid(async () => {
+		setTags(tagInput, await getAncestorTags(getTags(tagInput)));
+		return getInvalidTags(getTags(tagInput));
+	});
+
+const handleSave = (tagInput: HTMLTextAreaElement) => {
+	const saveHandler = (): Promise<boolean> =>
+		checkTags(tagInput).then((invalidTags) => {
+			if (invalidTags.length > 0) {
+				return getUserAcceptance(invalidTags, saveHandler);
+			} else {
+				return true;
+			}
+		});
+	return saveHandler;
 };
 
 onFormRender(() => {
@@ -109,7 +127,7 @@ onFormRender(() => {
 	if (tagInput && tagInputContainer) {
 		const {highlighter, backdrop} = createHighlighterComponents();
 		tagInputContainer.insertAdjacentElement("afterbegin", backdrop);
-		onSave(checkTags(tagInput));
+		onSave(handleSave(tagInput));
 		handleViewChange(tagInput, backdrop);
 		return handleInput(tagInput, highlighter);
 	}
