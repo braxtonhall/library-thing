@@ -16,7 +16,7 @@ interface ParserOptions {
 	parent?: TagNode;
 }
 
-const {asyncCached} = makeCache<TagTree>();
+const {asyncCached, setCache} = makeCache<TagTree>();
 
 const getTagRanges = async (): Promise<string[]> => {
 	const range = Sheets.createRange(META_SHEET, "A", "A");
@@ -50,7 +50,14 @@ const getSheetsTags = async (): Promise<string[][]> => {
 	return response.valueRanges.flatMap((valueRange) => valueRange.values);
 };
 
-const getTagTree = () => asyncCached("", async () => parseTree(await getSheetsTags()));
+const getTagTree = async (noCache = false) => {
+	const implementation = async () => parseTree(await getSheetsTags());
+	if (noCache) {
+		return implementation().then((tree) => setCache("", tree));
+	} else {
+		return asyncCached("", implementation);
+	}
+};
 
 const getAncestry = async (tag: string): Promise<string[]> => {
 	const tree = await getTagTree();
@@ -61,14 +68,16 @@ const getAncestry = async (tag: string): Promise<string[]> => {
 	return ancestry;
 };
 
-const isValidTag = async (tag: string): Promise<boolean> => (await getTagTree()).has(tag);
-
-const getAllTags = async () => Array.from((await getTagTree()).values()).map((node) => node.tag);
+const getAllTags = async (noCache = false) => {
+	const nodes = (await getTagTree(noCache)).values();
+	const tags = [...nodes].map((node) => node.tag);
+	return new Set(tags);
+};
 
 const getTagsIncluding = async (search: string): Promise<string[]> => {
 	const tags = await getAllTags();
 	const lowerSearch = search.toLowerCase();
-	return tags.filter((tag) => tag.toLowerCase().includes(lowerSearch));
+	return [...tags.values()].filter((tag) => tag.toLowerCase().includes(lowerSearch));
 };
 
-export {getAncestry, getAllTags, isValidTag, getTagsIncluding};
+export {getAncestry, getAllTags, getTagsIncluding};
