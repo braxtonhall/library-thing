@@ -70,9 +70,9 @@ const getUserAcceptance = (invalidTags: string[], saveHandler: () => Promise<boo
 					onClick: async () => resolve(getSecondaryAcceptance(saveHandler)),
 				},
 				{text: "Save anyway", colour: ModalColour.GREY, onClick: async () => resolve(true)},
-				{text: "Cancel", colour: ModalColour.BLUE, onClick: async () => resolve(false)},
+				{text: "Cancel", colour: ModalColour.PURPLE, onClick: async () => resolve(false)},
 			],
-			colour: ModalColour.AMBER,
+			colour: ModalColour.PURPLE,
 		})
 	);
 
@@ -83,9 +83,9 @@ const getSecondaryAcceptance = (saveHandler: () => Promise<boolean>): Promise<bo
 			text: "Did you put the new tags in the Tag Index?",
 			buttons: [
 				{text: "Yes!", colour: ModalColour.GREY, onClick: async () => resolve(saveHandler())},
-				{text: "Cancel", colour: ModalColour.BLUE, onClick: async () => resolve(false)},
+				{text: "Cancel", colour: ModalColour.PURPLE, onClick: async () => resolve(false)},
 			],
-			colour: ModalColour.AMBER,
+			colour: ModalColour.PURPLE,
 		})
 	);
 };
