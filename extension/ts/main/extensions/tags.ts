@@ -4,6 +4,7 @@ import {onFormRender, onSave} from "../entities/bookForm";
 import {getAllTags, getAncestry} from "../adapters/tags";
 import {createModal, ModalColour} from "../ui/modal";
 import {loaderOverlaid} from "../ui/loadingIndicator";
+import {isAuthorized} from "./author/util/isAuthorized";
 
 declare const SPREADSHEET_ID: string; // set by webpack
 
@@ -121,14 +122,16 @@ const handleSave = (tagInput: HTMLTextAreaElement) => {
 	return saveHandler;
 };
 
-onFormRender(() => {
-	const tagInputContainer = document.getElementById("bookedit_tags");
-	const tagInput = document.getElementById("form_tags") as HTMLTextAreaElement;
-	if (tagInput && tagInputContainer) {
-		const {highlighter, backdrop} = createHighlighterComponents();
-		tagInputContainer.insertAdjacentElement("afterbegin", backdrop);
-		onSave(handleSave(tagInput));
-		handleViewChange(tagInput, backdrop);
-		return handleInput(tagInput, highlighter);
+onFormRender(async () => {
+	if (await isAuthorized()) {
+		const tagInputContainer = document.getElementById("bookedit_tags");
+		const tagInput = document.getElementById("form_tags") as HTMLTextAreaElement;
+		if (tagInput && tagInputContainer) {
+			const {highlighter, backdrop} = createHighlighterComponents();
+			tagInputContainer.insertAdjacentElement("afterbegin", backdrop);
+			onSave(handleSave(tagInput));
+			handleViewChange(tagInput, backdrop);
+			return handleInput(tagInput, highlighter);
+		}
 	}
 });
