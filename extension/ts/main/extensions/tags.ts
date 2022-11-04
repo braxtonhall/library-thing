@@ -1,6 +1,6 @@
 import "../../../sass/tags.sass";
 
-import {onFormRender, onSave} from "../entities/bookForm";
+import {onFormRender} from "../entities/bookForm";
 import {getAllTags, getAncestry} from "../adapters/tags";
 import {createModal, ModalColour} from "../ui/modal";
 import {loaderOverlaid} from "../ui/loadingIndicator";
@@ -122,7 +122,7 @@ const handleSave = (tagInput: HTMLTextAreaElement) => {
 	return saveHandler;
 };
 
-onFormRender(async () => {
+onFormRender(async (form, forEachElement, onSave) => {
 	if (await isAuthorized()) {
 		const tagInputContainer = document.getElementById("bookedit_tags");
 		const tagInput = document.getElementById("form_tags") as HTMLTextAreaElement;
