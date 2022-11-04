@@ -54,7 +54,7 @@ const handleViewChange = (tagInput: HTMLTextAreaElement, backdrop: HTMLElement) 
 };
 
 const getInvalidTags = async (tags: string[]): Promise<string[]> => {
-	const validTags = await getAllTags(true);
+	const validTags = await getAllTags({noCache: true});
 	return tags.filter((tag) => !validTags.has(tag));
 };
 

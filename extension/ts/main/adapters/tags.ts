@@ -8,6 +8,10 @@ declare const SPREADSHEET_ID: string; // Declared in webpack DefinePlugin
 
 const META_SHEET = "META";
 
+interface TagSearchOptions {
+	noCache: boolean;
+}
+
 interface ParserOptions {
 	rows: string[][];
 	fromRow: number;
@@ -50,7 +54,7 @@ const getSheetsTags = async (): Promise<string[][]> => {
 	return response.valueRanges.flatMap((valueRange) => valueRange.values);
 };
 
-const getTagTree = async (noCache = false) => {
+const getTagTree = async ({noCache}: TagSearchOptions = {noCache: false}) => {
 	const implementation = async () => parseTree(await getSheetsTags());
 	if (noCache) {
 		return implementation().then((tree) => setCache("", tree));
@@ -68,14 +72,14 @@ const getAncestry = async (tag: string): Promise<string[]> => {
 	return ancestry;
 };
 
-const getAllTags = async (noCache = false) => {
-	const nodes = (await getTagTree(noCache)).values();
+const getAllTags = async (options: TagSearchOptions = {noCache: false}) => {
+	const nodes = (await getTagTree(options)).values();
 	const tags = [...nodes].map((node) => node.tag);
 	return new Set(tags);
 };
 
-const getTagsIncluding = async (search: string): Promise<string[]> => {
-	const tags = await getAllTags();
+const getTagsIncluding = async (search: string, options: TagSearchOptions = {noCache: false}): Promise<string[]> => {
+	const tags = await getAllTags(options);
 	const lowerSearch = search.toLowerCase();
 	return [...tags.values()].filter((tag) => tag.toLowerCase().includes(lowerSearch));
 };
