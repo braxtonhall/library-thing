@@ -4,7 +4,6 @@ import {createIconButton} from "../../ui/button";
 import {isAuthorized} from "../author/util/isAuthorized";
 import {showToast, ToastType} from "../../ui/toast";
 import {loaderOverlaid} from "../../ui/loadingIndicator";
-import {tooltipped} from "../../ui/tooltip";
 
 const BAD_BROWSER_INFO_URL =
 	"https://github.com/braxtonhall/library-thing/blob/main/docs/librarian/authors.md#prerequisites";
