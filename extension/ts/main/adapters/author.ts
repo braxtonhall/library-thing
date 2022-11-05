@@ -2,7 +2,7 @@ import Sheets, {GetSheetsDataResponse, ValueRange} from "./sheets";
 import {filterAuthorTags} from "../util/filterAuthorTags";
 import {makeCache} from "../util/cache";
 
-const SPREADSHEET_ID = "1EfwBhY56M8OwgVjFTWxxxdoIxK8osw2vfgsXnCyGGuA";
+const SPREADSHEET_ID = "18I5LabO21LfV97CkBRBW6SeK5hPggitvnK-2joUJ8jU";
 const AUTHOR_SHEET = "Authors";
 const QUERY_SHEET = "LOOKUP";
 

@@ -1,7 +1,7 @@
 import {showToast, ToastType} from "../../ui/toast";
 import {loaderOverlaid} from "../../ui/loadingIndicator";
 import {onFormRender} from "../../entities/bookForm";
-import {createButton} from "../../ui/button";
+import {createIconButton} from "../../ui/button";
 import {Finder, FinderParameters} from "../../services/finder/finder";
 
 const findTextContent = (id: string) => (): string =>
@@ -48,7 +48,7 @@ const createFinderExtension = <T>(options: CreateFinderExtensionOptions<T>) => {
 			const textArea = document.getElementById(options.textAreaId) as HTMLTextAreaElement; // not type safe -- lazy
 			if (textAreaContainer && textArea) {
 				textAreaContainer.appendChild(
-					createButton(options.buttonName, options.buttonImage ?? "img/search.png", onClick(textArea))
+					createIconButton(options.buttonName, options.buttonImage ?? "img/search.png", onClick(textArea))
 				);
 			}
 		}

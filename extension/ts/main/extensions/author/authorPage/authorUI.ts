@@ -1,5 +1,6 @@
-import {createButton} from "../../../ui/button";
+import {createIconButton} from "../../../ui/button";
 import {createHeader} from "../../../ui/header";
+import {onLoggedIn} from "../../util/onLoggedIn";
 
 const TAG_LIST_ID = "vbl-tag-list";
 const TAG_INPUT_ID = "vbl-tag-input";
@@ -25,8 +26,8 @@ const createTagLink = (tag: string) => {
 	return link;
 };
 
-const createTagButton = (text: string, imgSrc, onClick: () => void) => {
-	const button = createButton(text, imgSrc, onClick);
+const createTagButton = (text: string, imgSrc: string, onClick: () => void) => {
+	const button = createIconButton(text, imgSrc, onClick);
 	button.className += " author-tag-button";
 	return button;
 };
@@ -47,27 +48,30 @@ const createEditTagsSection = ({onSave, onPull, onCancel}: ButtonHandlers) => {
 	return section;
 };
 
-const createCurrentTagsButtons = ({onPush, onSync, onEdit}: ButtonHandlers) => {
+const createCurrentTagsButtons = ({onPush, onSync, onEdit}: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
 	const container = document.createElement("div");
 	container.id = TAG_LIST_BUTTON_CONTAINER_ID;
-	container.append(createTagButton("Push", "img/book.png", onPush));
-	container.append(createTagButton("Sync", "img/enchanted-book.png", onSync));
-	container.append(createTagButton("Edit", "img/edit.gif", onEdit));
+	onLoggedIn(async () => {
+		container.append(createTagButton("Push", "img/book.png", onPush));
+		container.append(createTagButton("Sync", "img/enchanted-book.png", onSync));
+		container.append(createTagButton("Edit", "img/edit.gif", onEdit));
+		await getTagsCallback();
+	}, container);
 	return container;
 };
 
-const createCurrentTagsSection = (handlers: ButtonHandlers) => {
+const createCurrentTagsSection = (handlers: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
 	const section = createSection();
 	section.id = TAG_LIST_CONTAINER_ID;
 	section.innerHTML = `<span id="${TAG_LIST_ID}"></span>`;
-	const buttons = createCurrentTagsButtons(handlers);
+	const buttons = createCurrentTagsButtons(handlers, getTagsCallback);
 	section.append(buttons);
 	return section;
 };
 
-const appendUI = (container: Element, handlers: ButtonHandlers) => {
+const appendUI = (container: Element, handlers: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
 	const header = createHeader("Tags");
-	const currentTagsSection = createCurrentTagsSection(handlers);
+	const currentTagsSection = createCurrentTagsSection(handlers, getTagsCallback);
 	const editTagsSection = createEditTagsSection(handlers);
 	container.insertBefore(editTagsSection, container.children[2]);
 	container.insertBefore(currentTagsSection, editTagsSection);

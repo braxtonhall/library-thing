@@ -7,7 +7,6 @@ import {getAuthorInfo, getTags} from "./util";
 import {onEditAllBooks} from "./editAllBooks";
 import {createModal, ModalColour} from "../../../ui/modal";
 import {showToast, ToastType} from "../../../ui/toast";
-import {isAuthorized} from "../util/isAuthorized";
 import {onPull} from "./pull";
 
 const onEdit = () => {
@@ -64,11 +63,10 @@ const onSync = async () => {
 };
 
 window.addEventListener("load", async () => {
-	if (document.querySelector("body.authorpage") && (await isAuthorized())) {
+	if (document.querySelector("body.authorpage")) {
 		const container = document.querySelector<HTMLTableCellElement>("table.authorContentTable td.middle");
 		if (container) {
-			appendUI(container, {onSync, onEdit, onSave, onPush, onPull, onCancel});
-			await getTags();
+			appendUI(container, {onSync, onEdit, onSave, onPush, onPull, onCancel}, getTags);
 		}
 	}
 });
