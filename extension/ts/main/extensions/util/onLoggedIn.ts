@@ -34,12 +34,9 @@ const removeInjectedButton = (button: HTMLTableCellElement) => {
 const onLoggedIn = async (callback: () => void, container: HTMLElement) => {
 	if (!(await isAuthorized())) {
 		const onClick = () =>
-			loaderOverlaid(() =>
-				authorize(true)
-					.then(() => removeInjectedButton(button))
-					.then(callback)
-					.catch(console.error)
-			);
+			loaderOverlaid(() => authorize(true).then(() => removeInjectedButton(button)))
+				.then(callback)
+				.catch(console.error);
 		const button = createIconButton("Login", "img/login.png", onClick);
 		injectButton(button, container);
 	} else {
