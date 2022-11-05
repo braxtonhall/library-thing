@@ -6,6 +6,7 @@ import {authorTagsFromBooksWhere, getAuthorInfo} from "./util";
 import Author from "../../../adapters/author";
 import Book from "../../../adapters/book";
 import {UIColour} from "../../../ui/colour";
+import {getAuthorPageBooks} from "./getAuthorPageBooks";
 
 interface PullData {
 	certainTags: Set<string>;
@@ -57,7 +58,7 @@ const finishPull = (pullData: PullData) => {
 const onPull = async () =>
 	loaderOverlaid(async (): Promise<PullData> => {
 		const {uuid, name} = getAuthorInfo();
-		const [author, books] = await Promise.all([Author.getAuthor(uuid), Book.getBooks({author: uuid})]);
+		const [author, books] = await Promise.all([Author.getAuthor(uuid), getAuthorPageBooks(uuid)]);
 		const singleAuthorTags = authorTagsFromBooksWhere(books, (book) => book.authorIds.length === 1);
 		const multiAuthorTags = authorTagsFromBooksWhere(books, (book) => book.authorIds.length !== 1);
 		const certainTags = new Set([...getInput(), ...(author?.tags ?? []), ...singleAuthorTags]);

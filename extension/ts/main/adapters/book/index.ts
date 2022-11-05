@@ -1,7 +1,7 @@
 import {BookRecord} from "./types";
 import {getBooks} from "./webscrapers/bookFromSearch";
-import {getBooksFromWork} from "./webscrapers/bookFromWork";
-import {getBook} from "./webscrapers/bookFromEdition";
+import {getBooksFromWorkPage} from "./webscrapers/bookFromWork";
+import {getBookFromEditionPage} from "./webscrapers/bookFromEdition";
 import {setCache} from "./bookCache";
 
 const POST_TAGS_URI = "/ajax_changetags2.php";
@@ -24,4 +24,4 @@ const removeDuplicates = (books: BookRecord[]): BookRecord[] => {
 };
 
 export type {BookRecord};
-export default {getBook, getBooksFromWork, getBooks, saveBook, removeDuplicates};
+export default {getBookFromEditionPage, getBooksFromWorkPage, getBooks, saveBook, removeDuplicates};
