@@ -5,10 +5,11 @@ import Book from "../../../adapters/book";
 import {createPushBookTags, createSyncBookTags} from "../util/bookEditor";
 import {getAuthorInfo, getTags} from "./util";
 import {onEditAllBooks} from "./editAllBooks";
-import {createModal, ModalColour} from "../../../ui/modal";
+import {createModal} from "../../../ui/modal";
 import {showToast, ToastType} from "../../../ui/toast";
 import {isAuthorized} from "../util/isAuthorized";
 import {onPull} from "./pull";
+import {UIColour} from "../../../ui/colour";
 
 const onEdit = () => {
 	viewTagEditor();
@@ -47,10 +48,10 @@ const userIsSure = (): Promise<boolean> =>
 				"Syncing will remove all author tags not associated with any author of a book. Ensure that your tags are complete!",
 			],
 			onCancel: async () => resolve(false),
-			colour: ModalColour.PURPLE,
+			colour: UIColour.PURPLE,
 			buttons: [
-				{text: "Sync", colour: ModalColour.GREY, onClick: async () => resolve(true)},
-				{text: "Cancel", colour: ModalColour.PURPLE, onClick: async () => resolve(false)},
+				{text: "Sync", colour: UIColour.GREY, onClick: async () => resolve(true)},
+				{text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
 			],
 		});
 	});

@@ -1,20 +1,12 @@
 import "../../../sass/modal.sass";
 
 import {createOverlay} from "./overlay";
-
-enum ModalColour {
-	RED = "vbl-red",
-	AMBER = "vbl-amber",
-	GREEN = "vbl-green",
-	BLUE = "vbl-blue",
-	PURPLE = "vbl-purple",
-	GREY = "vbl-grey",
-}
+import {UIColour} from "./colour";
 
 interface ModalButton {
 	text: string;
 	onClick?: () => Promise<void>;
-	colour: ModalColour;
+	colour: UIColour;
 }
 
 interface ModalOptions {
@@ -22,7 +14,7 @@ interface ModalOptions {
 	subText?: string[];
 	buttons: ModalButton[];
 	onCancel?: () => Promise<void>;
-	colour: ModalColour;
+	colour: UIColour;
 }
 
 const MODAL_CLASS_NAME = "better-library-thing-modal";
@@ -87,4 +79,4 @@ const createModal = ({text, subText, buttons, onCancel, colour}: ModalOptions): 
 	document.body.appendChild(overlay);
 };
 
-export {createModal, ModalColour};
+export {createModal};
