@@ -3,6 +3,7 @@ import {WorkerError, WorkerErrorKind, WorkerKind} from "../../../common/workers/
 import {createIconButton} from "../../ui/button";
 import {isAuthorized} from "../author/util/isAuthorized";
 import {showToast, ToastType} from "../../ui/toast";
+import {loaderOverlaid} from "../../ui/loadingIndicator";
 
 const BAD_BROWSER_INFO_URL =
 	"https://github.com/braxtonhall/library-thing/blob/main/docs/librarian/authors.md#prerequisites";
@@ -33,10 +34,12 @@ const removeInjectedButton = (button: HTMLTableCellElement) => {
 const onLoggedIn = async (callback: () => void, container: HTMLElement) => {
 	if (!(await isAuthorized())) {
 		const onClick = () =>
-			authorize(true)
-				.then(() => removeInjectedButton(button))
-				.then(callback)
-				.catch(console.error);
+			loaderOverlaid(() =>
+				authorize(true)
+					.then(() => removeInjectedButton(button))
+					.then(callback)
+					.catch(console.error)
+			);
 		const button = createIconButton("Login", "img/login.png", onClick);
 		injectButton(button, container);
 	} else {
