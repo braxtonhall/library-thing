@@ -1,3 +1,5 @@
+import {WorkerError, WorkerErrorKind} from "../../common/workers/types";
+
 type AuthorizeParameters = boolean;
 type AuthorizeResponse = string;
 
@@ -8,7 +10,7 @@ const authorize = (interactive: AuthorizeParameters): Promise<AuthorizeResponse>
 		} else {
 			// TODO use chrome.identity.launchWebAuthFlow
 			// see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/identity/launchWebAuthFlow
-			return reject(new Error("Unsupported browser :("));
+			return reject(new WorkerError(WorkerErrorKind.UnsupportedBrowser, "Unsupported browser :("));
 		}
 	});
 
