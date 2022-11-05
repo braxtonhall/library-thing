@@ -10,15 +10,17 @@ const BAD_BROWSER_INFO_URL =
 const authorize = (interactive: boolean) => invokeWorker(WorkerKind.Authorize, interactive).catch(handleAuthFailure);
 
 const handleAuthFailure = (error: WorkerError) => {
-	if (error.kind === WorkerErrorKind.UnsupportedBrowser) {
-		showToast(
-			"This browser is not yet supported. Click here to see which browsers are compatible with this feature.",
-			ToastType.ERROR,
-			() => window.open(BAD_BROWSER_INFO_URL)
-		);
-	}
+	const reason = getReason(error.kind);
+	showToast(`${reason} Click here to see which browsers are compatible with this feature.`, ToastType.ERROR, () =>
+		window.open(BAD_BROWSER_INFO_URL)
+	);
 	throw error;
 };
+
+const getReason = (kind: WorkerErrorKind) =>
+	kind === WorkerErrorKind.UnsupportedBrowser
+		? "This browser is not yet supported."
+		: "Could not log in. This browser might not yet be supported.";
 
 const injectButton = (button: HTMLTableCellElement, container: HTMLElement) => {
 	container.append(button);
