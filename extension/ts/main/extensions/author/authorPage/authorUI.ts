@@ -63,7 +63,7 @@ const createCurrentTagsButtons = ({onPush, onSync, onEdit}: ButtonHandlers, getT
 const createCurrentTagsSection = (handlers: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
 	const section = createSection();
 	section.id = TAG_LIST_CONTAINER_ID;
-	section.innerHTML = `<span id="${TAG_LIST_ID}"></span>`;
+	section.innerHTML = `<span id="${TAG_LIST_ID}">Unknown</span>`;
 	const buttons = createCurrentTagsButtons(handlers, getTagsCallback);
 	section.append(buttons);
 	return section;
@@ -76,7 +76,6 @@ const appendUI = (container: Element, handlers: ButtonHandlers, getTagsCallback:
 	container.insertBefore(editTagsSection, container.children[2]);
 	container.insertBefore(currentTagsSection, editTagsSection);
 	container.insertBefore(header, currentTagsSection);
-	insertTags([]);
 	viewExistingTags();
 };
 
