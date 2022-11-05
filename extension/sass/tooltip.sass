@@ -1,0 +1,123 @@
+@use "colours"
+
+*:hover > .vbl-tool-tip
+	opacity: 100%
+
+.vbl-tool-tip
+	transition: 100ms
+	opacity: 0
+	pointer-events: none
+	width: 120px
+	color: colours.$white
+	text-align: center
+	padding: 5px 0
+	border-radius: 6px
+	position: absolute
+	z-index: 1
+
+	&::after
+		content: " "
+		position: absolute
+		border-width: 5px
+		border-style: solid
+
+	&.vbl-tool-tip-top
+		bottom: 120%
+		left: 50%
+		margin-left: -60px // Use half of the width (120/2 = 60), to center the tooltip
+		&::after
+			top: 100%
+			left: 50%
+			margin-left: -5px
+
+	&.vbl-tool-tip-bottom
+		top: 120%
+		left: 50%
+		margin-left: -60px // Use half of the width (120/2 = 60), to center the tooltip
+		&::after
+			bottom: 100%
+			left: 50%
+			margin-left: -5px
+
+	&.vbl-tool-tip-left
+		top: -5px
+		right: 115%
+		&::after
+			top: 50%
+			left: 100%
+			margin-top: -5px
+
+	&.vbl-tool-tip-right
+		top: -5px
+		left: 115%
+		&::after
+			top: 50%
+			right: 100%
+			margin-top: -5px
+
+	&.vbl-red
+		&.vbl-tool-tip-top::after
+			border-color: colours.$red transparent transparent transparent
+		&.vbl-tool-tip-bottom::after
+			border-color: transparent transparent colours.$red transparent
+		&.vbl-tool-tip-right::after
+			border-color: transparent colours.$red transparent transparent
+		&.vbl-tool-tip-left::after
+			border-color: transparent transparent transparent colours.$red
+
+		background-color: colours.$red
+	&.vbl-amber
+		&.vbl-tool-tip-top::after
+			border-color: colours.$amber transparent transparent transparent
+		&.vbl-tool-tip-bottom::after
+			border-color: transparent transparent colours.$amber transparent
+		&.vbl-tool-tip-right::after
+			border-color: transparent colours.$amber transparent transparent
+		&.vbl-tool-tip-left::after
+			border-color: transparent transparent transparent colours.$amber
+
+		background-color: colours.$amber
+	&.vbl-green
+		&.vbl-tool-tip-top::after
+			border-color: colours.$green transparent transparent transparent
+		&.vbl-tool-tip-bottom::after
+			border-color: transparent transparent colours.$green transparent
+		&.vbl-tool-tip-right::after
+			border-color: transparent colours.$green transparent transparent
+		&.vbl-tool-tip-left::after
+			border-color: transparent transparent transparent colours.$green
+
+		background-color: colours.$green
+	&.vbl-blue
+		&.vbl-tool-tip-top::after
+			border-color: colours.$blue transparent transparent transparent
+		&.vbl-tool-tip-bottom::after
+			border-color: transparent transparent colours.$blue transparent
+		&.vbl-tool-tip-right::after
+			border-color: transparent colours.$blue transparent transparent
+		&.vbl-tool-tip-left::after
+			border-color: transparent transparent transparent colours.$blue
+
+		background-color: colours.$blue
+	&.vbl-purple
+		&.vbl-tool-tip-top::after
+			border-color: colours.$purple transparent transparent transparent
+		&.vbl-tool-tip-bottom::after
+			border-color: transparent transparent colours.$purple transparent
+		&.vbl-tool-tip-right::after
+			border-color: transparent colours.$purple transparent transparent
+		&.vbl-tool-tip-left::after
+			border-color: transparent transparent transparent colours.$purple
+
+		background-color: colours.$purple
+	&.vbl-grey
+		&.vbl-tool-tip-top::after
+			border-color: colours.$grey transparent transparent transparent
+		&.vbl-tool-tip-bottom::after
+			border-color: transparent transparent colours.$grey transparent
+		&.vbl-tool-tip-right::after
+			border-color: transparent colours.$grey transparent transparent
+		&.vbl-tool-tip-left::after
+			border-color: transparent transparent transparent colours.$grey
+
+		background-color: colours.$grey
