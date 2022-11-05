@@ -22,5 +22,5 @@ const appendAuthorization = async (init?: RequestInit): Promise<RequestInit> => 
 export const googleFetch: GoogleFetch = async (input: URL, init?: RequestInit) => {
 	const authorizedInit = await appendAuthorization(init);
 	const res = await fetch(input, authorizedInit).then(handleError);
-	return res.status === 200 ? res.json() : null;
+	return res.ok ? res.json() : null;
 };
