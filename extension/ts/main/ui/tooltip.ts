@@ -10,20 +10,25 @@ enum TooltipPosition {
 }
 
 interface TooltipOptions {
-	colour: UIColour; // Move Modal colour out, and apply it to loader as well
-	position?: TooltipPosition; // Defaults to TOP
+	colour?: UIColour;
+	position?: TooltipPosition;
 	text: string;
 }
 
 const tooltipped = <T extends HTMLElement>(
 	element: T,
-	{colour, text, position = TooltipPosition.TOP}: TooltipOptions
+	{text, colour = UIColour.GREY, position = TooltipPosition.TOP}: TooltipOptions
 ): T => {
 	// This MiiIIIght not age well. Probably smarter to add an invisible anchor point inside element
 	element.style.position = "relative";
-	const tooltip = document.createElement("span");
+
+	const span = document.createElement("span");
+	span.innerText = text;
+
+	const tooltip = document.createElement("div");
 	tooltip.className = `vbl-tool-tip ${colour} ${position}`;
-	tooltip.innerText = text;
+	tooltip.append(span);
+
 	element.append(tooltip);
 	return element;
 };
