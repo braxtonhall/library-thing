@@ -32,16 +32,11 @@ const removeInjectedButton = (button: HTMLTableCellElement) => {
 
 const onLoggedIn = async (callback: () => void, container: HTMLElement) => {
 	if (!(await isAuthorized())) {
-		const onClick = async () => {
+		const onClick = () =>
 			authorize(true)
-				.then(() => {
-					removeInjectedButton(button);
-					callback();
-				})
-				.catch((err) => {
-					console.error(err);
-				});
-		};
+				.then(() => removeInjectedButton(button))
+				.then(callback)
+				.catch(console.error);
 		const button = createIconButton("Login", "img/login.png", onClick);
 		injectButton(button, container);
 	} else {
