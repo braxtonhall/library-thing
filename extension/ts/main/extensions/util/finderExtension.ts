@@ -3,7 +3,6 @@ import {loaderOverlaid} from "../../ui/loadingIndicator";
 import {onFormRender} from "../../entities/bookForm";
 import {createButton} from "../../ui/button";
 import {Finder, FinderParameters} from "../../services/finder/finder";
-import {UIColour} from "../../ui/colour";
 
 const findTextContent = (id: string) => (): string =>
 	(document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement)?.value ?? "";
