@@ -2,9 +2,7 @@
 const createIconButton = (
 	buttonText: string,
 	imgSrc: string,
-	onClick: (event: MouseEvent) => void,
-	id?: string,
-	title?: string
+	onClick: (event: MouseEvent) => void
 ): HTMLTableCellElement => {
 	const td = document.createElement("td");
 	td.className = "book_bitItem";
@@ -23,8 +21,6 @@ const createIconButton = (
 	spanTd.append(span);
 	td.appendChild(imgTd);
 	td.appendChild(spanTd);
-	td.id = id ?? "";
-	td.title = title ?? "";
 	return td;
 };
 
