@@ -6,7 +6,13 @@ type AuthorizeResponse = string;
 const authorize = (interactive: AuthorizeParameters): Promise<AuthorizeResponse> =>
 	new Promise((resolve, reject) => {
 		if (chrome?.identity?.getAuthToken) {
-			return chrome.identity.getAuthToken({interactive}, resolve);
+			return chrome.identity.getAuthToken({interactive}, (auth) => {
+				if (auth) {
+					resolve(auth);
+				} else {
+					reject(new WorkerError(WorkerErrorKind.Unknown, "Auth not granted"));
+				}
+			});
 		} else {
 			// TODO use chrome.identity.launchWebAuthFlow
 			// see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/identity/launchWebAuthFlow
