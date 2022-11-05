@@ -11,7 +11,7 @@ const finders: PdfFinder[] = [LibGen, InternetArchive];
 const findPdf: PdfFinder = async (parameters: FinderParameters): Promise<PdfFinderResponse> =>
 	Promise.all(
 		finders.map((finder: PdfFinder) =>
-			finder(parameters).then((error) => {
+			finder(parameters).catch((error) => {
 				console.error(error);
 				return [];
 			})
