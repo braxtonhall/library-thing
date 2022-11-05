@@ -11,7 +11,7 @@ const findTitle = findTextContent("form_title");
 const findAuthor = findTextContent("form_authorunflip");
 const findISBN = findTextContent("form_ISBN");
 
-interface CreateFinderExtensionOptions<T> {
+interface FinderExtensionOptions<T> {
 	finder: Finder<T>;
 	textAreaId: string;
 	textAreaContainerId: string;
@@ -22,10 +22,11 @@ interface CreateFinderExtensionOptions<T> {
 	onFail: (response: T, input: FinderParameters) => string;
 	transform: (response: T, input: FinderParameters) => string;
 	delimiter: string;
-	condition?: () => Promise<boolean>;
 }
 
-const createFinderExtension = <T>(options: CreateFinderExtensionOptions<T>) => {
+const createFinderExtension = <T>(options: FinderExtensionOptions<T>) => onFormRender(() => insertFinder(options));
+
+const insertFinder = <T>(options: FinderExtensionOptions<T>) => {
 	const onClick = (textArea: HTMLTextAreaElement) => async (event: MouseEvent) => {
 		event.preventDefault();
 		const input = {author: findAuthor(), title: findTitle(), isbn: findISBN()};
@@ -42,17 +43,13 @@ const createFinderExtension = <T>(options: CreateFinderExtensionOptions<T>) => {
 		}
 	};
 
-	onFormRender(async () => {
-		if (!options.condition || (await options.condition())) {
-			const textAreaContainer = document.getElementById(options.textAreaContainerId);
-			const textArea = document.getElementById(options.textAreaId) as HTMLTextAreaElement; // not type safe -- lazy
-			if (textAreaContainer && textArea) {
-				textAreaContainer.appendChild(
-					createIconButton(options.buttonName, options.buttonImage ?? "img/search.png", onClick(textArea))
-				);
-			}
-		}
-	});
+	const textAreaContainer = document.getElementById(options.textAreaContainerId);
+	const textArea = document.getElementById(options.textAreaId) as HTMLTextAreaElement; // not type safe -- lazy
+	if (textAreaContainer && textArea) {
+		textAreaContainer.appendChild(
+			createIconButton(options.buttonName, options.buttonImage ?? "img/search.png", onClick(textArea))
+		);
+	}
 };
 
-export {createFinderExtension};
+export {createFinderExtension, insertFinder};
