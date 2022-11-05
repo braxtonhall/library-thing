@@ -4,6 +4,7 @@ import {createIconButton} from "../../ui/button";
 import {isAuthorized} from "../author/util/isAuthorized";
 import {showToast, ToastType} from "../../ui/toast";
 import {loaderOverlaid} from "../../ui/loadingIndicator";
+import {tooltipped} from "../../ui/tooltip";
 
 const BAD_BROWSER_INFO_URL =
 	"https://github.com/braxtonhall/library-thing/blob/main/docs/librarian/authors.md#prerequisites";
@@ -31,7 +32,15 @@ const removeInjectedButton = (button: HTMLTableCellElement) => {
 	button.remove();
 };
 
-const onLoggedIn = async (callback: () => void, container: HTMLElement) => {
+const decorateWithDescription = <T extends HTMLElement>(button: T, description?: string): T => {
+	if (description) {
+		return tooltipped(button, {text: description});
+	} else {
+		return button;
+	}
+};
+
+const onLoggedIn = async (callback: () => void, container: HTMLElement, description?: string) => {
 	if (!(await isAuthorized())) {
 		const onClick = () =>
 			loaderOverlaid(() =>
@@ -41,7 +50,7 @@ const onLoggedIn = async (callback: () => void, container: HTMLElement) => {
 			)
 				.then(callback)
 				.catch(console.error);
-		const button = createIconButton("Login", "img/login.png", onClick);
+		const button = decorateWithDescription(createIconButton("Login", "img/login.png", onClick), description);
 		injectButton(button, container);
 	} else {
 		callback();
