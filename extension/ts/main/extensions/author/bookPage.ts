@@ -12,18 +12,23 @@ const authorIds = () =>
 onFormRender(() => {
 	const textAreaContainerId = "bookedit_tags";
 	const textAreaContainer = document.getElementById(textAreaContainerId);
-	return onLoggedIn(() => {
-		insertFinder<string[]>({
-			buttonName: "Pull Author Tags",
-			buttonImage: "img/book-and-quill.png",
-			finder: () => getAuthorTags(authorIds(), Author.getAuthor),
-			onFail: () => "No author tags found for this book",
-			onSuccess: () => "Author tags synced",
-			isSuccess: (tags: string[]) => tags.length > 0,
-			textAreaContainerId,
-			textAreaId: "form_tags",
-			transform: (tags: string[]) => tags.join(", "),
-			delimiter: ", ",
-		});
-	}, textAreaContainer);
+	return onLoggedIn(
+		() => {
+			insertFinder<string[]>({
+				buttonName: "Pull Author Tags",
+				buttonImage: "img/book-and-quill.png",
+				description: "Copy the tags of every author of this book",
+				finder: () => getAuthorTags(authorIds(), Author.getAuthor),
+				onFail: () => "No author tags found for this book",
+				onSuccess: () => "Author tags synced",
+				isSuccess: (tags: string[]) => tags.length > 0,
+				textAreaContainerId,
+				textAreaId: "form_tags",
+				transform: (tags: string[]) => tags.join(", "),
+				delimiter: ", ",
+			});
+		},
+		textAreaContainer,
+		"Log in to sync this book's tags with its authors' tags"
+	);
 });

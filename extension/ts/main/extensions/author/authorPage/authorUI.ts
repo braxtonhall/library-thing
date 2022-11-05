@@ -26,8 +26,8 @@ const createTagLink = (tag: string) => {
 	return link;
 };
 
-const createTagButton = (text: string, imgSrc: string, onClick: () => void) => {
-	const button = createIconButton(text, imgSrc, onClick);
+const createTagButton = (text: string, imgSrc: string, onClick: () => void, description?: string) => {
+	const button = createIconButton(text, imgSrc, onClick, description);
 	button.className += " author-tag-button";
 	return button;
 };
@@ -42,7 +42,9 @@ const createEditTagsSection = ({onSave, onPull, onCancel}: ButtonHandlers) => {
 	const section = createSection();
 	section.id = TAG_INPUT_CONTAINER_ID;
 	section.innerHTML = `<input id="${TAG_INPUT_ID}" class="bookEditInput">`;
-	section.append(createTagButton("Pull", "img/book.png", onPull));
+	section.append(
+		createTagButton("Pull", "img/book.png", onPull, "Copy author tags that already exist on this author's books")
+	);
 	section.append(createTagButton("Save", "img/save.png", onSave));
 	section.append(createTagButton("Cancel", "img/cross.gif", onCancel));
 	return section;
@@ -51,19 +53,32 @@ const createEditTagsSection = ({onSave, onPull, onCancel}: ButtonHandlers) => {
 const createCurrentTagsButtons = ({onPush, onSync, onEdit}: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
 	const container = document.createElement("div");
 	container.id = TAG_LIST_BUTTON_CONTAINER_ID;
-	onLoggedIn(async () => {
-		container.append(createTagButton("Push", "img/book.png", onPush));
-		container.append(createTagButton("Sync", "img/enchanted-book.png", onSync));
-		container.append(createTagButton("Edit", "img/edit.gif", onEdit));
-		await getTagsCallback();
-	}, container);
+	onLoggedIn(
+		async () => {
+			container.append(
+				createTagButton("Push", "img/book.png", onPush, "Add this author's tags to all of their books")
+			);
+			container.append(
+				createTagButton(
+					"Sync",
+					"img/enchanted-book.png",
+					onSync,
+					"Add this author's tags to all of their books, and delete extra tags"
+				)
+			);
+			container.append(createTagButton("Edit", "img/edit.gif", onEdit));
+			await getTagsCallback();
+		},
+		container,
+		"Log in to manage this author's book tags"
+	);
 	return container;
 };
 
 const createCurrentTagsSection = (handlers: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
 	const section = createSection();
 	section.id = TAG_LIST_CONTAINER_ID;
-	section.innerHTML = `<span id="${TAG_LIST_ID}"></span>`;
+	section.innerHTML = `<span id="${TAG_LIST_ID}">Unknown</span>`;
 	const buttons = createCurrentTagsButtons(handlers, getTagsCallback);
 	section.append(buttons);
 	return section;
@@ -76,7 +91,6 @@ const appendUI = (container: Element, handlers: ButtonHandlers, getTagsCallback:
 	container.insertBefore(editTagsSection, container.children[2]);
 	container.insertBefore(currentTagsSection, editTagsSection);
 	container.insertBefore(header, currentTagsSection);
-	insertTags([]);
 	viewExistingTags();
 };
 
