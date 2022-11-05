@@ -17,6 +17,17 @@ enum WorkerStatus {
 	REJECTED,
 }
 
+enum WorkerErrorKind {
+	UnsupportedBrowser = "unsupported",
+	Unknown = "unknown",
+}
+
+class WorkerError extends Error {
+	constructor(public kind: WorkerErrorKind, message?: string) {
+		super(message);
+	}
+}
+
 type WorkerRequest<Kind extends WorkerKind> = Kind extends WorkerKind.Get
 	? GetParameters
 	: Kind extends WorkerKind.Authorize
@@ -33,7 +44,7 @@ type WorkerResponseResolved<Kind extends WorkerKind> = {
 	status: WorkerStatus.RESOLVED;
 	value: WorkerResponseValue<Kind>;
 };
-type WorkerResponseRejected = {status: WorkerStatus.REJECTED; message: string};
+type WorkerResponseRejected = {status: WorkerStatus.REJECTED; error: WorkerErrorKind; message: string};
 
 type WorkerResponseValue<Kind extends WorkerKind> = Kind extends WorkerKind.Get
 	? GetResponse
@@ -58,4 +69,6 @@ export {
 	WorkerResponseValue,
 	TypedWorkerRequest,
 	WorkerStatus,
+	WorkerError,
+	WorkerErrorKind,
 };

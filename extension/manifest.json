@@ -1,6 +1,6 @@
 {
 	"name": "Better LibraryThing",
-	"version": "1.2.0",
+	"version": "1.2.2",
 	"manifest_version": 3,
 	"description": "Makes LibraryThing BETTER",
 	"icons": {
@@ -49,6 +49,7 @@
 				"img/favicon.ico",
 				"img/search.png",
 				"img/paste.png",
+				"img/login.png",
 				"img/save.png",
 				"img/edit.gif",
 				"img/cross.gif",

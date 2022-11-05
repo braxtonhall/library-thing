@@ -1,10 +1,12 @@
-import {createModal, ModalColour} from "../../../ui/modal";
+import {createModal} from "../../../ui/modal";
 import {getInput, insertTags} from "./authorUI";
 import {showToast, ToastType} from "../../../ui/toast";
 import {loaderOverlaid} from "../../../ui/loadingIndicator";
 import {authorTagsFromBooksWhere, getAuthorInfo} from "./util";
 import Author from "../../../adapters/author";
 import Book from "../../../adapters/book";
+import {UIColour} from "../../../ui/colour";
+import {getAuthorPageBooks} from "./getAuthorPageBooks";
 
 interface PullData {
 	certainTags: Set<string>;
@@ -23,14 +25,14 @@ const uncertainTagModal =
 		createModal({
 			text: `Additional tag${strings.s}`,
 			subText: [...uncertainTags],
-			colour: ModalColour.BLUE,
+			colour: UIColour.BLUE,
 			buttons: [
 				{
 					text: `Add${strings.all}`,
-					colour: ModalColour.RED,
+					colour: UIColour.RED,
 					onClick: async () => insertTags([...certainTags, ...uncertainTags]),
 				},
-				{text: "Back", colour: ModalColour.BLUE},
+				{text: "Back", colour: UIColour.BLUE},
 			],
 		});
 
@@ -56,7 +58,7 @@ const finishPull = (pullData: PullData) => {
 const onPull = async () =>
 	loaderOverlaid(async (): Promise<PullData> => {
 		const {uuid, name} = getAuthorInfo();
-		const [author, books] = await Promise.all([Author.getAuthor(uuid), Book.getBooks({author: uuid})]);
+		const [author, books] = await Promise.all([Author.getAuthor(uuid), getAuthorPageBooks(uuid)]);
 		const singleAuthorTags = authorTagsFromBooksWhere(books, (book) => book.authorIds.length === 1);
 		const multiAuthorTags = authorTagsFromBooksWhere(books, (book) => book.authorIds.length !== 1);
 		const certainTags = new Set([...getInput(), ...(author?.tags ?? []), ...singleAuthorTags]);

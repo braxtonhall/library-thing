@@ -1,32 +1,10 @@
 import {loaderOverlaid} from "../../../ui/loadingIndicator";
 import {showToast, ToastType} from "../../../ui/toast";
-import Book, {BookRecord} from "../../../adapters/book";
+import {BookRecord} from "../../../adapters/book";
 import {getAuthorInfo} from "./util";
+import {getAuthorPageBooks} from "./getAuthorPageBooks";
 
 const isTruthy = (book) => !!book;
-
-const getExpectedBookCount = () => {
-	const booksBy = document.querySelector("p.booksby > a")?.textContent ?? "";
-	const [countString] = booksBy.split(" ");
-	const count = Number(countString);
-	return isFinite(count) ? count : 0;
-};
-
-const getCoauthorBooks = async (): Promise<BookRecord[]> => {
-	const workLinks = Array.from(document.querySelectorAll(".li_have > a"));
-	const workHrefs = workLinks.map((link: HTMLLinkElement) => link.href);
-	const futureCoauthorBooks = workHrefs.map(Book.getBooksFromWork);
-	return (await Promise.all(futureCoauthorBooks)).flat();
-};
-
-const getBooks = async (uuid: string): Promise<BookRecord[]> => {
-	const books = await Book.getBooks({author: uuid});
-	if (books.length >= getExpectedBookCount()) {
-		return books;
-	} else {
-		return Book.removeDuplicates([...books, ...(await getCoauthorBooks())]);
-	}
-};
 
 interface EditAllBooksParams {
 	updateBook: (book: BookRecord) => Promise<BookRecord>;
@@ -43,7 +21,7 @@ const onEditAllBooks =
 
 		await loaderOverlaid(async () => {
 			try {
-				const books = await getBooks(uuid);
+				const books = await getAuthorPageBooks(uuid);
 				const futureSyncs = books.map(updateBook);
 				const syncs = await Promise.all(futureSyncs);
 				allFailed = !syncs.some(isTruthy);

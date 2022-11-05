@@ -1,15 +1,26 @@
 @use "colours"
 
 $loader-background-colour: colours.$light-grey
-$loader-foreground-colour: colours.$purple
 
 .better-library-thing-loader
 	border: 16px solid $loader-background-colour
-	border-top-color: $loader-foreground-colour
 	border-radius: 50%
 	width: 50px
 	height: 50px
 	animation: spin 2s linear infinite
+
+	&.vbl-red
+		border-top-color: colours.$red
+	&.vbl-amber
+		border-top-color: colours.$amber
+	&.vbl-green
+		border-top-color: colours.$green
+	&.vbl-blue
+		border-top-color: colours.$blue
+	&.vbl-purple
+		border-top-color: colours.$purple
+	&.vbl-grey
+		border-top-color: colours.$grey
 
 @keyframes spin
 	0%

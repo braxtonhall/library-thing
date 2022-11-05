@@ -1,6 +1,6 @@
 import {showToast, ToastType} from "../ui/toast";
 import {getFormData, insertFormData, onFormRender} from "../entities/bookForm";
-import {createButton} from "../ui/button";
+import {createIconButton} from "../ui/button";
 
 const SAVE_DATA_KEY = "_save-data";
 
@@ -25,7 +25,7 @@ const onPaste = (event: Event) => {
 };
 
 const appendButton = (element: HTMLElement, text: string, imgSrc: string, onClick: (event: Event) => void) => {
-	const button = createButton(text, imgSrc, onClick);
+	const button = createIconButton(text, imgSrc, onClick);
 	button.style.padding = "0px 8px";
 	const deleteButtonIndex = element.children.length - 1;
 	element.insertBefore(button, element.children[deleteButtonIndex]);
