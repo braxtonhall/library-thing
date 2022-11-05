@@ -3,17 +3,17 @@ import {WorkerKind} from "../../../common/workers/types";
 import {createIconButton} from "../../ui/button";
 import {isAuthorized} from "../author/util/isAuthorized";
 
-const authorize = (interactive: boolean) => invokeWorker(WorkerKind.Authorize, interactive).catch(() => "");
+const authorize = (interactive: boolean) => invokeWorker(WorkerKind.Authorize, interactive);
 
-function injectButton(button: HTMLTableCellElement, container: HTMLElement) {
+const injectButton = (button: HTMLTableCellElement, container: HTMLElement) => {
 	container.append(button);
-}
+};
 
-function removeInjectedButton(button: HTMLTableCellElement) {
+const removeInjectedButton = (button: HTMLTableCellElement) => {
 	button.remove();
-}
+};
 
-async function onLoggedIn(callback: () => void, container: HTMLElement) {
+const onLoggedIn = async (callback: () => void, container: HTMLElement) => {
 	if (!(await isAuthorized())) {
 		const onClick = async () => {
 			authorize(true)
@@ -30,6 +30,6 @@ async function onLoggedIn(callback: () => void, container: HTMLElement) {
 	} else {
 		callback();
 	}
-}
+};
 
 export {onLoggedIn};
