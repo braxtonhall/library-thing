@@ -17,6 +17,7 @@ onFormRender(() => {
 			insertFinder<string[]>({
 				buttonName: "Pull Author Tags",
 				buttonImage: "img/book-and-quill.png",
+				description: "Copy the tags of every author of this book",
 				finder: () => getAuthorTags(authorIds(), Author.getAuthor),
 				onFail: () => "No author tags found for this book",
 				onSuccess: () => "Author tags synced",

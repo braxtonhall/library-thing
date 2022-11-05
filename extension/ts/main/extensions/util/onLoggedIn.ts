@@ -32,14 +32,6 @@ const removeInjectedButton = (button: HTMLTableCellElement) => {
 	button.remove();
 };
 
-const decorateWithDescription = <T extends HTMLElement>(button: T, description?: string): T => {
-	if (description) {
-		return tooltipped(button, {text: description});
-	} else {
-		return button;
-	}
-};
-
 const onLoggedIn = async (callback: () => void, container: HTMLElement, description?: string) => {
 	if (!(await isAuthorized())) {
 		const onClick = () =>
@@ -50,7 +42,7 @@ const onLoggedIn = async (callback: () => void, container: HTMLElement, descript
 			)
 				.then(callback)
 				.catch(console.error);
-		const button = decorateWithDescription(createIconButton("Login", "img/login.png", onClick), description);
+		const button = createIconButton("Login", "img/login.png", onClick, description);
 		injectButton(button, container);
 	} else {
 		callback();

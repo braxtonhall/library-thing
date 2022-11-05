@@ -1,8 +1,19 @@
+import {tooltipped} from "./tooltip";
+
+const decorateWithDescription = <T extends HTMLElement>(button: T, description?: string): T => {
+	if (description) {
+		return tooltipped(button, {text: description});
+	} else {
+		return button;
+	}
+};
+
 // semantically, this isn't actually a button, but who am i to question the choices of LibraryThing
 const createIconButton = (
 	buttonText: string,
 	imgSrc: string,
-	onClick: (event: MouseEvent) => void
+	onClick: (event: MouseEvent) => void,
+	description?: string
 ): HTMLTableCellElement => {
 	const td = document.createElement("td");
 	td.className = "book_bitItem";
@@ -21,7 +32,7 @@ const createIconButton = (
 	spanTd.append(span);
 	td.appendChild(imgTd);
 	td.appendChild(spanTd);
-	return td;
+	return decorateWithDescription(td, description);
 };
 
 export {createIconButton};
