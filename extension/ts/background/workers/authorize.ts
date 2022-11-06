@@ -8,6 +8,7 @@ const authorize = (interactive: AuthorizeParameters): Promise<AuthorizeResponse>
 		if (chrome?.identity?.getAuthToken) {
 			return chrome.identity.getAuthToken({interactive}, (auth) => {
 				if (auth) {
+					broadcastAuthorization();
 					resolve(auth);
 				} else {
 					reject(new WorkerError(WorkerErrorKind.Unknown, "Auth not granted"));
@@ -33,6 +34,11 @@ const deAuthorize = async (): Promise<DeAuthorizeResponse> => {
 		console.error(error);
 		throw new Error("Could not de-authorize");
 	}
+};
+
+const broadcastAuthorization = () => {
+	const matches = chrome.runtime.getManifest().content_scripts.flatMap((contentScript) => contentScript.matches);
+	chrome.tabs.query({url: matches}, (tabs) => tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, "authed")));
 };
 
 export {authorize, AuthorizeParameters, AuthorizeResponse};

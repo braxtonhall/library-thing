@@ -38,11 +38,13 @@ const resetCallbacks = () => {
 	CALLBACKS = [];
 };
 
-const onClick = () =>
-	loaderOverlaid(() => authorize(true).then(() => showToast("Logged in!", ToastType.SUCCESS)))
-		.then(() => CALLBACKS.map((callback) => callback()))
-		.then(resetCallbacks)
-		.catch(console.error);
+const handleLogin = () => {
+	showToast("Logged in!", ToastType.SUCCESS);
+	CALLBACKS.map((callback) => callback());
+	resetCallbacks();
+};
+
+const onClick = () => loaderOverlaid(() => authorize(true).catch(console.error));
 
 const onLoggedIn = async (callback: () => void, container?: HTMLElement, description?: string) => {
 	if (!(await isAuthorized())) {
@@ -61,5 +63,14 @@ const onLoggedIn = async (callback: () => void, container?: HTMLElement, descrip
 		callback();
 	}
 };
+
+window.addEventListener("load", () => {
+	chrome.runtime.onMessage.addListener((message) => {
+		console.log("Got message", message);
+		if (message === "authed") {
+			handleLogin();
+		}
+	});
+});
 
 export {onLoggedIn};
