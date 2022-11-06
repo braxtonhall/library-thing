@@ -22,13 +22,13 @@ const rowToRange = ([sheet, topLeft, width]: string[]): string => {
 const getTagRanges = async (): Promise<string[]> => {
 	const range = Sheets.createRange(META_TAG_SHEET, "A", "C");
 	const response = await Sheets.readRanges(SPREADSHEET_ID, [range]);
-	return response.valueRanges?.[0].values.filter(rowIsRange).map(rowToRange) ?? [];
+	return response?.valueRanges?.[0].values.filter(rowIsRange).map(rowToRange) ?? [];
 };
 
 const getSheetsTags = async (): Promise<string[][]> => {
 	const ranges = await getTagRanges();
 	const response = await Sheets.readRanges(SPREADSHEET_ID, ranges);
-	return response.valueRanges.flatMap((valueRange) => valueRange.values ?? []);
+	return response?.valueRanges?.flatMap((valueRange) => valueRange.values ?? []) ?? [];
 };
 
 const getTagTree = async ({noCache}: TagSearchOptions = {noCache: false}) => {
