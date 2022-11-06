@@ -12,7 +12,7 @@ const incrementColumn = (column: string): string => {
 			}
 		}
 	};
-	return incParts(parts).join();
+	return incParts(parts).join("");
 };
 
 const incrementColumnBy = (column: string, n: number): string => {
