@@ -1,4 +1,4 @@
-import {FormData, formDataEquals, formExists, getFormData, oneFormRender, onFormRender} from "../entities/bookForm";
+import {FormData, formDataEquals, formExists, getFormData, onceFormRender, onFormRender} from "../entities/bookForm";
 
 let storedFormData: FormData;
 
@@ -24,7 +24,7 @@ const onExit = (event: Event) => {
 
 const addUnloadListener = () => window.addEventListener("beforeunload", onExit);
 
-oneFormRender(addUnloadListener);
+onceFormRender(addUnloadListener);
 onFormRender(() => {
 	undoEdits();
 	addUndoEditListener();
