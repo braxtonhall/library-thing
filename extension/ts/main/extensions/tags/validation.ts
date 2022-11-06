@@ -1,11 +1,9 @@
-import "../../../sass/tags.sass";
-
-import {onFormRender} from "../entities/bookForm";
-import {getAllTags, getAncestry} from "../adapters/tags";
-import {createModal} from "../ui/modal";
-import {loaderOverlaid} from "../ui/loadingIndicator";
-import {isAuthorized} from "./author/util/isAuthorized";
-import {UIColour} from "../ui/colour";
+import {getAllTags, getAncestry} from "../../adapters/tags";
+import {createModal} from "../../ui/modal";
+import {loaderOverlaid} from "../../ui/loadingIndicator";
+import {isAuthorized} from "../author/util/isAuthorized";
+import {UIColour} from "../../ui/colour";
+import {OnSave} from "../../entities/bookForm";
 
 declare const SPREADSHEET_ID: string; // set by webpack
 
@@ -128,16 +126,16 @@ const handleSave = (tagInput: HTMLTextAreaElement, options: GetTagsOptions) => {
 	return saveHandler(options);
 };
 
-onFormRender(async (form, forEachElement, onSave) => {
-	if (await isAuthorized()) {
-		const tagInputContainer = document.getElementById("bookedit_tags");
-		const tagInput = document.getElementById("form_tags") as HTMLTextAreaElement;
-		if (tagInput && tagInputContainer) {
-			const {highlighter, backdrop} = createHighlighterComponents();
-			tagInputContainer.insertAdjacentElement("afterbegin", backdrop);
-			onSave(() => handleSave(tagInput, {noCache: false}));
-			handleViewChange(tagInput, backdrop);
-			return handleInput(tagInput, highlighter);
-		}
+const validateTags = (onSave: OnSave) => {
+	const tagInputContainer = document.getElementById("bookedit_tags");
+	const tagInput = document.getElementById("form_tags") as HTMLTextAreaElement;
+	if (tagInput && tagInputContainer) {
+		const {highlighter, backdrop} = createHighlighterComponents();
+		tagInputContainer.insertAdjacentElement("afterbegin", backdrop);
+		onSave(() => handleSave(tagInput, {noCache: false}));
+		handleViewChange(tagInput, backdrop);
+		return handleInput(tagInput, highlighter);
 	}
-});
+};
+
+export {validateTags};
