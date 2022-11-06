@@ -1,7 +1,7 @@
 import {filterAuthorTags} from "../../../util/filterAuthorTags";
 import {AuthorRecord} from "../../../adapters/author";
 import {BookRecord} from "../../../adapters/book";
-import {getAuthorTags} from "./getAuthorTags";
+import {getAuthorTags} from "../../util/getAuthorTags";
 
 const getBookOnlyTags = (tags: string[]): string[] => {
 	const authorTags = filterAuthorTags(tags);

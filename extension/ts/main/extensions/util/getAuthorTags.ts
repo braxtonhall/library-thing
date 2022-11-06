@@ -1,5 +1,5 @@
-import {AuthorRecord} from "../../../adapters/author";
-import {filterAuthorTags} from "../../../util/filterAuthorTags";
+import {AuthorRecord} from "../../adapters/author";
+import {filterAuthorTags} from "../../util/filterAuthorTags";
 
 const getAuthorTags = async (authorIds: string[], getAuthor: (uuid: string) => Promise<AuthorRecord>) => {
 	try {

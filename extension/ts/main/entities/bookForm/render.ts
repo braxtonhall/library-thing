@@ -1,8 +1,9 @@
 import {FormAreaElement} from "./types";
 import {formExists, getForm, getFormElements} from "./util";
+import {createOnSave, OnSave} from "./save";
 
 type ForEachFormElement = (callback: (element: FormAreaElement) => void) => void;
-type FormRenderListener = (form: HTMLElement, forEachElement: ForEachFormElement) => void;
+type FormRenderListener = (form: HTMLElement, forEachElement: ForEachFormElement, onSave: OnSave) => void;
 
 const FORM_RENDER_EVENT = "library-thing-form-rendered";
 
@@ -10,8 +11,11 @@ const forEachFormElement: ForEachFormElement = (callback: (element: FormAreaElem
 	getFormElements().forEach(callback);
 
 const listeners = new Map<FormRenderListener, () => void>();
+// kinda gross but i don't have a better idea without a bIG refactor
+let onSave: OnSave;
 
-const encloseCallbackArguments = (callback: FormRenderListener) => () => callback(getForm(), forEachFormElement);
+const encloseCallbackArguments = (callback: FormRenderListener) => () =>
+	callback(getForm(), forEachFormElement, onSave);
 
 const onFormRender = (callback: FormRenderListener): void => {
 	const listener = encloseCallbackArguments(callback);
@@ -27,12 +31,18 @@ const offFormRender = (callback: FormRenderListener): void => {
 const onceFormRender = (callback: FormRenderListener): void =>
 	window.addEventListener(FORM_RENDER_EVENT, encloseCallbackArguments(callback), {once: true});
 
+const handleFormMutation = () => {
+	if (formExists()) {
+		onSave = createOnSave();
+		window.dispatchEvent(new Event(FORM_RENDER_EVENT));
+	}
+};
+
 window.addEventListener("load", () => {
 	const editForm = getForm();
 	if (editForm) {
-		const tryToEmit = () => formExists() && window.dispatchEvent(new Event(FORM_RENDER_EVENT));
-		new MutationObserver(tryToEmit).observe(editForm, {subtree: false, childList: true});
-		tryToEmit();
+		new MutationObserver(handleFormMutation).observe(editForm, {subtree: false, childList: true});
+		handleFormMutation();
 	}
 });
 
