@@ -1,4 +1,4 @@
-import {Finder, FinderParameters} from "../finder";
+import {Finder} from "../finder";
 import {goodreads} from "./impl/Goodreads";
 import {amazon} from "./impl/Amazon";
 import {commonFinder} from "../util/commonFinder";
