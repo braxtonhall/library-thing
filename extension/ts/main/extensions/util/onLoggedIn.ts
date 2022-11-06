@@ -41,7 +41,7 @@ const resetCallbacks = () => {
 const onClick = () =>
 	loaderOverlaid(() => authorize(true).then(() => showToast("Logged in!", ToastType.SUCCESS)))
 		.then(() => CALLBACKS.map((callback) => callback()))
-		.then(() => resetCallbacks())
+		.then(resetCallbacks)
 		.catch(console.error);
 
 const onLoggedIn = async (callback: () => void, container?: HTMLElement, description?: string) => {
