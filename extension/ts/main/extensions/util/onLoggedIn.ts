@@ -8,6 +8,9 @@ import {loaderOverlaid} from "../../ui/loadingIndicator";
 const BAD_BROWSER_INFO_URL =
 	"https://github.com/braxtonhall/library-thing/blob/main/docs/librarian/authors.md#prerequisites";
 
+type OnLoggedInCallback = () => void;
+let CALLBACKS: OnLoggedInCallback[] = [];
+
 const authorize = (interactive: boolean) => invokeWorker(WorkerKind.Authorize, interactive).catch(handleAuthFailure);
 
 const handleAuthFailure = (error: WorkerError) => {
@@ -31,18 +34,29 @@ const removeInjectedButton = (button: HTMLTableCellElement) => {
 	button.remove();
 };
 
-const onLoggedIn = async (callback: () => void, container: HTMLElement, description?: string) => {
+const resetCallbacks = () => {
+	CALLBACKS = [];
+};
+
+const onClick = () =>
+	loaderOverlaid(() => authorize(true).then(() => showToast("Logged in!", ToastType.SUCCESS)))
+		.then(() => CALLBACKS.map((callback) => callback()))
+		.then(resetCallbacks)
+		.catch(console.error);
+
+const onLoggedIn = async (callback: () => void, container?: HTMLElement, description?: string) => {
 	if (!(await isAuthorized())) {
-		const onClick = () =>
-			loaderOverlaid(() =>
-				authorize(true)
-					.then(() => removeInjectedButton(button))
-					.then(() => showToast("Logged in!", ToastType.SUCCESS))
-			)
-				.then(callback)
-				.catch(console.error);
-		const button = createIconButton("Login", "img/login.png", onClick, description);
-		injectButton(button, container);
+		if (!container) {
+			CALLBACKS.push(callback);
+		} else {
+			const button = createIconButton("Login", "img/login.png", onClick, description);
+			injectButton(button, container);
+
+			CALLBACKS.push(() => {
+				removeInjectedButton(button);
+				callback();
+			});
+		}
 	} else {
 		callback();
 	}
