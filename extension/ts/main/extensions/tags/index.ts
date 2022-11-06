@@ -34,7 +34,7 @@ onFormRender((form, forEachElement, onSave) => {
 				return validateTags(onSave);
 			},
 			textAreaContainer,
-			"Log in to sync this book's tags with its authors' tags"
+			"Log in for tag validation and to sync this book's tags with its authors' tags"
 		)
 	);
 });
