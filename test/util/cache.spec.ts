@@ -1,4 +1,5 @@
 import {makeCache} from "../../extension/ts/main/util/cache";
+import {sleep} from "../../extension/ts/common/util/sleep";
 import {expect} from "chai";
 
 describe("cache", () => {
@@ -7,8 +8,6 @@ describe("cache", () => {
 	let asyncCached: (id: string, implementation: () => Promise<string>) => Promise<string>;
 	let setCache: (id: string, value: string) => string;
 	let sideEffectCounter = 0;
-
-	const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 	const syncGetValue = (value: string) => (): string => {
 		sideEffectCounter++;
