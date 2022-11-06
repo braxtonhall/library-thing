@@ -2,7 +2,7 @@ import {makeCache} from "../../util/cache";
 import {TagSearchOptions, TagTree} from "./types";
 import Sheets from "../sheets";
 import {parseTree} from "./parseTags";
-import {incrementColumnBy} from "./util";
+import {incrementColumnBy} from "../sheets/util";
 
 declare const SPREADSHEET_ID: string; // Declared in webpack DefinePlugin
 

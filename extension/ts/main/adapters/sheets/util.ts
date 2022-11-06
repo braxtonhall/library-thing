@@ -1,5 +1,3 @@
-// TODO this file probably doesn't belong here
-
 const incrementColumn = (column: string): string => {
 	const parts = column.split("");
 	const incParts = (parts: string[]): string[] => {
