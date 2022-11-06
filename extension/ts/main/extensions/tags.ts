@@ -2,9 +2,10 @@ import "../../../sass/tags.sass";
 
 import {onFormRender} from "../entities/bookForm";
 import {getAllTags, getAncestry} from "../adapters/tags";
-import {createModal, ModalColour} from "../ui/modal";
+import {createModal} from "../ui/modal";
 import {loaderOverlaid} from "../ui/loadingIndicator";
 import {isAuthorized} from "./author/util/isAuthorized";
+import {UIColour} from "../ui/colour";
 
 declare const SPREADSHEET_ID: string; // set by webpack
 
@@ -72,13 +73,13 @@ const getUserAcceptance = (
 			buttons: [
 				{
 					text: "Open the Tag Index",
-					colour: ModalColour.GREY,
+					colour: UIColour.GREY,
 					onClick: async () => resolve(getSecondaryAcceptance(saveHandler)),
 				},
-				{text: "Save anyway", colour: ModalColour.GREY, onClick: async () => resolve(true)},
-				{text: "Cancel", colour: ModalColour.PURPLE, onClick: async () => resolve(false)},
+				{text: "Save anyway", colour: UIColour.GREY, onClick: async () => resolve(true)},
+				{text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
 			],
-			colour: ModalColour.PURPLE,
+			colour: UIColour.PURPLE,
 		})
 	);
 
@@ -88,10 +89,10 @@ const getSecondaryAcceptance = (saveHandler: (options: GetTagsOptions) => Promis
 		createModal({
 			text: "Did you put the new tags in the Tag Index?",
 			buttons: [
-				{text: "Yes!", colour: ModalColour.GREY, onClick: async () => resolve(saveHandler({noCache: true}))},
-				{text: "Cancel", colour: ModalColour.PURPLE, onClick: async () => resolve(false)},
+				{text: "Yes!", colour: UIColour.GREY, onClick: async () => resolve(saveHandler({noCache: true}))},
+				{text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
 			],
-			colour: ModalColour.PURPLE,
+			colour: UIColour.PURPLE,
 		})
 	);
 };
