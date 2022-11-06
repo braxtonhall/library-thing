@@ -24,7 +24,7 @@ const offFormRender = (callback: FormRenderListener): void => {
 	listeners.delete(callback);
 };
 
-const oneFormRender = (callback: FormRenderListener): void =>
+const onceFormRender = (callback: FormRenderListener): void =>
 	window.addEventListener(FORM_RENDER_EVENT, encloseCallbackArguments(callback), {once: true});
 
 window.addEventListener("load", () => {
@@ -37,4 +37,4 @@ window.addEventListener("load", () => {
 });
 
 export type {ForEachFormElement, FormRenderListener};
-export {onFormRender, offFormRender, oneFormRender};
+export {onFormRender, offFormRender, onceFormRender};
