@@ -4,7 +4,6 @@ import {showToast, ToastType} from "../../../ui/toast";
 import {loaderOverlaid} from "../../../ui/loadingIndicator";
 import {authorTagsFromBooksWhere, getAuthorInfo} from "./util";
 import Author from "../../../adapters/author";
-import Book from "../../../adapters/book";
 import {UIColour} from "../../../ui/colour";
 import {getAuthorPageBooks} from "./getAuthorPageBooks";
 

@@ -1,7 +1,6 @@
 import {getAllTags, getAncestry} from "../../adapters/tags";
 import {createModal} from "../../ui/modal";
 import {loaderOverlaid} from "../../ui/loadingIndicator";
-import {isAuthorized} from "../author/util/isAuthorized";
 import {UIColour} from "../../ui/colour";
 import {OnSave} from "../../entities/bookForm";
 
