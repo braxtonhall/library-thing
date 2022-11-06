@@ -8,6 +8,9 @@ import {loaderOverlaid} from "../../ui/loadingIndicator";
 const BAD_BROWSER_INFO_URL =
 	"https://github.com/braxtonhall/library-thing/blob/main/docs/librarian/authors.md#prerequisites";
 
+type OnLoggedInCallback = () => void;
+let CALLBACKS: OnLoggedInCallback[] = [];
+
 const authorize = (interactive: boolean) => invokeWorker(WorkerKind.Authorize, interactive).catch(handleAuthFailure);
 
 const handleAuthFailure = (error: WorkerError) => {
@@ -23,24 +26,31 @@ const getReason = (kind: WorkerErrorKind) =>
 		? "This browser is not yet supported."
 		: "Could not log in. This browser might not yet be supported.";
 
-const injectButton = (button: HTMLTableCellElement, container: HTMLElement) => {
-	container.append(button);
+const injectButton = (button: HTMLTableCellElement, container?: HTMLElement) => {
+	container?.append(button);
 };
 
 const removeInjectedButton = (button: HTMLTableCellElement) => {
-	button.remove();
+	button?.remove();
 };
 
-const onLoggedIn = async (callback: () => void, container: HTMLElement, description?: string) => {
+const resetCallbacks = () => {
+	CALLBACKS = [];
+};
+
+const onLoggedIn = async (callback: () => void, container?: HTMLElement, description?: string) => {
 	if (!(await isAuthorized())) {
 		const onClick = () =>
-			loaderOverlaid(() =>
-				authorize(true)
-					.then(() => removeInjectedButton(button))
-					.then(() => showToast("Logged in!", ToastType.SUCCESS))
-			)
-				.then(callback)
+			loaderOverlaid(() => authorize(true).then(() => showToast("Logged in!", ToastType.SUCCESS)))
+				.then(() => CALLBACKS.map((callback) => callback()))
+				.then(() => resetCallbacks())
 				.catch(console.error);
+
+		CALLBACKS.push(() => {
+			removeInjectedButton(button);
+			callback();
+		});
+
 		const button = createIconButton("Login", "img/login.png", onClick, description);
 		injectButton(button, container);
 	} else {
