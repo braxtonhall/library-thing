@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {incrementColumnBy} from "../../extension/ts/main/adapters/sheets/util";
+import {incrementColumnBy} from "../../extension/ts/content/adapters/sheets/util";
 
 describe("sheets", () => {
 	describe("/util", () => {

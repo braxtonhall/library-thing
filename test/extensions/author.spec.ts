@@ -1,6 +1,6 @@
-import {createPushBookTags, createSyncBookTags} from "../../extension/ts/main/extensions/author/util/bookEditor";
-import {AuthorRecord} from "../../extension/ts/main/adapters/author";
-import {BookRecord} from "../../extension/ts/main/adapters/book";
+import {createPushBookTags, createSyncBookTags} from "../../extension/ts/content/extensions/author/util/bookEditor";
+import {AuthorRecord} from "../../extension/ts/content/adapters/author";
+import {BookRecord} from "../../extension/ts/content/adapters/book";
 import {expect} from "chai";
 
 const testAuthors = new Map<string, AuthorRecord>([
@@ -8,7 +8,7 @@ const testAuthors = new Map<string, AuthorRecord>([
 	["2", {uuid: "2", tags: ["B author", "C author"], name: "2"}],
 ]);
 const getAuthor = async (uuid: string): Promise<AuthorRecord> => testAuthors.get(uuid);
-const setAuthor = (id: string, tags: string[]) => testAuthors.get(id).tags = tags;
+const setAuthor = (id: string, tags: string[]) => (testAuthors.get(id).tags = tags);
 const createBook = (tags: string[], authorIds: string[]): BookRecord => ({id: "book", tags, authorIds});
 
 const saveBook = async () => undefined;
@@ -112,13 +112,17 @@ describe("author extension", () => {
 		it("should not remove an author tag (multiple authors)", async () => {
 			setAuthor("1", []);
 			const result = await updateBook(createBook(["foo", "bar", "Foobar author"], ["1", "2"]));
-			expect(result).to.deep.equal(createBook(["foo", "bar", "Foobar author", "B author", "C author"], ["1", "2"]));
+			expect(result).to.deep.equal(
+				createBook(["foo", "bar", "Foobar author", "B author", "C author"], ["1", "2"])
+			);
 		});
 
 		it("should add and remove and retain tags at the same time", async () => {
 			setAuthor("1", ["Baz author"]);
 			const result = await updateBook(createBook(["foo", "bar", "Foobar author", "C author"], ["1", "2"]));
-			expect(result).to.deep.equal(createBook(["foo", "bar", "Foobar author", "C author", "Baz author", "B author"], ["1", "2"]));
+			expect(result).to.deep.equal(
+				createBook(["foo", "bar", "Foobar author", "C author", "Baz author", "B author"], ["1", "2"])
+			);
 		});
 	});
 });

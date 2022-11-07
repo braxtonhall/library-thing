@@ -1,3 +1,5 @@
+import "mv3-hot-reload/content";
+
 import "./extensions/banner";
 import "./extensions/copy";
 import "./extensions/pdf";
