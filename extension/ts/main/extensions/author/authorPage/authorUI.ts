@@ -28,7 +28,7 @@ const createTagLink = (tag: string) => {
 
 const createTagButton = (text: string, imgSrc: string, onClick: () => void, description?: string) => {
 	const button = createIconButton(text, imgSrc, onClick, description);
-	button.className += " author-tag-button";
+	button.classList.add("author-tag-button");
 	return button;
 };
 
@@ -38,10 +38,17 @@ const createSection = () => {
 	return section;
 };
 
+const createTagInput = () => {
+	const input = document.createElement("input");
+	input.id = TAG_INPUT_ID;
+	input.classList.add("bookEditInput");
+	return input;
+};
+
 const createEditTagsSection = ({onSave, onPull, onCancel}: ButtonHandlers) => {
 	const section = createSection();
 	section.id = TAG_INPUT_CONTAINER_ID;
-	section.innerHTML = `<input id="${TAG_INPUT_ID}" class="bookEditInput">`;
+	section.append(createTagInput());
 	section.append(
 		createTagButton("Pull", "img/book.png", onPull, "Copy author tags that already exist on this author's books")
 	);
