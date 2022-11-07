@@ -12,6 +12,7 @@ const findAuthor = findTextContent("form_authorunflip");
 const findISBN = findTextContent("form_ISBN");
 
 interface FinderExtensionOptions<T> {
+	id: string;
 	finder: Finder<T>;
 	textAreaId: string;
 	textAreaContainerId: string;
@@ -25,9 +26,27 @@ interface FinderExtensionOptions<T> {
 	delimiter: string;
 }
 
-const createFinderExtension = <T>(options: FinderExtensionOptions<T>) => onFormRender(() => insertFinder(options));
+const createFinderExtension = <T>(options: FinderExtensionOptions<T>) =>
+	onFormRender(() => {
+		appendFinder(options);
+		showFinder(options.id);
+	});
 
-const insertFinder = <T>(options: FinderExtensionOptions<T>) => {
+const showFinder = (id: string): void => {
+	if (finderButtons.has(id)) {
+		finderButtons.get(id).style.display = "";
+	}
+};
+
+const hideFinder = (id: string): void => {
+	if (finderButtons.has(id)) {
+		finderButtons.get(id).style.display = "none";
+	}
+};
+
+const finderButtons = new Map<string, HTMLElement>();
+
+const appendFinder = <T>(options: FinderExtensionOptions<T>) => {
 	const onClick = (textArea: HTMLTextAreaElement) => async (event: MouseEvent) => {
 		event.preventDefault();
 		const input = {author: findAuthor(), title: findTitle(), isbn: findISBN()};
@@ -47,15 +66,15 @@ const insertFinder = <T>(options: FinderExtensionOptions<T>) => {
 	const textAreaContainer = document.getElementById(options.textAreaContainerId);
 	const textArea = document.getElementById(options.textAreaId) as HTMLTextAreaElement; // not type safe -- lazy
 	if (textAreaContainer && textArea) {
-		textAreaContainer.appendChild(
-			createIconButton(
-				options.buttonName,
-				options.buttonImage ?? "img/search.png",
-				onClick(textArea),
-				options.description
-			)
+		const finderButton = createIconButton(
+			options.buttonName,
+			options.buttonImage ?? "img/search.png",
+			onClick(textArea),
+			options.description
 		);
+		textAreaContainer.appendChild(finderButton);
+		finderButtons.set(options.id, finderButton);
 	}
 };
 
-export {createFinderExtension, insertFinder};
+export {createFinderExtension, appendFinder, showFinder, hideFinder};
