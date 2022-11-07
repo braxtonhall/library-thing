@@ -2,7 +2,6 @@ import {createFinderExtension} from "./util/finderExtension";
 import {findSummary} from "../services/finder/summary/summaryFinder";
 
 createFinderExtension<string[]>({
-	id: "find-summary",
 	buttonName: "Find Summary",
 	finder: findSummary,
 	onFail: () => "No summary found for this book",

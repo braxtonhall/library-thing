@@ -12,7 +12,6 @@ const findAuthor = findTextContent("form_authorunflip");
 const findISBN = findTextContent("form_ISBN");
 
 interface FinderExtensionOptions<T> {
-	id: string;
 	finder: Finder<T>;
 	textAreaId: string;
 	textAreaContainerId: string;
@@ -29,22 +28,7 @@ interface FinderExtensionOptions<T> {
 const createFinderExtension = <T>(options: FinderExtensionOptions<T>) =>
 	onFormRender(() => {
 		appendFinder(options);
-		showFinder(options.id);
 	});
-
-const showFinder = (id: string): void => {
-	if (finderButtons.has(id)) {
-		finderButtons.get(id).style.display = "";
-	}
-};
-
-const hideFinder = (id: string): void => {
-	if (finderButtons.has(id)) {
-		finderButtons.get(id).style.display = "none";
-	}
-};
-
-const finderButtons = new Map<string, HTMLElement>();
 
 const appendFinder = <T>(options: FinderExtensionOptions<T>) => {
 	const onClick = (textArea: HTMLTextAreaElement) => async (event: MouseEvent) => {
@@ -73,8 +57,13 @@ const appendFinder = <T>(options: FinderExtensionOptions<T>) => {
 			options.description
 		);
 		textAreaContainer.appendChild(finderButton);
-		finderButtons.set(options.id, finderButton);
+
+		const showFinder = () => (finderButton.style.display = "");
+		const hideFinder = () => (finderButton.style.display = "none");
+		return {showFinder, hideFinder};
+	} else {
+		throw new Error("appendFinder should not have been called on this page");
 	}
 };
 
-export {createFinderExtension, appendFinder, showFinder, hideFinder};
+export {createFinderExtension, appendFinder};

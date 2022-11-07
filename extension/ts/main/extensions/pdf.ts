@@ -2,7 +2,6 @@ import {findPdf} from "../services/finder/pdf/pdfFinder";
 import {createFinderExtension} from "./util/finderExtension";
 
 createFinderExtension<string[]>({
-	id: "find-pdf",
 	buttonName: "Find PDF",
 	finder: findPdf,
 	onFail: () => "No PDFs found for this book",
