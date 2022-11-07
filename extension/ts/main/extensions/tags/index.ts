@@ -16,8 +16,10 @@ onFormRender((form, forEachElement, onSave) => {
 	const textAreaContainer = document.getElementById(textAreaContainerId);
 	return (
 		textAreaContainer &&
-		onLoggedIn(
-			() => {
+		onLoggedIn({
+			container: textAreaContainer,
+			description: "Log in for tag validation and to sync this book's tags with its authors' tags",
+			onLogIn: () => {
 				insertFinder<string[]>({
 					buttonName: "Pull Author Tags",
 					buttonImage: "img/book-and-quill.png",
@@ -33,8 +35,6 @@ onFormRender((form, forEachElement, onSave) => {
 				});
 				return validateTags(onSave);
 			},
-			textAreaContainer,
-			"Log in for tag validation and to sync this book's tags with its authors' tags"
-		)
+		})
 	);
 });

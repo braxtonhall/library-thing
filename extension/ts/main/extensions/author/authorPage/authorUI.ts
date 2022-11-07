@@ -53,8 +53,10 @@ const createEditTagsSection = ({onSave, onPull, onCancel}: ButtonHandlers) => {
 const createCurrentTagsButtons = ({onPush, onSync, onEdit}: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
 	const container = document.createElement("div");
 	container.id = TAG_LIST_BUTTON_CONTAINER_ID;
-	onLoggedIn(
-		async () => {
+	onLoggedIn({
+		container,
+		description: "Log in to manage this author's book tags",
+		onLogIn: async () => {
 			container.append(
 				createTagButton("Push", "img/book.png", onPush, "Add this author's tags to all of their books")
 			);
@@ -69,9 +71,7 @@ const createCurrentTagsButtons = ({onPush, onSync, onEdit}: ButtonHandlers, getT
 			container.append(createTagButton("Edit", "img/edit.gif", onEdit));
 			await getTagsCallback();
 		},
-		container,
-		"Log in to manage this author's book tags"
-	);
+	});
 	return container;
 };
 

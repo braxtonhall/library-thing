@@ -9,8 +9,16 @@ import {BackgroundEvent, onBackgroundEvent} from "../../../common/backgroundEven
 const BAD_BROWSER_INFO_URL =
 	"https://github.com/braxtonhall/library-thing/blob/main/docs/librarian/authors.md#prerequisites";
 
-type OnLoggedInCallback = () => void;
-let CALLBACKS: OnLoggedInCallback[] = [];
+interface OnLogOptions {
+	onLogIn?: OnLoggedCallback;
+	onLogOut?: OnLoggedCallback;
+	container?: HTMLElement;
+	description?: string;
+}
+
+type OnLoggedCallback = () => void;
+const loginCallbacks: OnLoggedCallback[] = [];
+const logoutCallbacks: OnLoggedCallback[] = [];
 
 const authorize = (interactive: boolean) => invokeWorker(WorkerKind.Authorize, interactive).catch(handleAuthFailure);
 
@@ -35,36 +43,50 @@ const removeInjectedButton = (button: HTMLTableCellElement) => {
 	button.remove();
 };
 
-const resetCallbacks = () => {
-	CALLBACKS = [];
+const handleLog = (text: string, toastType: ToastType, callbacks: OnLoggedCallback[]) => () => {
+	showToast(text, toastType);
+	callbacks.map((callback) => callback());
 };
 
-const handleLogin = () => {
-	showToast("Logged in!", ToastType.SUCCESS);
-	CALLBACKS.map((callback) => callback());
-	resetCallbacks();
-};
+const handleLogin = handleLog("Logged in!", ToastType.SUCCESS, loginCallbacks);
+const handleLogout = handleLog("Logged out!", ToastType.INFO, logoutCallbacks);
 
 const onClick = () => loaderOverlaid(() => authorize(true).catch(console.error));
 
-const onLoggedIn = async (callback: () => void, container?: HTMLElement, description?: string) => {
-	if (!(await isAuthorized())) {
-		if (!container) {
-			CALLBACKS.push(callback);
-		} else {
-			const button = createIconButton("Login", "img/login.png", onClick, description);
-			injectButton(button, container);
-
-			CALLBACKS.push(() => {
-				removeInjectedButton(button);
-				callback();
-			});
-		}
+const onLoggedIn = async ({onLogIn, onLogOut, container, description}: OnLogOptions) => {
+	let actualLogIn;
+	let actualLogOut;
+	if (!container) {
+		actualLogIn = onLogIn;
+		actualLogOut = onLogOut;
+		onLogIn && loginCallbacks.push(onLogIn);
+		onLogOut && logoutCallbacks.push(onLogOut);
 	} else {
-		callback();
+		const button = createIconButton("Login", "img/login.png", onClick, description);
+
+		actualLogIn = () => {
+			removeInjectedButton(button);
+			onLogIn && onLogIn();
+		};
+		loginCallbacks.push(actualLogIn);
+
+		actualLogOut = () => {
+			injectButton(button, container);
+			onLogOut && onLogOut();
+		};
+		logoutCallbacks.push(actualLogOut);
+	}
+
+	if (!(await isAuthorized())) {
+		actualLogOut && actualLogOut();
+	} else {
+		actualLogIn && actualLogIn();
 	}
 };
 
-window.addEventListener("load", () => onBackgroundEvent(BackgroundEvent.CompletedAuth, handleLogin));
+window.addEventListener("load", () => {
+	onBackgroundEvent(BackgroundEvent.CompletedAuth, handleLogin);
+	onBackgroundEvent(BackgroundEvent.RemovedAuth, handleLogout);
+});
 
 export {onLoggedIn};
