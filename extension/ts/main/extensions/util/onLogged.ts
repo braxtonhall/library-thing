@@ -53,35 +53,25 @@ const handleLogout = handleLog("Logged out!", ToastType.INFO, logoutCallbacks);
 
 const onClick = () => loaderOverlaid(() => authorize(true).catch(console.error));
 
-const onLoggedIn = async ({onLogIn, onLogOut, container, description}: OnLogOptions) => {
-	let actualLogIn;
-	let actualLogOut;
-	if (!container) {
-		actualLogIn = onLogIn;
-		actualLogOut = onLogOut;
-		onLogIn && loginCallbacks.push(onLogIn);
-		onLogOut && logoutCallbacks.push(onLogOut);
-	} else {
+const compose =
+	(...listeners: OnLoggedCallback[]): OnLoggedCallback =>
+	() =>
+		listeners.forEach((listener) => listener?.());
+
+const saveCallback = (callback: OnLoggedCallback, callbacks: OnLoggedCallback[], applyNow: boolean): void => {
+	callbacks.push(callback);
+	applyNow && callback();
+};
+
+const onLogged = async ({onLogIn, onLogOut, container, description}: OnLogOptions) => {
+	const authed = await isAuthorized();
+	if (container) {
 		const button = createIconButton("Login", "img/login.png", onClick, description);
-
-		actualLogIn = () => {
-			removeInjectedButton(button);
-			onLogIn && onLogIn();
-		};
-		loginCallbacks.push(actualLogIn);
-
-		actualLogOut = () => {
-			injectButton(button, container);
-			onLogOut && onLogOut();
-		};
-		logoutCallbacks.push(actualLogOut);
+		onLogIn = compose(() => removeInjectedButton(button), onLogIn);
+		onLogOut = compose(() => injectButton(button, container), onLogOut);
 	}
-
-	if (!(await isAuthorized())) {
-		actualLogOut && actualLogOut();
-	} else {
-		actualLogIn && actualLogIn();
-	}
+	saveCallback(onLogIn, loginCallbacks, authed === true);
+	saveCallback(onLogOut, logoutCallbacks, authed === false);
 };
 
 window.addEventListener("load", () => {
@@ -89,4 +79,4 @@ window.addEventListener("load", () => {
 	onBackgroundEvent(BackgroundEvent.RemovedAuth, handleLogout);
 });
 
-export {onLoggedIn};
+export {onLogged};

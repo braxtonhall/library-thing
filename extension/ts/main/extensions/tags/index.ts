@@ -3,7 +3,7 @@ import "../../../../sass/tags.sass";
 import {onFormRender} from "../../entities/bookForm";
 import {validateTags} from "./validation";
 import {getAuthorIdsFromLinks} from "../../util/getAuthorIdsFromLinks";
-import {onLoggedIn} from "../util/onLoggedIn";
+import {onLogged} from "../util/onLogged";
 import {insertFinder} from "../util/finderExtension";
 import {getAuthorTags} from "../util/getAuthorTags";
 import Author from "../../adapters/author";
@@ -16,7 +16,7 @@ onFormRender((form, forEachElement, onSave) => {
 	const textAreaContainer = document.getElementById(textAreaContainerId);
 	return (
 		textAreaContainer &&
-		onLoggedIn({
+		onLogged({
 			container: textAreaContainer,
 			description: "Log in for tag validation and to sync this book's tags with its authors' tags",
 			onLogIn: () => {
