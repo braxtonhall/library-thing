@@ -1,10 +1,7 @@
 import {BackgroundEvent, BackgroundEventMessage} from "../../common/backgroundEvent";
 import Tab = chrome.tabs.Tab;
 
-const sendToTab = (event: BackgroundEventMessage) => (tab: Tab) => {
-	console.log(tab);
-	chrome.tabs.sendMessage(tab.id, event);
-};
+const sendToTab = (event: BackgroundEventMessage) => (tab: Tab) => chrome.tabs.sendMessage(tab.id, event);
 
 const sendToTabs = (event: BackgroundEventMessage) => (tabs: Tab[]) => tabs.forEach(sendToTab(event));
 
