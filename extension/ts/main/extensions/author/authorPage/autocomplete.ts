@@ -36,10 +36,9 @@ const autocomplete = ({container, input}: Options) =>
 	autocompleted({
 		container,
 		input,
-		onSelection: (match, value, selectionStart) => {
+		newValue: (match, value, selectionStart) => {
 			const parts = value.split(",");
-			input.value = replaceSelectedWord(parts, selectionStart, ` ${match}`).join(",").trim();
-			input.focus();
+			return replaceSelectedWord(parts, selectionStart, ` ${match}`).join(",").trim();
 		},
 		getMatches: async (value, selectionStart) => {
 			const parts = value.split(",");

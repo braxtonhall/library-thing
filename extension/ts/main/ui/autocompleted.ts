@@ -6,15 +6,10 @@ interface AutocompleteOptions<T extends HTMLElement> {
 	container: T;
 	input: HTMLInputElement | HTMLTextAreaElement;
 	getMatches: (value: string, selectionStart: number) => Promise<string[]>;
-	onSelection: (match: string, value: string, selectionStart: number) => void;
+	newValue: (match: string, value: string, selectionStart: number) => string;
 }
 
-const autocompleted = <T extends HTMLElement>({
-	container,
-	input,
-	getMatches,
-	onSelection,
-}: AutocompleteOptions<T>): T => {
+const autocompleted = <T extends HTMLElement>({container, input, getMatches, newValue}: AutocompleteOptions<T>): T => {
 	let entries = [];
 
 	const autocompleteList = document.createElement("div");
@@ -26,7 +21,8 @@ const autocompleted = <T extends HTMLElement>({
 		div.addEventListener("click", () => {
 			const {value, selectionStart} = input;
 			closeAllLists();
-			onSelection(match, value, selectionStart);
+			input.value = newValue(match, value, selectionStart);
+			input.focus();
 		});
 		return div;
 	};
