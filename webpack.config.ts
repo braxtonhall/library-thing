@@ -13,21 +13,6 @@ const getEntry = (name: string) => {
 
 module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration => ({
 	devtool: isDev(options) ? "source-map" : undefined,
-	// @ts-ignore
-	devServer: {
-		hot: true,
-		firewall: false,
-		port: 3912,
-		devMiddleware: {
-			writeToDisk: true,
-		},
-		static: {
-			watch: false,
-		},
-		client: {
-			host: "localhost",
-		},
-	},
 	entry: {
 		options: path.join(tsSrcDir, "options"),
 		bundle: getEntry("content"),
