@@ -74,7 +74,12 @@ const currentTagViewButtons = ({onPush, onSync, onEdit}: ButtonHandlers, getTags
 			container.append(onPushButton, onSyncButton, onEditButton);
 			await getTagsCallback();
 		},
-		onLogOut: () => container.replaceChildren(onPushButton, onSyncButton, onEditButton),
+		onLogOut: () => {
+			viewExistingTags();
+			onPushButton.remove();
+			onSyncButton.remove();
+			onEditButton.remove();
+		},
 	});
 	return container;
 };
