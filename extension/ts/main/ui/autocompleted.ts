@@ -1,15 +1,20 @@
+import "../../../sass/autocomplete.sass";
+
 import {debounce} from "../util/debounce";
 
-type Autocompletable = HTMLTextAreaElement | HTMLInputElement;
-
-interface AutocompleteOptions<T extends Autocompletable> {
-	element: T;
+interface AutocompleteOptions<T extends HTMLElement> {
+	container: T;
+	input: HTMLInputElement | HTMLTextAreaElement;
 	getMatches: (value: string, selectionStart: number) => Promise<string[]>;
-	onSelection: (match: string) => void;
+	onSelection: (match: string, value: string, selectionStart: number) => void;
 }
 
-const autocompleted = <T extends Autocompletable>({element, getMatches, onSelection}: AutocompleteOptions<T>): T => {
-	let selection = -1;
+const autocompleted = <T extends HTMLElement>({
+	container,
+	input,
+	getMatches,
+	onSelection,
+}: AutocompleteOptions<T>): T => {
 	let entries = [];
 
 	const autocompleteList = document.createElement("div");
@@ -19,58 +24,36 @@ const autocompleted = <T extends Autocompletable>({element, getMatches, onSelect
 		const div = document.createElement("div");
 		div.innerText = match;
 		div.addEventListener("click", () => {
+			const {value, selectionStart} = input;
 			closeAllLists();
-			onSelection(match);
+			onSelection(match, value, selectionStart);
 		});
 		return div;
 	};
 
-	element.addEventListener(
+	input.addEventListener(
 		"input",
 		debounce(async () => {
 			closeAllLists();
-			const {value, selectionStart} = element;
+			const {value, selectionStart} = input;
 			const matches = await getMatches(value, selectionStart);
 
 			if (matches.length > 0) {
-				element.appendChild(autocompleteList);
+				container.appendChild(autocompleteList);
 				entries = matches.map(toAutocompleteEntry);
 				autocompleteList.append(...entries);
 			}
 		}, 100)
 	);
 
-	const moveSelection = (code: "ArrowUp" | "ArrowDown", {length}: {length: number}) => {
-		if (length) {
-			selection += code === "ArrowDown" ? 1 : -1;
-			selection %= length;
-		}
-	};
+	const closeAllLists = () => autocompleteList.replaceChildren();
 
-	element.addEventListener("keydown", (event: KeyboardEvent) => {
-		if (event.code == "ArrowDown" || event.code == "ArrowUp") {
-			removeActive(entries[selection]);
-			moveSelection(event.code, entries);
-			addActive(entries[selection]);
-		} else if (event.code == "Enter") {
-			entries[selection]?.click();
-		}
-	});
-
-	const addActive = (div: HTMLDivElement) => div.classList.add("autocomplete-active");
-	const removeActive = (div: HTMLDivElement) => div.classList.remove("autocomplete-active");
-
-	const closeAllLists = () => {
-		selection = -1;
-		autocompleteList.replaceChildren();
-	};
-
-	element.addEventListener("click", (event) => event.stopPropagation());
+	container.addEventListener("click", (event) => event.stopPropagation());
 	document.addEventListener("click", closeAllLists);
 
 	// again proOOOBably shouldn't do this
-	element.style.position = "relative";
-	return element;
+	container.style.position = "relative";
+	return container;
 };
 
 export {autocompleted};

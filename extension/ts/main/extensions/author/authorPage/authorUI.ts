@@ -1,6 +1,9 @@
 import {createIconButton} from "../../../ui/button";
 import {createHeader} from "../../../ui/header";
 import {onLogged} from "../../util/onLogged";
+import {autocompleted} from "../../../ui/autocompleted";
+import {getTagsIncluding} from "../../../adapters/tags";
+import {autocomplete} from "./autocomplete";
 
 const TAG_LIST_ID = "vbl-tag-list";
 const TAG_INPUT_ID = "vbl-tag-input";
@@ -42,7 +45,13 @@ const createTagInput = () => {
 	const input = document.createElement("input");
 	input.id = TAG_INPUT_ID;
 	input.classList.add("bookEditInput");
-	return input;
+	input.autocomplete = "off";
+
+	const container = document.createElement("div");
+	container.classList.add("vbl-tag-input-container");
+	container.append(input);
+
+	return autocomplete({container, input});
 };
 
 const editTagViewSection = ({onSave, onPull, onCancel}: ButtonHandlers) => {
