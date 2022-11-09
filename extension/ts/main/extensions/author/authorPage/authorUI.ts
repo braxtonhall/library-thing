@@ -1,6 +1,6 @@
 import {createIconButton} from "../../../ui/button";
 import {createHeader} from "../../../ui/header";
-import {onLoggedIn} from "../../util/onLoggedIn";
+import {onLogged} from "../../util/onLogged";
 
 const TAG_LIST_ID = "vbl-tag-list";
 const TAG_INPUT_ID = "vbl-tag-input";
@@ -38,7 +38,7 @@ const createSection = () => {
 	return section;
 };
 
-const createEditTagsSection = ({onSave, onPull, onCancel}: ButtonHandlers) => {
+const editTagViewSection = ({onSave, onPull, onCancel}: ButtonHandlers) => {
 	const section = createSection();
 	section.id = TAG_INPUT_CONTAINER_ID;
 	section.innerHTML = `<input id="${TAG_INPUT_ID}" class="bookEditInput">`;
@@ -50,44 +50,53 @@ const createEditTagsSection = ({onSave, onPull, onCancel}: ButtonHandlers) => {
 	return section;
 };
 
-const createCurrentTagsButtons = ({onPush, onSync, onEdit}: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
+const currentTagViewButtons = ({onPush, onSync, onEdit}: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
 	const container = document.createElement("div");
 	container.id = TAG_LIST_BUTTON_CONTAINER_ID;
-	onLoggedIn(
-		async () => {
-			container.append(
-				createTagButton("Push", "img/book.png", onPush, "Add this author's tags to all of their books")
-			);
-			container.append(
-				createTagButton(
-					"Sync",
-					"img/enchanted-book.png",
-					onSync,
-					"Add this author's tags to all of their books, and delete extra tags"
-				)
-			);
-			container.append(createTagButton("Edit", "img/edit.gif", onEdit));
+	const onPushButton = createTagButton(
+		"Push",
+		"img/book.png",
+		onPush,
+		"Add this author's tags to all of their books"
+	);
+	const onSyncButton = createTagButton(
+		"Sync",
+		"img/enchanted-book.png",
+		onSync,
+		"Add this author's tags to all of their books, and delete extra tags"
+	);
+	const onEditButton = createTagButton("Edit", "img/edit.gif", onEdit);
+
+	onLogged({
+		container,
+		description: "Log in to manage this author's book tags",
+		onLogIn: async () => {
+			container.append(onPushButton, onSyncButton, onEditButton);
 			await getTagsCallback();
 		},
-		container,
-		"Log in to manage this author's book tags"
-	);
+		onLogOut: () => {
+			viewExistingTags();
+			onPushButton.remove();
+			onSyncButton.remove();
+			onEditButton.remove();
+		},
+	});
 	return container;
 };
 
-const createCurrentTagsSection = (handlers: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
+const currentTagViewSection = (handlers: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
 	const section = createSection();
 	section.id = TAG_LIST_CONTAINER_ID;
 	section.innerHTML = `<span id="${TAG_LIST_ID}">Unknown</span>`;
-	const buttons = createCurrentTagsButtons(handlers, getTagsCallback);
-	section.append(buttons);
+	const buttonsContainer = currentTagViewButtons(handlers, getTagsCallback);
+	section.append(buttonsContainer);
 	return section;
 };
 
 const appendUI = (container: Element, handlers: ButtonHandlers, getTagsCallback: () => Promise<void>) => {
 	const header = createHeader("Tags");
-	const currentTagsSection = createCurrentTagsSection(handlers, getTagsCallback);
-	const editTagsSection = createEditTagsSection(handlers);
+	const currentTagsSection = currentTagViewSection(handlers, getTagsCallback);
+	const editTagsSection = editTagViewSection(handlers);
 	container.insertBefore(editTagsSection, container.children[2]);
 	container.insertBefore(currentTagsSection, editTagsSection);
 	container.insertBefore(header, currentTagsSection);

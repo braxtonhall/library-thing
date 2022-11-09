@@ -25,9 +25,12 @@ interface FinderExtensionOptions<T> {
 	delimiter: string;
 }
 
-const createFinderExtension = <T>(options: FinderExtensionOptions<T>) => onFormRender(() => insertFinder(options));
+const createFinderExtension = <T>(options: FinderExtensionOptions<T>) =>
+	onFormRender(() => {
+		appendFinder(options);
+	});
 
-const insertFinder = <T>(options: FinderExtensionOptions<T>) => {
+const appendFinder = <T>(options: FinderExtensionOptions<T>) => {
 	const onClick = (textArea: HTMLTextAreaElement) => async (event: MouseEvent) => {
 		event.preventDefault();
 		const input = {author: findAuthor(), title: findTitle(), isbn: findISBN()};
@@ -47,15 +50,20 @@ const insertFinder = <T>(options: FinderExtensionOptions<T>) => {
 	const textAreaContainer = document.getElementById(options.textAreaContainerId);
 	const textArea = document.getElementById(options.textAreaId) as HTMLTextAreaElement; // not type safe -- lazy
 	if (textAreaContainer && textArea) {
-		textAreaContainer.appendChild(
-			createIconButton(
-				options.buttonName,
-				options.buttonImage ?? "img/search.png",
-				onClick(textArea),
-				options.description
-			)
+		const finderButton = createIconButton(
+			options.buttonName,
+			options.buttonImage ?? "img/search.png",
+			onClick(textArea),
+			options.description
 		);
+		textAreaContainer.appendChild(finderButton);
+
+		const showFinder = () => (finderButton.style.display = "");
+		const hideFinder = () => (finderButton.style.display = "none");
+		return {showFinder, hideFinder};
+	} else {
+		throw new Error("appendFinder should not have been called on this page");
 	}
 };
 
-export {createFinderExtension, insertFinder};
+export {createFinderExtension, appendFinder};

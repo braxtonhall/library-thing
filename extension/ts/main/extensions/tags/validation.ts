@@ -2,7 +2,7 @@ import {getAllTags, getAncestry} from "../../adapters/tags";
 import {createModal} from "../../ui/modal";
 import {loaderOverlaid} from "../../ui/loadingIndicator";
 import {UIColour} from "../../ui/colour";
-import {OnSave} from "../../entities/bookForm";
+import {OnSave, OffSave} from "../../entities/bookForm";
 
 declare const SPREADSHEET_ID: string; // set by webpack
 
@@ -36,11 +36,11 @@ const applyHighlights = async (text: string): Promise<string> => {
 	return parts.join(",") + "\n";
 };
 
-const handleInput = (tagInput: HTMLTextAreaElement, highlighter: HTMLElement) => {
+const handleInput = (tagInput: HTMLTextAreaElement, highlighter: HTMLElement): void => {
 	const handler = async () => (highlighter.innerHTML = await applyHighlights(tagInput.value));
 	tagInput.addEventListener("input", handler);
 	tagInput.addEventListener("change", handler);
-	return handler();
+	handler();
 };
 
 const handleViewChange = (tagInput: HTMLTextAreaElement, backdrop: HTMLElement) => {
@@ -125,16 +125,29 @@ const handleSave = (tagInput: HTMLTextAreaElement, options: GetTagsOptions) => {
 	return saveHandler(options);
 };
 
-const validateTags = (onSave: OnSave) => {
+const appendTagValidator = (onSave: OnSave, offSave: OffSave) => {
 	const tagInputContainer = document.getElementById("bookedit_tags");
 	const tagInput = document.getElementById("form_tags") as HTMLTextAreaElement;
 	if (tagInput && tagInputContainer) {
 		const {highlighter, backdrop} = createHighlighterComponents();
 		tagInputContainer.insertAdjacentElement("afterbegin", backdrop);
-		onSave(() => handleSave(tagInput, {noCache: false}));
+		const saveButtonListener = () => handleSave(tagInput, {noCache: false});
 		handleViewChange(tagInput, backdrop);
-		return handleInput(tagInput, highlighter);
+		handleInput(tagInput, highlighter);
+
+		const showTagValidator = () => {
+			onSave(saveButtonListener);
+			backdrop.style.display = "";
+		};
+		const hideTagValidator = () => {
+			offSave(saveButtonListener);
+			backdrop.style.display = "none";
+		};
+
+		return {showTagValidator, hideTagValidator};
+	} else {
+		throw new Error("appendTagValidator should not have been called on this page");
 	}
 };
 
-export {validateTags};
+export {appendTagValidator};
