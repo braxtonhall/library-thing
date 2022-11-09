@@ -27,20 +27,20 @@ const autocompleted = <T extends HTMLElement>({container, input, getMatches, new
 		return div;
 	};
 
-	input.addEventListener(
-		"input",
-		debounce(async () => {
-			closeAllLists();
-			const {value, selectionStart} = input;
-			const matches = await getMatches(value, selectionStart);
+	const inputHandler = debounce(async () => {
+		closeAllLists();
+		const {value, selectionStart} = input;
+		const matches = await getMatches(value, selectionStart);
 
-			if (matches.length > 0) {
-				container.appendChild(autocompleteList);
-				entries = matches.map(toAutocompleteEntry);
-				autocompleteList.replaceChildren(...entries);
-			}
-		}, 100)
-	);
+		if (matches.length > 0) {
+			container.appendChild(autocompleteList);
+			entries = matches.map(toAutocompleteEntry);
+			autocompleteList.replaceChildren(...entries);
+		}
+	}, 100);
+
+	input.addEventListener("click", inputHandler);
+	input.addEventListener("keydown", inputHandler);
 
 	const closeAllLists = () => autocompleteList.replaceChildren();
 
