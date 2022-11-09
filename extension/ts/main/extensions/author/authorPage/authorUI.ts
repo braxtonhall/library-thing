@@ -1,6 +1,7 @@
 import {createIconButton} from "../../../ui/button";
 import {createHeader} from "../../../ui/header";
 import {onLogged} from "../../util/onLogged";
+import {autocomplete} from "./autocomplete";
 
 const TAG_LIST_ID = "vbl-tag-list";
 const TAG_INPUT_ID = "vbl-tag-input";
@@ -28,7 +29,7 @@ const createTagLink = (tag: string) => {
 
 const createTagButton = (text: string, imgSrc: string, onClick: () => void, description?: string) => {
 	const button = createIconButton(text, imgSrc, onClick, description);
-	button.className += " author-tag-button";
+	button.classList.add("author-tag-button");
 	return button;
 };
 
@@ -38,10 +39,23 @@ const createSection = () => {
 	return section;
 };
 
+const createTagInput = () => {
+	const input = document.createElement("input");
+	input.id = TAG_INPUT_ID;
+	input.classList.add("bookEditInput");
+	input.autocomplete = "off";
+
+	const container = document.createElement("div");
+	container.classList.add("vbl-tag-input-container");
+	container.append(input);
+
+	return autocomplete({container, input});
+};
+
 const editTagViewSection = ({onSave, onPull, onCancel}: ButtonHandlers) => {
 	const section = createSection();
 	section.id = TAG_INPUT_CONTAINER_ID;
-	section.innerHTML = `<input id="${TAG_INPUT_ID}" class="bookEditInput">`;
+	section.append(createTagInput());
 	section.append(
 		createTagButton("Pull", "img/book.png", onPull, "Copy author tags that already exist on this author's books")
 	);

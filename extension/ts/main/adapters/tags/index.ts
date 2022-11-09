@@ -16,11 +16,17 @@ const getAllTags = async (options: TagSearchOptions = {noCache: false}) => {
 	return new Set(tags);
 };
 
-const getTagsIncluding = async (search: string, options: TagSearchOptions = {noCache: false}): Promise<string[]> => {
-	const tags = await getAllTags(options);
+const tagMatches = (search: string, match: RegExp) => (tag) =>
+	tag.length > search.length && tag.toLowerCase().includes(search) && match.test(tag);
+
+const getTagsIncluding = async (
+	search: string,
+	{noCache = false, match = /.*/}: {noCache?: boolean; match?: RegExp} = {}
+): Promise<string[]> => {
+	const tags = await getAllTags({noCache});
 	const lowerSearch = search.toLowerCase();
 	const allTags = [...tags.values()];
-	const matchingTags = allTags.filter((tag) => tag.toLowerCase().includes(lowerSearch));
+	const matchingTags = allTags.filter(tagMatches(lowerSearch, match));
 	return matchingTags.sort();
 };
 

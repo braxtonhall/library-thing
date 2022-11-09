@@ -62,7 +62,7 @@ const createModal = ({text, subText, buttons, onCancel, colour}: ModalOptions): 
 	const exit = () => document.body.removeChild(overlay);
 
 	const overlay = createOverlay();
-	overlay.className += " modal";
+	overlay.classList.add("modal");
 	addOnClick(overlay, exit, onCancel);
 
 	const modal = createWithClass("div", `${MODAL_CLASS_NAME} ${colour}`);
