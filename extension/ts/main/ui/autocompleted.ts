@@ -41,7 +41,7 @@ const autocompleted = <T extends HTMLElement>({
 			if (matches.length > 0) {
 				container.appendChild(autocompleteList);
 				entries = matches.map(toAutocompleteEntry);
-				autocompleteList.append(...entries);
+				autocompleteList.replaceChildren(...entries);
 			}
 		}, 100)
 	);
