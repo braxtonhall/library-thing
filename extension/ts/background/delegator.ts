@@ -10,6 +10,7 @@ import {
 } from "../common/workers/types";
 import {get} from "./workers/request";
 import {authorize, deAuthorize} from "./workers/authorize";
+import {Message} from "../common/types";
 
 const workers: Workers = {
 	[WorkerKind.Get]: get,
@@ -17,8 +18,11 @@ const workers: Workers = {
 	[WorkerKind.DeAuthorize]: deAuthorize,
 };
 
-chrome.runtime.onMessage.addListener(
-	<Kind extends WorkerKind>(typedRequest: TypedWorkerRequest<Kind>, sender, sendResponse) => {
+const isTypedWorkerRequest = <Kind extends WorkerKind>(request: Message): request is TypedWorkerRequest<Kind> =>
+	request.message === "worker-message";
+
+chrome.runtime.onMessage.addListener(<Kind extends WorkerKind>(typedRequest: Message, sender, sendResponse) => {
+	if (isTypedWorkerRequest(typedRequest)) {
 		const request = typedRequest.request as WorkerRequest<Kind>;
 		const worker = workers[typedRequest.kind] as Worker<Kind>;
 		worker(request)
@@ -32,4 +36,4 @@ chrome.runtime.onMessage.addListener(
 			});
 		return true;
 	}
-);
+});

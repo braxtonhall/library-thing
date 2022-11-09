@@ -5,6 +5,7 @@ import {
 	DeAuthorizeParameters,
 	DeAuthorizeResponse,
 } from "../../background/workers/authorize";
+import {Message} from "../types";
 
 enum WorkerKind {
 	Get = "get",
@@ -36,7 +37,11 @@ type WorkerRequest<Kind extends WorkerKind> = Kind extends WorkerKind.Get
 	? DeAuthorizeParameters
 	: never;
 
-type TypedWorkerRequest<Kind extends WorkerKind> = {kind: WorkerKind; request: WorkerRequest<Kind>};
+interface TypedWorkerRequest<Kind extends WorkerKind> extends Message {
+	kind: WorkerKind;
+	request: WorkerRequest<Kind>;
+	message: "worker-message";
+}
 
 type WorkerResponse<Kind extends WorkerKind> = WorkerResponseResolved<Kind> | WorkerResponseRejected;
 
