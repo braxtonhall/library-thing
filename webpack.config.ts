@@ -7,16 +7,16 @@ const isDev = (options: WebpackOptionsNormalized) => options.mode !== "productio
 
 const srcDir = path.join(__dirname, "extension");
 const tsSrcDir = path.join(srcDir, "ts");
-const getEntry = (name: string) => {
-	return [path.join(tsSrcDir, name === "content" ? "main" : name), ...(isDev ? [`mv3-hot-reload/${name}`] : [])];
+const getEntry = (name: string, options: WebpackOptionsNormalized) => {
+	return [path.join(tsSrcDir, name === "content" ? "main" : name), ...(isDev(options) ? [`mv3-hot-reload/${name}`] : [])];
 };
 
 module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration => ({
 	devtool: isDev(options) ? "source-map" : undefined,
 	entry: {
 		options: path.join(tsSrcDir, "options"),
-		bundle: getEntry("content"),
-		background: getEntry("background"),
+		bundle: getEntry("content", options),
+		background: getEntry("background", options),
 	},
 	output: {
 		path: path.join(srcDir, "js"),
