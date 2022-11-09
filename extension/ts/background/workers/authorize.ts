@@ -15,8 +15,8 @@ const authorize = (interactive: AuthorizeParameters): Promise<AuthorizeResponse>
 					}
 					resolve(auth);
 				} else {
-					// TODO check runtime.lastError
-					reject(new WorkerError(WorkerErrorKind.Unknown, "Auth not granted"));
+					const {message} = chrome.runtime.lastError;
+					reject(new WorkerError(WorkerErrorKind.Unknown, message));
 				}
 			});
 		} else {
