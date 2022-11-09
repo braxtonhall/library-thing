@@ -1,6 +1,6 @@
-import {createPushBookTags, createSyncBookTags} from "../../extension/ts/content/extensions/author/util/bookEditor";
-import {AuthorRecord} from "../../extension/ts/content/adapters/author";
-import {BookRecord} from "../../extension/ts/content/adapters/book";
+import {createPushBookTags, createSyncBookTags} from "../../extension/ts/main/extensions/author/util/bookEditor";
+import {AuthorRecord} from "../../extension/ts/main/adapters/author";
+import {BookRecord} from "../../extension/ts/main/adapters/book";
 import {expect} from "chai";
 
 const testAuthors = new Map<string, AuthorRecord>([

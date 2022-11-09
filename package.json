@@ -30,15 +30,15 @@
 		"webpack-cli": "^4.10.0"
 	},
 	"scripts": {
-		"watch": "concurrently yarn:dev:*",
+		"watch": "concurrently yarn:watch:*",
 		"build": "webpack --mode production",
 		"lint": "eslint extension/ts/ --ext .ts",
 		"fix": "yarn lint --fix",
 		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write \"extension/ts/**/*.ts\"",
 		"test": "mocha --require ts-node/register --extension .spec.ts --recursive test",
 		"prepare": "husky install",
-		"dev:webpack": "webpack --watch --mode development",
-		"dev:mv3": "mv3-hot-reload"
+		"watch:webpack": "webpack --watch --mode development",
+		"watch:mv3": "mv3-hot-reload"
 	},
 	"lint-staged": {
 		"extension/**/*.ts": [

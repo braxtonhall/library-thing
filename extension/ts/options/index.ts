@@ -1,7 +1,7 @@
 import "../../sass/options.sass";
 import {invokeWorker} from "../common/workers/invoker";
 import {WorkerKind} from "../common/workers/types";
-import {loaderOverlaid} from "../content/ui/loadingIndicator";
+import {loaderOverlaid} from "../main/ui/loadingIndicator";
 
 const getAuthorization = (interactive: boolean) => invokeWorker(WorkerKind.Authorize, interactive).catch(() => "");
 const removeAuthorization = () => invokeWorker(WorkerKind.DeAuthorize, null).catch(() => undefined);
