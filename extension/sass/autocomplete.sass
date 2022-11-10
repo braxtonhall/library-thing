@@ -1,0 +1,23 @@
+@use "colours"
+
+.autocomplete-list
+	position: absolute
+	border: 1px solid colours.$dark-grey
+	border-bottom: none
+	border-top: none
+	z-index: 99
+	top: 100%
+	left: 0
+
+	div
+		padding: 10px
+		cursor: pointer
+		background-color: colours.$white
+		border-bottom: 1px solid colours.$dark-grey
+
+		&:hover
+			background-color: colours.$light-grey
+
+.autocomplete-active
+	background-color: colours.$blue !important
+	color: colours.$white
