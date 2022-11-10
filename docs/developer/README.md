@@ -16,7 +16,7 @@ To contribute just make a PR into the `main` branch!
 ## Scripts
 - **`yarn install`**: Gathers all dependencies. This should be run at the start of development on a new clone in the root.
 - **`yarn build`**: Compiles the `.ts` files to `.js` files in the `extension/js/` dir.
-- **`yarn watch`**: Runs a new build any time any file changes are detected.
+- **`yarn watch`**: Runs a new build any time any file changes are detected and hot reloads the extension and page.
 - **`yarn lint`**: Lints the `extension/ts/` files.
 - **`yarn fix`**: Fixes all automatically fixable lint errors in the `extension/ts/` files.
 - **`yarn pretty`**: Prettifies the `extension/ts/` files.

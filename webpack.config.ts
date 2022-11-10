@@ -1,17 +1,26 @@
 import path from "path";
-import {Configuration, DefinePlugin} from "webpack";
+import {Configuration, DefinePlugin, EnvironmentPlugin, WebpackOptionsNormalized} from "webpack";
 
-module.exports = (env, options): Configuration => ({
-	devtool: options.mode !== 'production' ? 'source-map' : undefined,
-	context: path.join(__dirname, '/extension'),
+import config from "./mv3-hot-reload.config";
+
+const isDev = (options: WebpackOptionsNormalized) => options.mode !== "production";
+
+const srcDir = path.join(__dirname, "extension");
+const tsSrcDir = path.join(srcDir, "ts");
+const getEntry = (name: string, options) => {
+	return [path.join(tsSrcDir, name), ...(isDev(options) ? [`mv3-hot-reload/${name}`] : [])];
+};
+
+module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration => ({
+	devtool: isDev(options) ? "source-map" : undefined,
 	entry: {
-		'bundle': './ts/main/index.ts',
-		'options': './ts/options/index.ts',
-		'background': './ts/background/delegator.ts',
+		options: path.join(tsSrcDir, "options"),
+		bundle: getEntry("content", options),
+		background: getEntry("background", options),
 	},
 	output: {
-		path: path.join(__dirname, '/extension/js'),
-		filename: '[name].js'
+		path: path.join(srcDir, "js"),
+		filename: "[name].js",
 	},
 	module: {
 		rules: [
@@ -19,14 +28,14 @@ module.exports = (env, options): Configuration => ({
 				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
 				use: {
-					loader: 'babel-loader'
-				}
+					loader: "babel-loader",
+				},
 			},
 			{
 				test: /\.tsx?$/,
 				exclude: /node_modules/,
 				use: {
-					loader: 'ts-loader'
+					loader: "ts-loader",
 				},
 			},
 			{
@@ -36,17 +45,20 @@ module.exports = (env, options): Configuration => ({
 			{
 				test: /\.s[ac]ss$/i,
 				use: ["style-loader", "css-loader", "sass-loader"],
-			}
-		]
+			},
+		],
 	},
 	resolve: {
-		extensions: ['.tsx', '.ts', '.js'],
+		extensions: [".tsx", ".ts", ".js"],
 	},
 	plugins: [
 		new DefinePlugin({
-			SPREADSHEET_ID: options.mode !== 'production'
+			SPREADSHEET_ID: isDev(options)
 				? JSON.stringify("18I5LabO21LfV97CkBRBW6SeK5hPggitvnK-2joUJ8jU")
 				: JSON.stringify("1EfwBhY56M8OwgVjFTWxxxdoIxK8osw2vfgsXnCyGGuA"),
-		})
-	]
+		}),
+		new EnvironmentPlugin({
+			MV3_HOT_RELOAD_PORT: config.port,
+		}),
+	],
 });

@@ -1,4 +1,4 @@
-import {makeCache} from "../../extension/ts/main/util/cache";
+import {makeCache} from "../../extension/ts/content/util/cache";
 import {sleep} from "../../extension/ts/common/util/sleep";
 import {expect} from "chai";
 
@@ -14,7 +14,10 @@ describe("cache", () => {
 		return value;
 	};
 
-	const asyncGetValue = (value: string, ms = 0) => () => sleep(ms).then(syncGetValue(value));
+	const asyncGetValue =
+		(value: string, ms = 0) =>
+		() =>
+			sleep(ms).then(syncGetValue(value));
 
 	beforeEach(() => {
 		const cache = makeCache<string>();
