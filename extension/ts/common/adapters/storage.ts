@@ -7,8 +7,8 @@ const set = async <T>(key: string, value: T): Promise<T> => {
 	return value;
 };
 
-const get = async <T>(key: string): Promise<T> => {
-	const storage = await chrome.storage.sync.get({[key]: ""});
+const get = async <T>(key: string, defaultValue?: T): Promise<T> => {
+	const storage = await chrome.storage.sync.get({[key]: defaultValue});
 	return storage[key];
 };
 
