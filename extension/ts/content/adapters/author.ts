@@ -1,6 +1,6 @@
 import Sheets, {GetSheetsDataResponse, ValueRange} from "./sheets";
 import {filterAuthorTags} from "../util/filterAuthorTags";
-import {makeCache} from "../util/cache";
+import {makeCache} from "../../common/util/cache";
 
 declare const SPREADSHEET_ID: string; // Declared in webpack DefinePlugin
 const AUTHOR_SHEET = "Authors";
