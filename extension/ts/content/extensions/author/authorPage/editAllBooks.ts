@@ -1,5 +1,5 @@
-import {loaderOverlaid} from "../../../ui/loadingIndicator";
-import {showToast, ToastType} from "../../../ui/toast";
+import {loaderOverlaid} from "../../../../common/ui/loadingIndicator";
+import {showToast, ToastType} from "../../../../common/ui/toast";
 import {BookRecord} from "../../../adapters/book";
 import {getAuthorInfo} from "./util";
 import {getAuthorPageBooks} from "./getAuthorPageBooks";

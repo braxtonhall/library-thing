@@ -1,4 +1,4 @@
-import {autocompleted} from "../../../ui/autocompleted";
+import {autocompleted} from "../../../../common/ui/autocompleted";
 import {getTagsIncluding} from "../../../adapters/tags";
 
 interface Options {

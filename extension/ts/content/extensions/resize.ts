@@ -1,5 +1,5 @@
 import {ForEachFormElement, onFormRender} from "../entities/bookForm";
-import {debounce} from "../util/debounce";
+import {debounce} from "../../common/util/debounce";
 import {getLastFormRender} from "../util/lastFormRender";
 
 /**

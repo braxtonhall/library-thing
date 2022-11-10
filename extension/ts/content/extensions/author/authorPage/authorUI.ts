@@ -1,5 +1,5 @@
-import {createIconButton} from "../../../ui/button";
-import {createHeader} from "../../../ui/header";
+import {createIconButton} from "../../../../common/ui/button";
+import {createHeader} from "../../../../common/ui/header";
 import {onLogged} from "../../util/onLogged";
 import {autocomplete} from "./autocomplete";
 

@@ -1,10 +1,10 @@
-import {createModal} from "../../../ui/modal";
+import {createModal} from "../../../../common/ui/modal";
 import {getInput, insertTags} from "./authorUI";
-import {showToast, ToastType} from "../../../ui/toast";
-import {loaderOverlaid} from "../../../ui/loadingIndicator";
+import {showToast, ToastType} from "../../../../common/ui/toast";
+import {loaderOverlaid} from "../../../../common/ui/loadingIndicator";
 import {authorTagsFromBooksWhere, getAuthorInfo} from "./util";
 import Author from "../../../adapters/author";
-import {UIColour} from "../../../ui/colour";
+import {UIColour} from "../../../../common/ui/colour";
 import {getAuthorPageBooks} from "./getAuthorPageBooks";
 
 interface PullData {

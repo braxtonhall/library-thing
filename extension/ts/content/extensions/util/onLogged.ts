@@ -1,9 +1,9 @@
 import {invokeWorker} from "../../../common/workers/invoker";
 import {WorkerError, WorkerErrorKind, WorkerKind} from "../../../common/workers/types";
-import {createIconButton} from "../../ui/button";
+import {createIconButton} from "../../../common/ui/button";
 import {isAuthorized} from "../author/util/isAuthorized";
-import {showToast, ToastType} from "../../ui/toast";
-import {loaderOverlaid} from "../../ui/loadingIndicator";
+import {showToast, ToastType} from "../../../common/ui/toast";
+import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {BackgroundEvent} from "../../../common/backgroundEvent";
 import {onBackgroundEvent} from "../../util/onBackgroundEvent";
 

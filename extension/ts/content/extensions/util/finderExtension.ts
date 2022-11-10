@@ -1,7 +1,7 @@
-import {showToast, ToastType} from "../../ui/toast";
-import {loaderOverlaid} from "../../ui/loadingIndicator";
+import {showToast, ToastType} from "../../../common/ui/toast";
+import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {onFormRender} from "../../entities/bookForm";
-import {createIconButton} from "../../ui/button";
+import {createIconButton} from "../../../common/ui/button";
 import {Finder, FinderParameters} from "../../services/finder/finder";
 
 const findTextContent = (id: string) => (): string =>

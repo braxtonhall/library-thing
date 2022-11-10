@@ -1,7 +1,7 @@
 import {getAllTags, getAncestry} from "../../adapters/tags";
-import {createModal} from "../../ui/modal";
-import {loaderOverlaid} from "../../ui/loadingIndicator";
-import {UIColour} from "../../ui/colour";
+import {createModal} from "../../../common/ui/modal";
+import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
+import {UIColour} from "../../../common/ui/colour";
 import {OnSave, OffSave} from "../../entities/bookForm";
 
 declare const SPREADSHEET_ID: string; // set by webpack
