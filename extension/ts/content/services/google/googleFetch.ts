@@ -1,6 +1,6 @@
 import {invokeWorker} from "../../../common/workers/invoker";
 import {WorkerKind} from "../../../common/workers/types";
-import {showToast, ToastType} from "../../ui/toast";
+import {showToast, ToastType} from "../../../common/ui/toast";
 
 const handleError = (res: Response): Response => {
 	if (!res.ok) {

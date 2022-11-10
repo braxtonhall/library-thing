@@ -1,14 +1,14 @@
 import Author, {AuthorRecord} from "../../../adapters/author";
 import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from "./authorUI";
-import {loaderOverlaid} from "../../../ui/loadingIndicator";
+import {loaderOverlaid} from "../../../../common/ui/loadingIndicator";
 import Book from "../../../adapters/book";
 import {createPushBookTags, createSyncBookTags} from "../util/bookEditor";
 import {getAuthorInfo, getTags} from "./util";
 import {onEditAllBooks} from "./editAllBooks";
-import {createModal} from "../../../ui/modal";
-import {showToast, ToastType} from "../../../ui/toast";
+import {createModal} from "../../../../common/ui/modal";
+import {showToast, ToastType} from "../../../../common/ui/toast";
 import {onPull} from "./pull";
-import {UIColour} from "../../../ui/colour";
+import {UIColour} from "../../../../common/ui/colour";
 
 const onEdit = () => {
 	viewTagEditor();

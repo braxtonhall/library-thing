@@ -1,4 +1,4 @@
-import {showToast, ToastType} from "../ui/toast";
+import {showToast, ToastType} from "../../common/ui/toast";
 import {invokeWorker} from "../../common/workers/invoker";
 import {WorkerKind} from "../../common/workers/types";
 
