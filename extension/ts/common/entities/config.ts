@@ -10,11 +10,11 @@ const configDefaults = {
 	[ConfigKey.CheckVersionInterval]: ONE_DAY_MS,
 };
 
-const get = async <K extends ConfigKey>(key: K): Promise<typeof configDefaults[K]> =>
-	storage.get<typeof configDefaults[K]>(key, configDefaults[key]);
+type ConfigGetter = <K extends ConfigKey>(key: K) => Promise<typeof configDefaults[K]>;
+type ConfigSetter = <K extends ConfigKey>(key: K, value: typeof configDefaults[K]) => Promise<typeof configDefaults[K]>;
 
-const set: <K extends ConfigKey>(key: K, value: typeof configDefaults[K]) => Promise<typeof configDefaults[K]> =
-	storage.set;
+const get: ConfigGetter = (key) => storage.get(key, configDefaults[key]);
+const set: ConfigSetter = storage.set;
 
 export {ConfigKey};
 export default {get, set};
