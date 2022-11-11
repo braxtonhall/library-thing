@@ -3,16 +3,20 @@ import {googleFetch} from "../../services/google/googleFetch";
 const BASE_URL = "https://sheets.googleapis.com/v4/spreadsheets";
 
 type Range = `${string}!${string}` | `${string}!${string}:${string}`;
+type Values = string[][];
 
 interface ValueRange {
-	range: string;
+	range: Range;
+	values: Values;
+}
+
+interface SheetsDataValueRange extends ValueRange {
 	majorDimension: string;
-	values: string[][];
 }
 
 export interface GetSheetsDataResponse {
 	spreadsheetId: string;
-	valueRanges: ValueRange[];
+	valueRanges: SheetsDataValueRange[];
 }
 interface UpdateSheetsDataResponse {
 	spreadsheetId: string;
@@ -20,7 +24,7 @@ interface UpdateSheetsDataResponse {
 	updatedCells: number;
 	updatedRows: number;
 	updatedColumns: number;
-	updatedData: ValueRange;
+	updatedData: SheetsDataValueRange;
 }
 
 export interface AppendSheetsDataResponse {
@@ -29,20 +33,18 @@ export interface AppendSheetsDataResponse {
 	updates: UpdateSheetsDataResponse;
 }
 
-const readRanges = (spreadsheetId: string, ranges: string[]): Promise<GetSheetsDataResponse | null> => {
+const readRanges = async (spreadsheetId: string, ranges: Range[]): Promise<ValueRange[] | null> => {
 	const queryParams = ranges.reduce((acc, range) => {
 		acc.append("ranges", range);
 		return acc;
 	}, new URLSearchParams({}));
 
-	return googleFetch(`${BASE_URL}/${spreadsheetId}/values:batchGet?${queryParams}`);
+	const url = `${BASE_URL}/${spreadsheetId}/values:batchGet?${queryParams}`;
+	const response: GetSheetsDataResponse = await googleFetch(url);
+	return response?.valueRanges ?? null;
 };
 
-const appendRowToSheet = (
-	spreadsheetId: string,
-	range: string,
-	values: string[][]
-): Promise<AppendSheetsDataResponse | null> => {
+const appendRowToSheet = async (spreadsheetId: string, range: string, values: Values): Promise<ValueRange | null> => {
 	const options: RequestInit = {
 		method: "POST",
 		headers: {
@@ -52,21 +54,16 @@ const appendRowToSheet = (
 		body: JSON.stringify({values}),
 	};
 
-	return googleFetch(
-		`${BASE_URL}/${spreadsheetId}/values/${range}:append?${new URLSearchParams({
-			includeValuesInResponse: "true",
-			insertDataOption: "INSERT_ROWS",
-			valueInputOption: "USER_ENTERED",
-		})}`,
-		options
-	);
+	const url = `${BASE_URL}/${spreadsheetId}/values/${range}:append?${new URLSearchParams({
+		includeValuesInResponse: "true",
+		insertDataOption: "INSERT_ROWS",
+		valueInputOption: "USER_ENTERED",
+	})}`;
+	const response: AppendSheetsDataResponse = await googleFetch(url, options);
+	return response?.updates?.updatedData ?? null;
 };
 
-const updateRowInSheet = (
-	spreadsheetId: string,
-	range: string,
-	values: string[][]
-): Promise<UpdateSheetsDataResponse | null> => {
+const updateRowInSheet = async (spreadsheetId: string, range: string, values: Values): Promise<ValueRange | null> => {
 	const options: RequestInit = {
 		method: "PUT",
 		headers: {
@@ -76,16 +73,15 @@ const updateRowInSheet = (
 		body: JSON.stringify({values}),
 	};
 
-	return googleFetch(
-		`${BASE_URL}/${spreadsheetId}/values/${range}?${new URLSearchParams({
-			includeValuesInResponse: "true",
-			valueInputOption: "USER_ENTERED",
-		})}`,
-		options
-	);
+	const url = `${BASE_URL}/${spreadsheetId}/values/${range}?${new URLSearchParams({
+		includeValuesInResponse: "true",
+		valueInputOption: "USER_ENTERED",
+	})}`;
+	const response: UpdateSheetsDataResponse = await googleFetch(url, options);
+	return response?.updatedData ?? null;
 };
 
 const createRange = (sheet: string, from: string, to?: string): Range => `${sheet}!${from}${to ? `:${to}` : ""}`;
 
-export type {ValueRange};
+export type {ValueRange, Range, Values};
 export default {readRanges, appendRowToSheet, updateRowInSheet, createRange};

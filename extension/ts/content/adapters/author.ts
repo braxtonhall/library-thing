@@ -1,4 +1,4 @@
-import Sheets, {GetSheetsDataResponse, ValueRange} from "./sheets";
+import Sheets, {Range, ValueRange} from "./sheets";
 import {filterAuthorTags} from "../util/filterAuthorTags";
 import {makeCache} from "../../common/util/cache";
 
@@ -37,12 +37,12 @@ const getAuthorRowIndex = async (uuid: string): Promise<number | null> => {
 	const update = await Sheets.updateRowInSheet(SPREADSHEET_ID, Sheets.createRange(QUERY_SHEET, "A1"), [
 		[`=MATCH("${uuid}", ${Sheets.createRange(AUTHOR_SHEET, Columns.UUID, Columns.UUID)}, 0)`],
 	]);
-	const [[rowIndexString]] = update?.updatedData?.values ?? [];
+	const [[rowIndexString]] = update?.values ?? [];
 	const rowIndex = Number(rowIndexString);
 	return isFinite(rowIndex) ? rowIndex : null;
 };
 
-const getAuthorRange = async (uuid: string): Promise<string> => {
+const getAuthorRange = async (uuid: string): Promise<Range> => {
 	const rowIndex = await getAuthorRowIndex(uuid);
 	return rowIndex ? selectRow(rowIndex) : null;
 };
@@ -64,13 +64,13 @@ const writeAuthor = async ({uuid, name, tags}: AuthorRecord): Promise<AuthorReco
 
 const createAuthor = async ({uuid, name, tags}: AuthorRecord): Promise<AuthorRecord | null> => {
 	const appendRes = await Sheets.appendRowToSheet(SPREADSHEET_ID, selectAll, [[uuid, name, tags.join(", ")]]);
-	return valueRangeToAuthors(appendRes?.updates?.updatedData)?.[0] ?? null;
+	return valueRangeToAuthors(appendRes)?.[0] ?? null;
 };
 
 const updateAuthor = async (rowIndex: number, {uuid, name, tags}: AuthorRecord): Promise<AuthorRecord | null> => {
 	const range = Sheets.createRange(AUTHOR_SHEET, `${Columns.UUID}${rowIndex}`, `${Columns.TAGS}${rowIndex}`);
 	const updateRes = await Sheets.updateRowInSheet(SPREADSHEET_ID, range, [[uuid, name, tags.join(", ")]]);
-	return valueRangeToAuthors(updateRes?.updatedData)?.[0] ?? null;
+	return valueRangeToAuthors(updateRes)?.[0] ?? null;
 };
 
 const valueRangeToAuthors = (valueRange: ValueRange): AuthorRecord[] =>
@@ -80,8 +80,8 @@ const valueRangeToAuthors = (valueRange: ValueRange): AuthorRecord[] =>
 		return setCache(uuid, {uuid, name, tags: filterAuthorTags(sheetTags)});
 	}) ?? [];
 
-const transformReadSheetsData = (authorTagsData: GetSheetsDataResponse): AuthorRecord[] | null => {
-	return authorTagsData?.valueRanges.flatMap(valueRangeToAuthors) ?? null;
+const transformReadSheetsData = (authorTagsData: ValueRange[]): AuthorRecord[] | null => {
+	return authorTagsData?.flatMap(valueRangeToAuthors) ?? null;
 };
 
 const getAuthor = async (uuid: string): Promise<AuthorRecord> => {

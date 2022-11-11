@@ -1,6 +1,6 @@
 import {makeCache} from "../../../common/util/cache";
 import {TagSearchOptions, TagTree} from "./types";
-import Sheets from "../sheets";
+import Sheets, {Range} from "../sheets";
 import {parseTree} from "./parseTags";
 import {incrementColumnBy} from "../sheets/util";
 
@@ -27,7 +27,7 @@ const {asyncCached, setCache} = makeCache<TagTree>();
 const rowIsRange = ([, topLeft, width]: string[]): boolean =>
 	topLeft && width && /^[A-Z]+[0-9]+$/.test(topLeft) && /^[0-9]+$/.test(width);
 
-const rowToRange = ([sheet, topLeft, width]: string[]): string => {
+const rowToRange = ([sheet, topLeft, width]: string[]): Range => {
 	// `left` is a column, for example "B"
 	const left = topLeft.match(/^[A-Z]+/)[0];
 	// `right` is the right most column with tags if there are `width` columns of tags
@@ -36,16 +36,16 @@ const rowToRange = ([sheet, topLeft, width]: string[]): string => {
 	return `${sheet}!${topLeft}:${right}`;
 };
 
-const getTagRanges = async (): Promise<string[]> => {
+const getTagRanges = async (): Promise<Range[]> => {
 	const range = Sheets.createRange(META_TAG_SHEET, "A", "C");
 	const response = await Sheets.readRanges(SPREADSHEET_ID, [range]);
-	return response?.valueRanges?.[0].values.filter(rowIsRange).map(rowToRange) ?? [];
+	return response?.[0].values.filter(rowIsRange).map(rowToRange) ?? [];
 };
 
 const getSheetsTags = async (): Promise<string[][]> => {
 	const ranges = await getTagRanges();
 	const response = await Sheets.readRanges(SPREADSHEET_ID, ranges);
-	return response?.valueRanges?.flatMap((valueRange) => valueRange.values ?? []) ?? [];
+	return response?.flatMap((valueRange) => valueRange.values ?? []) ?? [];
 };
 
 const getTagTree = async ({noCache}: TagSearchOptions = {noCache: false}) => {
