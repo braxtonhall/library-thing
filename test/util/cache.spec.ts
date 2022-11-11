@@ -1,4 +1,4 @@
-import {makeCache} from "../../extension/ts/content/util/cache";
+import {makeCache} from "../../extension/ts/common/util/cache";
 import {sleep} from "../../extension/ts/common/util/sleep";
 import {expect} from "chai";
 

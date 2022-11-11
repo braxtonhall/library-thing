@@ -1,4 +1,4 @@
-import {makeCache} from "../../util/cache";
+import {makeCache} from "../../../common/util/cache";
 import {TagSearchOptions, TagTree} from "./types";
 import Sheets from "../sheets";
 import {parseTree} from "./parseTags";
