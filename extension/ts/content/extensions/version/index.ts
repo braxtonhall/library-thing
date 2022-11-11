@@ -26,7 +26,7 @@ const onANewVersion = async (): Promise<boolean> => versionLessThan(await lastSe
 
 window.addEventListener("load", async () => {
 	if ((await onANewVersion()) || (await beenAWhile())) {
-		const {version: remoteVersion, download, html} = await getLatestRelease();
+		const {version: remoteVersion, download} = await getLatestRelease();
 		const currentVersion = getCurrentVersion();
 		if (versionLessThan(currentVersion, remoteVersion)) {
 			download &&
@@ -34,12 +34,12 @@ window.addEventListener("load", async () => {
 					window.open(download)
 				);
 		} else if (versionEquals(remoteVersion, currentVersion)) {
-			html &&
-				showToast(
-					"Looks like this is your first time on this version of Better LibraryThing!\n\nClick here to see what's new.",
-					ToastType.INFO,
-					() => window.open(html)
-				);
+			// html &&
+			// 	showToast(
+			// 		"Looks like this is your first time on this version of Better LibraryThing!\n\nClick here to see what's new.",
+			// 		ToastType.INFO,
+			// 		() => window.open(html)
+			// 	);
 		}
 		await lastSeenVersion.set();
 		await checkedTime.set();
