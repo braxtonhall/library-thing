@@ -1,5 +1,11 @@
 import storage from "../adapters/storage";
 
+/**
+ * The point is this file is to have storage,
+ * but with types consistent across different files
+ * also accessing the same configs
+ */
+
 enum ConfigKey {
 	CheckVersionInterval = "check-version-interval",
 }
