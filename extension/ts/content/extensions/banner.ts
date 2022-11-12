@@ -1,6 +1,7 @@
 import "../../../sass/banner.sass";
 
 import Cookies from "../adapters/cookies";
+import {onLogged} from "./util/onLogged";
 
 const LOGGED_IN_SATURATION = 1.5;
 const LOGGED_OUT_SATURATION = 0;
@@ -33,15 +34,21 @@ const setFavicon = () =>
 			element.type = "image/x-icon";
 		});
 
-const selectFilter = (): string => `saturate(${loggedIn() ? LOGGED_IN_SATURATION : LOGGED_OUT_SATURATION})`;
+const selectFilter = (authorized: boolean): string =>
+	`saturate(${loggedIn(authorized) ? LOGGED_IN_SATURATION : LOGGED_OUT_SATURATION})`;
 
-const loggedIn = (): boolean => Cookies.get(LOGGED_IN_COOKIE_KEY) === LOGGED_IN_ID;
+const loggedIn = (authorized: boolean): boolean => authorized && Cookies.get(LOGGED_IN_COOKIE_KEY) === LOGGED_IN_ID;
+
+const setMasthead = (authorized: boolean) =>
+	setCSS("masthead", {transition: "500ms", filter: selectFilter(authorized)});
 
 window.addEventListener("load", () => {
-	setCSS("masthead", {transition: "500ms", filter: selectFilter()});
-
 	const background = `url(${chrome.runtime.getURL("img/icon128.png")}) no-repeat 16px 0`;
 	setCSS("masthead_logo_wordmark", {background});
 	setLogo("masthead_lt_logo");
 	setFavicon();
+	return onLogged({
+		onLogOut: () => setMasthead(false),
+		onLogIn: () => setMasthead(true),
+	});
 });
