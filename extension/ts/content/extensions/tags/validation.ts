@@ -94,7 +94,11 @@ const getSecondaryAcceptance = (saveHandler: (options: GetTagsOptions) => Promis
 	);
 };
 
-const getTags = (tagInput: HTMLTextAreaElement) => tagInput.value.split(",").map((part) => part.trim());
+const getTags = (tagInput: HTMLTextAreaElement) =>
+	tagInput.value
+		.split(",")
+		.map((part) => part.trim())
+		.filter((tag) => !!tag);
 
 const getAncestorTags = async (tags: string[]): Promise<Set<string>> => {
 	const futureAncestors = tags.map((tag) => getAncestry(tag));
