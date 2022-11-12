@@ -9,3 +9,4 @@ import "./extensions/summary";
 import "./extensions/author";
 import "./extensions/resize";
 import "./extensions/tags";
+import "./extensions/sort";
