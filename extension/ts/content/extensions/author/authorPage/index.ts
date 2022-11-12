@@ -78,7 +78,6 @@ window.addEventListener("load", async () => {
 		if (container) {
 			appendUI(container, {onSync, onEdit, onSave, onPush, onPull, onCancel}, getTags);
 			const input = document.getElementById(AUTHOR_TAG_INPUT_ID) as HTMLInputElement;
-			console.log(input);
 			const {showTagValidator} = appendTagValidator(
 				(listener) => listeners.add(listener),
 				(listener) => listeners.delete(listener),

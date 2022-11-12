@@ -47,7 +47,6 @@ const onDisplayChange = (element: HTMLElement, handler: () => void) =>
 
 const handleViewChange = (tagInput: Highlightable, backdrop: HTMLElement) => {
 	const handler = () => {
-		console.log(tagInput);
 		backdrop.scrollTop = tagInput.scrollTop;
 		backdrop.style.width = tagInput.clientWidth + "px";
 		backdrop.style.height = tagInput.clientHeight + "px";
