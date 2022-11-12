@@ -1,5 +1,3 @@
-import "../../../../sass/tags.sass";
-
 import {onFormRender} from "../../entities/bookForm";
 import {appendTagValidator} from "./validation";
 import {getAuthorIdsFromLinks} from "../../util/getAuthorIdsFromLinks";

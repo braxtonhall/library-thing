@@ -3,55 +3,31 @@ import {createModal} from "../../../common/ui/modal";
 import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {UIColour} from "../../../common/ui/colour";
 import {OnSave, OffSave} from "../../entities/bookForm";
+import {Highlight, highlighted} from "../../../common/ui/highlighter";
 
 declare const SPREADSHEET_ID: string; // set by webpack
 
 type GetTagsOptions = {noCache: boolean};
 
-const createHighlighterComponents = () => {
-	const highlighter = document.createElement("div");
-	highlighter.className = "bookEditInput"; // this comes from LibraryThing. Stealing their css
-	highlighter.id = "vbl-text-highlighter";
-
-	const backdrop = document.createElement("div");
-	backdrop.id = "vbl-text-backdrop";
-	backdrop.append(highlighter);
-
-	return {highlighter, backdrop};
-};
-
-const applyHighlights = async (text: string): Promise<string> => {
+const applyHighlights = async (text: string): Promise<Highlight[]> => {
 	const validTags = await getAllTags();
-	const futureParts = text.split(",").map(async (part) => {
-		const trimmedPart = part.trim();
-		if (validTags.has(trimmedPart)) {
-			return part;
-		} else {
-			const mark = document.createElement("mark");
-			mark.innerText = trimmedPart;
-			return part.replace(trimmedPart, mark.outerHTML);
-		}
-	});
-	const parts = await Promise.all(futureParts);
-	return parts.join(",") + "\n";
-};
-
-const handleInput = (tagInput: HTMLTextAreaElement, highlighter: HTMLElement): void => {
-	const handler = async () => (highlighter.innerHTML = await applyHighlights(tagInput.value));
-	tagInput.addEventListener("input", handler);
-	tagInput.addEventListener("change", handler);
-	handler();
-};
-
-const handleViewChange = (tagInput: HTMLTextAreaElement, backdrop: HTMLElement) => {
-	const handler = () => {
-		backdrop.scrollTop = tagInput.scrollTop;
-		backdrop.style.width = tagInput.clientWidth + "px";
-		backdrop.style.height = tagInput.clientHeight + "px";
-	};
-	tagInput.addEventListener("scroll", handler);
-	tagInput.addEventListener("resize", handler);
-	return handler();
+	return text
+		.split(",")
+		.flatMap((part) => {
+			const trimmedPart = part.trim();
+			if (validTags.has(trimmedPart) || !trimmedPart) {
+				return [part, ","];
+			} else {
+				const highlightedPart: Highlight = {highlight: true, text: trimmedPart};
+				if (trimmedPart === part) {
+					return [highlightedPart, ","];
+				} else {
+					const [before, after] = part.split(trimmedPart);
+					return [before, highlightedPart, after, ","];
+				}
+			}
+		})
+		.slice(0, -1); // Remove the trailing comma
 };
 
 const getInvalidTags = async (tags: string[], options: GetTagsOptions): Promise<string[]> => {
@@ -126,14 +102,11 @@ const handleSave = (tagInput: HTMLTextAreaElement, options: GetTagsOptions) => {
 };
 
 const appendTagValidator = (onSave: OnSave, offSave: OffSave) => {
-	const tagInputContainer = document.getElementById("bookedit_tags");
 	const tagInput = document.getElementById("form_tags") as HTMLTextAreaElement;
-	if (tagInput && tagInputContainer) {
-		const {highlighter, backdrop} = createHighlighterComponents();
-		tagInputContainer.insertAdjacentElement("afterbegin", backdrop);
+	if (tagInput) {
 		const saveButtonListener = () => handleSave(tagInput, {noCache: false});
-		handleViewChange(tagInput, backdrop);
-		handleInput(tagInput, highlighter);
+
+		const backdrop = highlighted(tagInput, applyHighlights);
 
 		const showTagValidator = () => {
 			onSave(saveButtonListener);
