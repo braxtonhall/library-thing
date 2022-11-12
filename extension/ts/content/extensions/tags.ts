@@ -1,18 +1,20 @@
-import {onFormRender} from "../../entities/bookForm";
-import {appendTagValidator} from "./validation";
-import {getAuthorIdsFromLinks} from "../../util/getAuthorIdsFromLinks";
-import {onLogged} from "../util/onLogged";
-import {appendFinder} from "../util/finderExtension";
-import {getAuthorTags} from "../util/getAuthorTags";
-import Author from "../../adapters/author";
+import {onFormRender} from "../entities/bookForm";
+import {appendTagValidator} from "./util/tagValidation";
+import {getAuthorIdsFromLinks} from "../util/getAuthorIdsFromLinks";
+import {onLogged} from "./util/onLogged";
+import {appendFinder} from "./util/finderExtension";
+import {getAuthorTags} from "./util/getAuthorTags";
+import Author from "../adapters/author";
 
 const authorIds = () =>
 	getAuthorIdsFromLinks(document.querySelectorAll<HTMLLinkElement>("div.headsummary > h2 a[href]"));
 
 onFormRender((form, forEachElement, onSave, offSave) => {
 	const textAreaContainerId = "bookedit_tags";
+	const textAreaId = "form_tags";
 	const textAreaContainer = document.getElementById(textAreaContainerId);
-	if (textAreaContainer) {
+	const textArea = document.getElementById(textAreaId) as HTMLTextAreaElement;
+	if (textAreaContainer && textArea) {
 		const {showFinder, hideFinder} = appendFinder<string[]>({
 			buttonName: "Pull Author Tags",
 			buttonImage: "img/book-and-quill.png",
@@ -22,12 +24,12 @@ onFormRender((form, forEachElement, onSave, offSave) => {
 			onSuccess: () => "Author tags synced",
 			isSuccess: (tags: string[]) => tags.length > 0,
 			textAreaContainerId,
-			textAreaId: "form_tags",
+			textAreaId: textAreaId,
 			transform: (tags: string[]) => tags.join(", "),
 			delimiter: ", ",
 		});
 
-		const {showTagValidator, hideTagValidator} = appendTagValidator(onSave, offSave);
+		const {showTagValidator, hideTagValidator} = appendTagValidator(onSave, offSave, textArea);
 
 		return onLogged({
 			container: textAreaContainer,

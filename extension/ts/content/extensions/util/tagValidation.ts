@@ -101,26 +101,18 @@ const handleSave = (tagInput: HTMLTextAreaElement, options: GetTagsOptions) => {
 	return saveHandler(options);
 };
 
-const appendTagValidator = (onSave: OnSave, offSave: OffSave) => {
-	const tagInput = document.getElementById("form_tags") as HTMLTextAreaElement;
-	if (tagInput) {
-		const saveButtonListener = () => handleSave(tagInput, {noCache: false});
-
-		const backdrop = highlighted(tagInput, applyHighlights);
-
-		const showTagValidator = () => {
-			onSave(saveButtonListener);
-			backdrop.style.display = "";
-		};
-		const hideTagValidator = () => {
-			offSave(saveButtonListener);
-			backdrop.style.display = "none";
-		};
-
-		return {showTagValidator, hideTagValidator};
-	} else {
-		throw new Error("appendTagValidator should not have been called on this page");
-	}
+const appendTagValidator = (onSave: OnSave, offSave: OffSave, input: HTMLTextAreaElement) => {
+	const backdrop = highlighted(input, applyHighlights);
+	const saveButtonListener = () => handleSave(input, {noCache: false});
+	const showTagValidator = () => {
+		onSave(saveButtonListener);
+		backdrop.style.display = "";
+	};
+	const hideTagValidator = () => {
+		offSave(saveButtonListener);
+		backdrop.style.display = "none";
+	};
+	return {showTagValidator, hideTagValidator};
 };
 
 export {appendTagValidator};
