@@ -34,19 +34,26 @@ const handleInput = (
 	tagInput: Highlightable,
 	highlighter: HTMLElement,
 	highlight: (value: string) => Promise<Highlight[]>
-): void => {
+) => {
 	const handler = async () => (highlighter.innerHTML = highlightsToText(await highlight(tagInput.value)));
 	tagInput.addEventListener("input", handler);
 	tagInput.addEventListener("change", handler);
+	onDisplayChange(tagInput, handler);
 	handler();
 };
 
+const onDisplayChange = (element: HTMLElement, handler: () => void) =>
+	new IntersectionObserver((entries) => entries.forEach(handler)).observe(element);
+
 const handleViewChange = (tagInput: Highlightable, backdrop: HTMLElement) => {
 	const handler = () => {
+		console.log(tagInput);
 		backdrop.scrollTop = tagInput.scrollTop;
 		backdrop.style.width = tagInput.clientWidth + "px";
 		backdrop.style.height = tagInput.clientHeight + "px";
 	};
+
+	onDisplayChange(tagInput, handler);
 	tagInput.addEventListener("scroll", handler);
 	tagInput.addEventListener("resize", handler);
 	return handler();
@@ -61,5 +68,5 @@ const highlighted = (element: Highlightable, highlight: (value: string) => Promi
 	return backdrop;
 };
 
-export type {Highlight};
+export type {Highlight, Highlightable};
 export {highlighted};

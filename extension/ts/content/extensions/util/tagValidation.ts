@@ -3,7 +3,7 @@ import {createModal} from "../../../common/ui/modal";
 import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {UIColour} from "../../../common/ui/colour";
 import {OnSave, OffSave} from "../../entities/bookForm";
-import {Highlight, highlighted} from "../../../common/ui/highlighter";
+import {Highlight, Highlightable, highlighted} from "../../../common/ui/highlighter";
 
 declare const SPREADSHEET_ID: string; // set by webpack
 
@@ -70,7 +70,7 @@ const getSecondaryAcceptance = (saveHandler: (options: GetTagsOptions) => Promis
 	);
 };
 
-const getTags = (tagInput: HTMLTextAreaElement) => tagInput.value.split(",").map((part) => part.trim());
+const getTags = (tagInput: Highlightable) => tagInput.value.split(",").map((part) => part.trim());
 
 const getAncestorTags = async (tags: string[]): Promise<Set<string>> => {
 	const futureAncestors = tags.map((tag) => getAncestry(tag));
@@ -78,18 +78,18 @@ const getAncestorTags = async (tags: string[]): Promise<Set<string>> => {
 	return new Set([...tags, ...ancestors.flat()]);
 };
 
-const setTags = (tagInput: HTMLTextAreaElement, tags: Iterable<string>) => {
+const setTags = (tagInput: Highlightable, tags: Iterable<string>) => {
 	tagInput.value = [...tags].join(", ");
 	tagInput.dispatchEvent(new Event("change"));
 };
 
-const checkTags = async (tagInput: HTMLTextAreaElement, options: GetTagsOptions) =>
+const checkTags = async (tagInput: Highlightable, options: GetTagsOptions) =>
 	loaderOverlaid(async () => {
 		setTags(tagInput, await getAncestorTags(getTags(tagInput)));
 		return getInvalidTags(getTags(tagInput), options);
 	});
 
-const handleSave = (tagInput: HTMLTextAreaElement, options: GetTagsOptions) => {
+const handleSave = (tagInput: Highlightable, options: GetTagsOptions) => {
 	const saveHandler = (options: GetTagsOptions): Promise<boolean> =>
 		checkTags(tagInput, options).then((invalidTags) => {
 			if (invalidTags.length > 0) {
@@ -101,7 +101,7 @@ const handleSave = (tagInput: HTMLTextAreaElement, options: GetTagsOptions) => {
 	return saveHandler(options);
 };
 
-const appendTagValidator = (onSave: OnSave, offSave: OffSave, input: HTMLTextAreaElement) => {
+const appendTagValidator = (onSave: OnSave, offSave: OffSave, input: Highlightable) => {
 	const backdrop = highlighted(input, applyHighlights);
 	const saveButtonListener = () => handleSave(input, {noCache: false});
 	const showTagValidator = () => {

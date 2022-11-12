@@ -39,8 +39,8 @@ const createSection = () => {
 	return section;
 };
 
-const createTagInput = () => {
-	const input = document.createElement("input");
+const createTagInput = (): HTMLDivElement => {
+	const input = document.createElement("textarea");
 	input.id = TAG_INPUT_ID;
 	input.classList.add("bookEditInput");
 	input.autocomplete = "off";
@@ -147,4 +147,4 @@ const getInputElement = () => (document.getElementById(TAG_INPUT_ID) as HTMLInpu
 const viewExistingTags = toggleViews(TAG_LIST_CONTAINER_ID, TAG_INPUT_CONTAINER_ID);
 const viewTagEditor = toggleViews(TAG_INPUT_CONTAINER_ID, TAG_LIST_CONTAINER_ID);
 
-export {appendUI, insertTags, getInput, viewExistingTags, viewTagEditor};
+export {appendUI, insertTags, getInput, viewExistingTags, viewTagEditor, TAG_INPUT_ID};

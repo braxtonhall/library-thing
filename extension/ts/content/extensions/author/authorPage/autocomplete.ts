@@ -3,7 +3,7 @@ import {getTagsIncluding} from "../../../adapters/tags";
 
 interface Options {
 	container: HTMLDivElement;
-	input: HTMLInputElement;
+	input: HTMLInputElement | HTMLTextAreaElement;
 }
 
 const getSelectedWord = (words: string[], selection: number): string => {

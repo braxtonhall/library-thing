@@ -22,6 +22,7 @@ const autocompleted = <T extends HTMLElement>({container, input, getMatches, new
 			const {value, selectionStart} = input;
 			closeAllLists();
 			input.value = newValue(match, value, selectionStart);
+			input.dispatchEvent(new Event("change"));
 			input.focus();
 		});
 		return div;
