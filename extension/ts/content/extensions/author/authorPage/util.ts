@@ -11,7 +11,7 @@ const getAuthorInfo = () => {
 
 const getTags = async () => {
 	const author = await Author.getAuthor(getAuthorInfo().uuid);
-	author && insertTags(author.tags);
+	insertTags(author?.tags ?? []);
 };
 
 const authorTagsFromBooksWhere = (books: BookRecord[], where: (book: BookRecord) => boolean) =>

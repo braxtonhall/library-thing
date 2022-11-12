@@ -12,6 +12,7 @@ In order to support [author tagging](./authors.md), Better LibraryThing will sto
 1. Column `B` _must_ be the name of the author.
 1. Column `C` _must_ be the author tags.
 1. None of these columns can be hidden, however the sheet itself may be hidden.
+1. Additionally, there must be _another_ sheet in The Tag Index labelled **LOOKUP**. This sheet should be hidden.
 
 Example:
 
