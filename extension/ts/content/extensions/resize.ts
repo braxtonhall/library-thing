@@ -1,6 +1,7 @@
 import {ForEachFormElement, onFormRender} from "../entities/bookForm";
 import {debounce} from "../../common/util/debounce";
 import {getLastFormRender} from "../util/lastFormRender";
+import {AUTHOR_TAG_INPUT_ID} from "./author/authorPage/authorUI";
 
 /**
  * This file is dedicated to saving the sizes of the text areas in the book form
@@ -92,4 +93,11 @@ const clearSizeData = () => localStorage.setItem(SIZE_LOCAL_STORAGE_KEY, "{}");
 onFormRender((form: HTMLElement, forEachElement: ForEachFormElement) => {
 	beenAWhile() && clearSizeData();
 	forEachElement(ifTextArea(mutateTextArea(getSizeData())));
+});
+
+window.addEventListener("load", async () => {
+	if (document.querySelector("body.authorpage")) {
+		const tagTextArea = document.getElementById(AUTHOR_TAG_INPUT_ID) as HTMLTextAreaElement;
+		mutateTextArea(getSizeData())(tagTextArea);
+	}
 });

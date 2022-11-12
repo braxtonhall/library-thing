@@ -1,5 +1,5 @@
 import Author, {AuthorRecord} from "../../../adapters/author";
-import {appendUI, getInput, insertTags, viewExistingTags, viewTagEditor} from "./authorUI";
+import {appendUI, getInput, insertTags, AUTHOR_TAG_INPUT_ID, viewExistingTags, viewTagEditor} from "./authorUI";
 import {loaderOverlaid} from "../../../../common/ui/loadingIndicator";
 import Book from "../../../adapters/book";
 import {createPushBookTags, createSyncBookTags} from "../util/bookEditor";
@@ -9,6 +9,7 @@ import {createModal} from "../../../../common/ui/modal";
 import {showToast, ToastType} from "../../../../common/ui/toast";
 import {onPull} from "./pull";
 import {UIColour} from "../../../../common/ui/colour";
+import {appendTagValidator} from "../../util/tagValidation";
 
 const onEdit = () => {
 	viewTagEditor();
@@ -21,7 +22,15 @@ const onBackToExistingTags = (getAuthor: () => Promise<AuthorRecord>) => () =>
 		viewExistingTags();
 	});
 
-const onSave = onBackToExistingTags(() => Author.writeAuthor({...getAuthorInfo(), tags: getInput()}));
+const listeners = new Set<() => Promise<boolean>>();
+
+const onSave = async () => {
+	const futureApprovals = [...listeners].map((listener) => listener());
+	const approvals = await Promise.all(futureApprovals);
+	if (approvals.every((approval) => approval === true)) {
+		return onBackToExistingTags(() => Author.writeAuthor({...getAuthorInfo(), tags: getInput()}))();
+	}
+};
 
 const onCancel = onBackToExistingTags(() => Author.getAuthor(getAuthorInfo().uuid));
 
@@ -68,6 +77,13 @@ window.addEventListener("load", async () => {
 		const container = document.querySelector<HTMLTableCellElement>("table.authorContentTable td.middle");
 		if (container) {
 			appendUI(container, {onSync, onEdit, onSave, onPush, onPull, onCancel}, getTags);
+			const input = document.getElementById(AUTHOR_TAG_INPUT_ID) as HTMLInputElement;
+			const {showTagValidator} = appendTagValidator(
+				(listener) => listeners.add(listener),
+				(listener) => listeners.delete(listener),
+				input
+			);
+			showTagValidator();
 		}
 	}
 });
