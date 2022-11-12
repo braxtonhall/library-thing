@@ -1,5 +1,5 @@
 import Author, {AuthorRecord} from "../../../adapters/author";
-import {appendUI, getInput, insertTags, TAG_INPUT_ID, viewExistingTags, viewTagEditor} from "./authorUI";
+import {appendUI, getInput, insertTags, AUTHOR_TAG_INPUT_ID, viewExistingTags, viewTagEditor} from "./authorUI";
 import {loaderOverlaid} from "../../../../common/ui/loadingIndicator";
 import Book from "../../../adapters/book";
 import {createPushBookTags, createSyncBookTags} from "../util/bookEditor";
@@ -77,7 +77,7 @@ window.addEventListener("load", async () => {
 		const container = document.querySelector<HTMLTableCellElement>("table.authorContentTable td.middle");
 		if (container) {
 			appendUI(container, {onSync, onEdit, onSave, onPush, onPull, onCancel}, getTags);
-			const input = document.getElementById(TAG_INPUT_ID) as HTMLInputElement;
+			const input = document.getElementById(AUTHOR_TAG_INPUT_ID) as HTMLInputElement;
 			console.log(input);
 			const {showTagValidator} = appendTagValidator(
 				(listener) => listeners.add(listener),

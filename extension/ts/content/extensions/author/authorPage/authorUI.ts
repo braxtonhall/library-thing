@@ -4,7 +4,7 @@ import {onLogged} from "../../util/onLogged";
 import {autocomplete} from "./autocomplete";
 
 const TAG_LIST_ID = "vbl-tag-list";
-const TAG_INPUT_ID = "vbl-tag-input";
+const AUTHOR_TAG_INPUT_ID = "vbl-tag-input";
 
 const TAG_LIST_BUTTON_CONTAINER_ID = "vbl-tag-list-buttons";
 
@@ -41,7 +41,7 @@ const createSection = () => {
 
 const createTagInput = (): HTMLDivElement => {
 	const input = document.createElement("textarea");
-	input.id = TAG_INPUT_ID;
+	input.id = AUTHOR_TAG_INPUT_ID;
 	input.classList.add("bookEditInput");
 	input.autocomplete = "off";
 
@@ -119,7 +119,7 @@ const appendUI = (container: Element, handlers: ButtonHandlers, getTagsCallback:
 
 const insertTags = (tags: string[]) => {
 	const list = document.getElementById(TAG_LIST_ID);
-	const input = document.getElementById(TAG_INPUT_ID) as HTMLInputElement;
+	const input = document.getElementById(AUTHOR_TAG_INPUT_ID) as HTMLInputElement;
 	if (tags.length === 0) {
 		list.innerText = "None";
 		input.value = "";
@@ -142,9 +142,9 @@ const toggleViews = (showId: string, hideId: string) => () => {
 	document.getElementById(hideId).style.display = "none";
 };
 
-const getInputElement = () => (document.getElementById(TAG_INPUT_ID) as HTMLInputElement)?.value ?? "";
+const getInputElement = () => (document.getElementById(AUTHOR_TAG_INPUT_ID) as HTMLInputElement)?.value ?? "";
 
 const viewExistingTags = toggleViews(TAG_LIST_CONTAINER_ID, TAG_INPUT_CONTAINER_ID);
 const viewTagEditor = toggleViews(TAG_INPUT_CONTAINER_ID, TAG_LIST_CONTAINER_ID);
 
-export {appendUI, insertTags, getInput, viewExistingTags, viewTagEditor, TAG_INPUT_ID};
+export {appendUI, insertTags, getInput, viewExistingTags, viewTagEditor, AUTHOR_TAG_INPUT_ID};
