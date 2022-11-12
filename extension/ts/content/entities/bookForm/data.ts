@@ -43,13 +43,13 @@ const getFormData = () =>
 		return saveData;
 	}, getFormMetadata());
 
-const insertFormData = (saveData: FormData) => {
+const insertFormData = (saveData: FormData, blackList: Set<string> = new Set()) => {
 	ensureRolesInputCount(saveData?.[FORM_META_DATA_KEY]?.[ROLES_INPUT_COUNT_KEY] ?? 0);
 	getFormElements().forEach((element: any) => {
 		// We can't change hidden elements because LibraryThing relies
 		// on hidden form inputs to send additional, form-specific metadata
 		// on save
-		if (element && element.id && element.type !== "hidden") {
+		if (element && element.id && element.type !== "hidden" && !blackList.has(element.id)) {
 			const {value, checked} = extractSaveDataFor(element, saveData);
 			if (element.value !== value || element.checked !== checked) {
 				element.value = value;
