@@ -1,4 +1,4 @@
-import {getAncestry, getTagTrees, TagTrees} from "../../adapters/tags";
+import {getAncestry, getTagsFromElement, getTagTrees, TagTrees} from "../../adapters/tags";
 import {createModal} from "../../../common/ui/modal";
 import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {UIColour} from "../../../common/ui/colour";
@@ -68,17 +68,6 @@ const getSecondaryAcceptance = (saveHandler: (options: GetTagsOptions) => Promis
 	);
 };
 
-const getTags = (tagInput: Highlightable) =>
-	tagInput.value
-		.split(",")
-		.map((part) => part.trim())
-		.filter((tag) => !!tag);
-
-const getAncestorTags = (tags: string[], trees: TagTrees): Set<string> => {
-	const ancestors = tags.map((tag) => getAncestry(tag, trees));
-	return new Set([...tags, ...ancestors.flat()]);
-};
-
 const fixTagsCase = (tags: string[], trees: TagTrees): string[] =>
 	tags.map((tag) => trees.get(tag.toLowerCase())?.tag ?? tag);
 
@@ -90,10 +79,10 @@ const setTags = (tagInput: Highlightable, tags: Iterable<string>) => {
 const checkTags = async (tagInput: Highlightable, options: GetTagsOptions) =>
 	loaderOverlaid(async () => {
 		const trees = await getTagTrees(options);
-		const userTags = getTags(tagInput);
+		const userTags = getTagsFromElement(tagInput);
 		const properCaseTags = fixTagsCase(userTags, trees);
-		setTags(tagInput, getAncestorTags(properCaseTags, trees));
-		return getInvalidTags(getTags(tagInput), trees);
+		setTags(tagInput, properCaseTags);
+		return getInvalidTags(getTagsFromElement(tagInput), trees);
 	});
 
 const handleSave = (tagInput: Highlightable, options: GetTagsOptions) => {

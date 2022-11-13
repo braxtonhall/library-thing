@@ -2,6 +2,7 @@ import {createIconButton} from "../../../../common/ui/button";
 import {createHeader} from "../../../../common/ui/header";
 import {onLogged} from "../../util/onLogged";
 import {autocomplete} from "./autocomplete";
+import {getTagsFromElement} from "../../../adapters/tags";
 
 const TAG_LIST_ID = "vbl-tag-list";
 const AUTHOR_TAG_INPUT_ID = "vbl-tag-input";
@@ -131,18 +132,14 @@ const insertTags = (tags: string[]) => {
 	}
 };
 
-const getInput = (): string[] =>
-	getInputElement()
-		.split(",")
-		.map((tag) => tag.trim())
-		.filter((tag) => !!tag);
+const getInput = (): string[] => getTagsFromElement(getInputElement());
 
 const toggleViews = (showId: string, hideId: string) => () => {
 	document.getElementById(showId).style.display = "";
 	document.getElementById(hideId).style.display = "none";
 };
 
-const getInputElement = () => (document.getElementById(AUTHOR_TAG_INPUT_ID) as HTMLInputElement)?.value ?? "";
+const getInputElement = () => document.getElementById(AUTHOR_TAG_INPUT_ID) as HTMLInputElement;
 
 const viewExistingTags = toggleViews(TAG_LIST_CONTAINER_ID, TAG_INPUT_CONTAINER_ID);
 const viewTagEditor = toggleViews(TAG_INPUT_CONTAINER_ID, TAG_LIST_CONTAINER_ID);

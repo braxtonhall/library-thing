@@ -1,9 +1,10 @@
 import {TagSearchOptions, TagTrees} from "./types";
 import {getTagTrees} from "./getTags";
 
-const getAncestry = (tag: string, tree: TagTrees): string[] => {
+const getAncestry = async (tag: string): Promise<string[]> => {
+	const trees = await getTagTrees();
 	const ancestry = [];
-	for (let node = tree.get(tag.toLowerCase()); node; node = node.parent) {
+	for (let node = trees.get(tag.toLowerCase()); node; node = node.parent) {
 		ancestry.push(node.tag);
 	}
 	return ancestry;
@@ -29,5 +30,11 @@ const getTagsIncluding = async (
 	return matchingTags.sort();
 };
 
+const getTagsFromElement = (element: HTMLTextAreaElement | HTMLInputElement): string[] =>
+	element?.value
+		?.split(",")
+		.map((tag) => tag.trim())
+		.filter((tag) => !!tag) ?? [];
+
 export type {TagTrees};
-export {getAncestry, getTagList, getTagsIncluding, getTagTrees};
+export {getAncestry, getTagList, getTagsIncluding, getTagTrees, getTagsFromElement};
