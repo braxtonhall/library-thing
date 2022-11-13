@@ -41,12 +41,12 @@ onFormRender((form, forEachElement, onSave, offSave) => {
 		});
 
 		const {showFinder: showAncestors, hideFinder: hideAncestors} = appendFinder<string[]>({
-			buttonName: "Pull Ancestor Tags",
+			buttonName: "Add Ancestor Tags",
 			buttonImage: "img/written-book.png",
 			description: "Get parent tags for any current nested tags",
 			finder: () => getAncestorTags(getTagsFromElement(textArea)),
 			onFail: () => "No new ancestor tags found",
-			onSuccess: () => "Ancestor tags pulled",
+			onSuccess: () => "Ancestor tags added",
 			isSuccess: (tags: string[]) => tags.length > 0,
 			textAreaContainerId,
 			textAreaId,
