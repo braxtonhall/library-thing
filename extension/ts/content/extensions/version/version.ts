@@ -4,34 +4,35 @@ interface Version {
 	revision: number;
 }
 
-const versionCompare = (comparator: (a: number, b: number) => boolean) => (versionA: Version, versionB: Version) => {
-	if (comparator(versionA.major, versionB.major)) {
-		return true;
-	} else if (comparator(versionB.major, versionA.major)) {
-		return false;
-	} else if (comparator(versionA.minor, versionB.minor)) {
-		return true;
-	} else if (comparator(versionB.minor, versionA.minor)) {
-		return false;
-	} else if (comparator(versionA.revision, versionB.revision)) {
-		return true;
-	} else if (comparator(versionB.revision, versionA.revision)) {
-		return false;
-	} else {
-		return false;
-	}
+const versionLT = (versionA: Version, versionB: Version) => {
+	const lessThan = (versionA: Version, versionB: Version, keys: (keyof Version)[]): boolean => {
+		const [key, ...rest] = keys;
+		if (key) {
+			if (versionA[key] < versionB[key]) {
+				return true;
+			} else if (versionA[key] > versionB[key]) {
+				return false;
+			} else {
+				return lessThan(versionA, versionB, rest);
+			}
+		} else {
+			return false;
+		}
+	};
+	return lessThan(versionA, versionB, ["major", "minor", "revision"]);
 };
 
-const versionLessThan = versionCompare((a, b) => a < b);
+const versionEQ = (a: Version, b: Version) => ["major", "minor", "revision"].every((key) => a[key] === b[key]);
 
-const versionEquals = versionCompare((a, b) => a === b);
+const versionLTE = (a: Version, b: Version) => versionLT(a, b) || versionEQ(a, b);
+const versionGT = (a: Version, b: Version) => !versionLTE(a, b);
+const versionGTE = (a: Version, b: Version) => !versionLT(a, b);
+const versionNEQ = (a: Version, b: Version) => !versionEQ(a, b);
 
 const toVersion = (tag: string): Version => {
 	const [major, minor, revision] = tag.split(".").map(Number);
 	return {major, minor, revision};
 };
 
-const getCurrentVersion = () => toVersion(chrome.runtime.getManifest().version);
-
 export type {Version};
-export {toVersion, versionEquals, versionLessThan, getCurrentVersion};
+export {toVersion, versionEQ, versionLT, versionLTE, versionGT, versionGTE, versionNEQ};
