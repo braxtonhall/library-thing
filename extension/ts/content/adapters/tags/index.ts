@@ -1,8 +1,7 @@
-import {TagSearchOptions} from "./types";
+import {TagSearchOptions, TagTree} from "./types";
 import {getTagTree} from "./getTags";
 
-const getAncestry = async (tag: string): Promise<string[]> => {
-	const tree = await getTagTree();
+const getAncestry = (tag: string, tree: TagTree): string[] => {
 	const ancestry = [];
 	for (let node = tree.get(tag.toLowerCase()); node; node = node.parent) {
 		ancestry.push(node.tag);
@@ -30,4 +29,5 @@ const getTagsIncluding = async (
 	return matchingTags.sort();
 };
 
+export type {TagTree};
 export {getAncestry, getTagList, getTagsIncluding, getTagTree};

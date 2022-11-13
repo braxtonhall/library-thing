@@ -1,10 +1,9 @@
-import {getAncestry, getTagTree} from "../../adapters/tags";
+import {getAncestry, getTagTree, TagTree} from "../../adapters/tags";
 import {createModal} from "../../../common/ui/modal";
 import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {UIColour} from "../../../common/ui/colour";
 import {OnSave, OffSave} from "../../entities/bookForm";
 import {Highlight, Highlightable, highlighted} from "../../../common/ui/highlighter";
-import {TagTree} from "../../adapters/tags/types";
 
 declare const SPREADSHEET_ID: string; // set by webpack
 
@@ -74,9 +73,8 @@ const getTags = (tagInput: Highlightable) =>
 		.map((part) => part.trim())
 		.filter((tag) => !!tag);
 
-const getAncestorTags = async (tags: string[]): Promise<Set<string>> => {
-	const futureAncestors = tags.map((tag) => getAncestry(tag));
-	const ancestors = await Promise.all(futureAncestors);
+const getAncestorTags = (tags: string[], tree: TagTree): Set<string> => {
+	const ancestors = tags.map((tag) => getAncestry(tag, tree));
 	return new Set([...tags, ...ancestors.flat()]);
 };
 
@@ -93,7 +91,7 @@ const checkTags = async (tagInput: Highlightable, options: GetTagsOptions) =>
 		const tree = await getTagTree(options);
 		const userTags = getTags(tagInput);
 		const properCaseTags = fixTagsCase(userTags, tree);
-		setTags(tagInput, await getAncestorTags(properCaseTags));
+		setTags(tagInput, getAncestorTags(properCaseTags, tree));
 		return getInvalidTags(getTags(tagInput), tree);
 	});
 
