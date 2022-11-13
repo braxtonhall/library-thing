@@ -13,11 +13,20 @@ const onCopy = (event: Event) => {
 	);
 };
 
+const isEmptySaveData = (saveData: object) => Object.keys(saveData).length === 0;
+
 const onPaste = (event: Event) => {
 	event.preventDefault();
 	try {
 		const saveData = JSON.parse(localStorage.getItem(SAVE_DATA_KEY) ?? "{}");
-		insertFormData(saveData);
+		if (isEmptySaveData(saveData)) {
+			showToast(
+				"No save data found. Try copying a book's data using the 'Copy' button before pasting",
+				ToastType.ERROR
+			);
+		} else {
+			insertFormData(saveData);
+		}
 	} catch (error) {
 		console.error(error);
 		showToast("Something went wrong when trying to paste metadata :/", ToastType.ERROR);
