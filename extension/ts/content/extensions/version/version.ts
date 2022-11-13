@@ -31,7 +31,5 @@ const toVersion = (tag: string): Version => {
 	return {major, minor, revision};
 };
 
-const getCurrentVersion = () => toVersion(chrome.runtime.getManifest().version);
-
 export type {Version};
-export {toVersion, versionEquals, versionLessThan, getCurrentVersion};
+export {toVersion, versionEquals, versionLessThan};

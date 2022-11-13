@@ -3,11 +3,12 @@ import {showToast, ToastType} from "../../../common/ui/toast";
 import config, {ConfigKey} from "../../../common/entities/config";
 import storage from "../../../common/adapters/storage";
 import {getLatestRelease} from "./release";
-import {getCurrentVersion, Version, versionEquals, versionLessThan} from "./version";
+import {toVersion, Version, versionEquals, versionLessThan} from "./version";
 
 const LAST_CHECKED_KEY = "last-checked-version";
 const VERSION_SEEN_KEY = "latest-version-seen";
 
+const getCurrentVersion = () => toVersion(chrome.runtime.getManifest().version);
 const getCheckInterval = (): Promise<number> => config.get(ConfigKey.CheckVersionInterval);
 
 const lastSeenVersion = {
