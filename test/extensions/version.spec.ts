@@ -2,8 +2,8 @@ import {expect} from "chai";
 import {
 	toVersion,
 	Version,
-	versionEquals,
-	versionLessThan
+	versionEQ,
+	versionLT
 } from "../../extension/ts/content/extensions/version/version";
 
 describe("version", () => {
@@ -18,7 +18,7 @@ describe("version", () => {
 	});
 
 	describe("#versionEquals", () => {
-		const eq = testFunction(versionEquals);
+		const eq = testFunction(versionEQ);
 
 		it("should be able to tell when two versions are the same", () => {
 			expect(eq("1.2.3", "1.2.3")).to.be.true;
@@ -54,7 +54,7 @@ describe("version", () => {
 	});
 
 	describe("#versionLessThan", () => {
-		const lt = testFunction(versionLessThan);
+		const lt = testFunction(versionLT);
 
 		it("should not report lt when versions are the same", () => {
 			expect(lt("1.1.0", "1.1.0")).to.be.false;

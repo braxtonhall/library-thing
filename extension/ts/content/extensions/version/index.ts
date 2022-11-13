@@ -3,7 +3,7 @@ import {showToast, ToastType} from "../../../common/ui/toast";
 import config, {ConfigKey} from "../../../common/entities/config";
 import storage from "../../../common/adapters/storage";
 import {getLatestRelease} from "./release";
-import {toVersion, Version, versionEquals, versionLessThan} from "./version";
+import {toVersion, Version, versionEQ, versionLT} from "./version";
 
 const LAST_CHECKED_KEY = "last-checked-version";
 const VERSION_SEEN_KEY = "latest-version-seen";
@@ -23,18 +23,18 @@ const checkedTime = {
 
 const beenAWhile = async (): Promise<boolean> => Date.now() > (await checkedTime.get()) + (await getCheckInterval());
 
-const onANewVersion = async (): Promise<boolean> => versionLessThan(await lastSeenVersion.get(), getCurrentVersion());
+const onANewVersion = async (): Promise<boolean> => versionLT(await lastSeenVersion.get(), getCurrentVersion());
 
 window.addEventListener("load", async () => {
 	if ((await onANewVersion()) || (await beenAWhile())) {
 		const {version: remoteVersion, download, html} = await getLatestRelease();
 		const currentVersion = getCurrentVersion();
-		if (versionLessThan(currentVersion, remoteVersion)) {
+		if (versionLT(currentVersion, remoteVersion)) {
 			download &&
 				showToast("New version available!\n\nClick here to download it.", ToastType.INFO, () =>
 					window.open(download)
 				);
-		} else if (versionEquals(remoteVersion, currentVersion)) {
+		} else if (versionEQ(remoteVersion, currentVersion)) {
 			html &&
 				showToast(
 					"Looks like this is your first time on this version of Better LibraryThing!\n\nClick here to see what's new.",
