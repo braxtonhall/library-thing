@@ -1,7 +1,7 @@
-import {TagSearchOptions, TagTree} from "./types";
-import {getTagTree} from "./getTags";
+import {TagSearchOptions, TagTrees} from "./types";
+import {getTagTrees} from "./getTags";
 
-const getAncestry = (tag: string, tree: TagTree): string[] => {
+const getAncestry = (tag: string, tree: TagTrees): string[] => {
 	const ancestry = [];
 	for (let node = tree.get(tag.toLowerCase()); node; node = node.parent) {
 		ancestry.push(node.tag);
@@ -10,7 +10,7 @@ const getAncestry = (tag: string, tree: TagTree): string[] => {
 };
 
 const getTagList = async (options: TagSearchOptions = {noCache: false}) => {
-	const nodes = (await getTagTree(options)).values();
+	const nodes = (await getTagTrees(options)).values();
 	const tags = [...nodes].map((node) => node.tag);
 	return new Set(tags);
 };
@@ -29,5 +29,5 @@ const getTagsIncluding = async (
 	return matchingTags.sort();
 };
 
-export type {TagTree};
-export {getAncestry, getTagList, getTagsIncluding, getTagTree};
+export type {TagTrees};
+export {getAncestry, getTagList, getTagsIncluding, getTagTrees};

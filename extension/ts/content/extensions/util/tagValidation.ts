@@ -1,4 +1,4 @@
-import {getAncestry, getTagTree, TagTree} from "../../adapters/tags";
+import {getAncestry, getTagTrees, TagTrees} from "../../adapters/tags";
 import {createModal} from "../../../common/ui/modal";
 import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {UIColour} from "../../../common/ui/colour";
@@ -10,7 +10,7 @@ declare const SPREADSHEET_ID: string; // set by webpack
 type GetTagsOptions = {noCache: boolean};
 
 const applyHighlights = async (text: string): Promise<Highlight[]> => {
-	const validTags = await getTagTree();
+	const validTags = await getTagTrees();
 	return text
 		.split(",")
 		.flatMap((part) => {
@@ -30,7 +30,8 @@ const applyHighlights = async (text: string): Promise<Highlight[]> => {
 		.slice(0, -1); // Remove the trailing comma
 };
 
-const getInvalidTags = (tags: string[], tree: TagTree): string[] => tags.filter((tag) => !tree.has(tag.toLowerCase()));
+const getInvalidTags = (tags: string[], trees: TagTrees): string[] =>
+	tags.filter((tag) => !trees.has(tag.toLowerCase()));
 
 const getUserAcceptance = (
 	invalidTags: string[],
@@ -73,13 +74,13 @@ const getTags = (tagInput: Highlightable) =>
 		.map((part) => part.trim())
 		.filter((tag) => !!tag);
 
-const getAncestorTags = (tags: string[], tree: TagTree): Set<string> => {
-	const ancestors = tags.map((tag) => getAncestry(tag, tree));
+const getAncestorTags = (tags: string[], trees: TagTrees): Set<string> => {
+	const ancestors = tags.map((tag) => getAncestry(tag, trees));
 	return new Set([...tags, ...ancestors.flat()]);
 };
 
-const fixTagsCase = (tags: string[], tree: TagTree): string[] =>
-	tags.map((tag) => tree.get(tag.toLowerCase())?.tag ?? tag);
+const fixTagsCase = (tags: string[], trees: TagTrees): string[] =>
+	tags.map((tag) => trees.get(tag.toLowerCase())?.tag ?? tag);
 
 const setTags = (tagInput: Highlightable, tags: Iterable<string>) => {
 	tagInput.value = [...tags].join(", ");
@@ -88,11 +89,11 @@ const setTags = (tagInput: Highlightable, tags: Iterable<string>) => {
 
 const checkTags = async (tagInput: Highlightable, options: GetTagsOptions) =>
 	loaderOverlaid(async () => {
-		const tree = await getTagTree(options);
+		const trees = await getTagTrees(options);
 		const userTags = getTags(tagInput);
-		const properCaseTags = fixTagsCase(userTags, tree);
-		setTags(tagInput, getAncestorTags(properCaseTags, tree));
-		return getInvalidTags(getTags(tagInput), tree);
+		const properCaseTags = fixTagsCase(userTags, trees);
+		setTags(tagInput, getAncestorTags(properCaseTags, trees));
+		return getInvalidTags(getTags(tagInput), trees);
 	});
 
 const handleSave = (tagInput: Highlightable, options: GetTagsOptions) => {
