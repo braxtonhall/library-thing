@@ -1,4 +1,4 @@
-import {getAllTags, getAncestry} from "../../adapters/tags";
+import {getAncestry, getTagTrees, TagTrees} from "../../adapters/tags";
 import {createModal} from "../../../common/ui/modal";
 import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {UIColour} from "../../../common/ui/colour";
@@ -10,12 +10,12 @@ declare const SPREADSHEET_ID: string; // set by webpack
 type GetTagsOptions = {noCache: boolean};
 
 const applyHighlights = async (text: string): Promise<Highlight[]> => {
-	const validTags = await getAllTags();
+	const validTags = await getTagTrees();
 	return text
 		.split(",")
 		.flatMap((part) => {
 			const trimmedPart = part.trim();
-			if (validTags.has(trimmedPart) || !trimmedPart) {
+			if (!trimmedPart || validTags.has(trimmedPart.toLowerCase())) {
 				return [part, ","];
 			} else {
 				const highlightedPart: Highlight = {highlight: true, text: trimmedPart};
@@ -30,10 +30,8 @@ const applyHighlights = async (text: string): Promise<Highlight[]> => {
 		.slice(0, -1); // Remove the trailing comma
 };
 
-const getInvalidTags = async (tags: string[], options: GetTagsOptions): Promise<string[]> => {
-	const validTags = await getAllTags(options);
-	return tags.filter((tag) => !validTags.has(tag));
-};
+const getInvalidTags = (tags: string[], trees: TagTrees): string[] =>
+	tags.filter((tag) => !trees.has(tag.toLowerCase()));
 
 const getUserAcceptance = (
 	invalidTags: string[],
@@ -76,11 +74,13 @@ const getTags = (tagInput: Highlightable) =>
 		.map((part) => part.trim())
 		.filter((tag) => !!tag);
 
-const getAncestorTags = async (tags: string[]): Promise<Set<string>> => {
-	const futureAncestors = tags.map((tag) => getAncestry(tag));
-	const ancestors = await Promise.all(futureAncestors);
+const getAncestorTags = (tags: string[], trees: TagTrees): Set<string> => {
+	const ancestors = tags.map((tag) => getAncestry(tag, trees));
 	return new Set([...tags, ...ancestors.flat()]);
 };
+
+const fixTagsCase = (tags: string[], trees: TagTrees): string[] =>
+	tags.map((tag) => trees.get(tag.toLowerCase())?.tag ?? tag);
 
 const setTags = (tagInput: Highlightable, tags: Iterable<string>) => {
 	tagInput.value = [...tags].join(", ");
@@ -89,8 +89,11 @@ const setTags = (tagInput: Highlightable, tags: Iterable<string>) => {
 
 const checkTags = async (tagInput: Highlightable, options: GetTagsOptions) =>
 	loaderOverlaid(async () => {
-		setTags(tagInput, await getAncestorTags(getTags(tagInput)));
-		return getInvalidTags(getTags(tagInput), options);
+		const trees = await getTagTrees(options);
+		const userTags = getTags(tagInput);
+		const properCaseTags = fixTagsCase(userTags, trees);
+		setTags(tagInput, getAncestorTags(properCaseTags, trees));
+		return getInvalidTags(getTags(tagInput), trees);
 	});
 
 const handleSave = (tagInput: Highlightable, options: GetTagsOptions) => {

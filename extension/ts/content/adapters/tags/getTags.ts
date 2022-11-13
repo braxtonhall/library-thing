@@ -1,5 +1,5 @@
 import {makeCache} from "../../../common/util/cache";
-import {TagSearchOptions, TagTree} from "./types";
+import {TagSearchOptions, TagTrees} from "./types";
 import Sheets, {Range} from "../sheets";
 import {parseTree} from "./parseTags";
 import {incrementColumnBy} from "../sheets/util";
@@ -22,7 +22,7 @@ const META_TAG_SHEET = "Tag Index Index";
  *    The first tag in this table is at A2
  */
 
-const {asyncCached, setCache} = makeCache<TagTree>();
+const {asyncCached, setCache} = makeCache<TagTrees>();
 
 const rowIsRange = ([, topLeft, width]: string[]): boolean =>
 	topLeft && width && /^[A-Z]+[0-9]+$/.test(topLeft) && /^[0-9]+$/.test(width);
@@ -48,7 +48,7 @@ const getSheetsTags = async (): Promise<string[][]> => {
 	return response?.flatMap((valueRange) => valueRange.values ?? []) ?? [];
 };
 
-const getTagTree = async ({noCache}: TagSearchOptions = {noCache: false}) => {
+const getTagTrees = async ({noCache}: TagSearchOptions = {noCache: false}) => {
 	const implementation = async () => parseTree(await getSheetsTags());
 	if (noCache) {
 		return implementation().then((tree) => setCache("", tree));
@@ -57,4 +57,4 @@ const getTagTree = async ({noCache}: TagSearchOptions = {noCache: false}) => {
 	}
 };
 
-export {getTagTree};
+export {getTagTrees};
