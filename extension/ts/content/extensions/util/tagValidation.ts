@@ -1,4 +1,4 @@
-import {getAncestry, getTagsFromElement, getTagTrees, TagTrees} from "../../adapters/tags";
+import {getTagsFromElement, getTagTrees, TagTrees} from "../../adapters/tags";
 import {createModal} from "../../../common/ui/modal";
 import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {UIColour} from "../../../common/ui/colour";
