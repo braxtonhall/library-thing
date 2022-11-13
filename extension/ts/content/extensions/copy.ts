@@ -3,7 +3,6 @@ import {getFormData, insertFormData, onFormRender} from "../entities/bookForm";
 import {createIconButton} from "../../common/ui/button";
 
 const SAVE_DATA_KEY = "_save-data";
-const BARCODE_ID = "item_inventory_barcode_1";
 
 const onCopy = (event: Event) => {
 	event.preventDefault();
@@ -14,20 +13,11 @@ const onCopy = (event: Event) => {
 	);
 };
 
-const focusOn = (id: string) => {
-	const element = document.getElementById(id);
-	const top = window.scrollY; // capture the height before focus
-	element?.focus(); // focus will scroll us down
-	window.scroll({top}); // scroll us back up immediately
-	element?.scrollIntoView({behavior: "smooth"}); // smooth scroll down
-};
-
 const onPaste = (event: Event) => {
 	event.preventDefault();
 	try {
 		const saveData = JSON.parse(localStorage.getItem(SAVE_DATA_KEY) ?? "{}");
-		insertFormData(saveData, new Set([BARCODE_ID]));
-		focusOn(BARCODE_ID);
+		insertFormData(saveData);
 	} catch (error) {
 		console.error(error);
 		showToast("Something went wrong when trying to paste metadata :/", ToastType.ERROR);
