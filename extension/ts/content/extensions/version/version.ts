@@ -4,27 +4,25 @@ interface Version {
 	revision: number;
 }
 
-const versionCompare = (comparator: (a: number, b: number) => boolean) => (versionA: Version, versionB: Version) => {
-	if (comparator(versionA.major, versionB.major)) {
-		return true;
-	} else if (comparator(versionB.major, versionA.major)) {
-		return false;
-	} else if (comparator(versionA.minor, versionB.minor)) {
-		return true;
-	} else if (comparator(versionB.minor, versionA.minor)) {
-		return false;
-	} else if (comparator(versionA.revision, versionB.revision)) {
-		return true;
-	} else if (comparator(versionB.revision, versionA.revision)) {
-		return false;
-	} else {
-		return false;
-	}
+const versionLessThan = (versionA: Version, versionB: Version) => {
+	const lessThan = (versionA: Version, versionB: Version, keys: (keyof Version)[]): boolean => {
+		const [key, ...rest] = keys;
+		if (key) {
+			if (versionA[key] < versionB[key]) {
+				return true;
+			} else if (versionA[key] > versionB[key]) {
+				return false;
+			} else {
+				return lessThan(versionA, versionB, rest);
+			}
+		} else {
+			return false;
+		}
+	};
+	return lessThan(versionA, versionB, ["major", "minor", "revision"]);
 };
 
-const versionLessThan = versionCompare((a, b) => a < b);
-
-const versionEquals = versionCompare((a, b) => a === b);
+const versionEquals = (a: Version, b: Version) => ["major", "minor", "revision"].every((key) => a[key] === b[key]);
 
 const toVersion = (tag: string): Version => {
 	const [major, minor, revision] = tag.split(".").map(Number);
