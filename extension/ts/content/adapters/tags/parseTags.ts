@@ -14,7 +14,7 @@ const parseRows = ({rows, fromRow, depth, tree, parent}: ParserOptions): number 
 		const tag = rows[row][depth];
 		if (tag) {
 			const node = {tag, parent};
-			tree.set(tag, node);
+			tree.set(tag.toLowerCase(), node);
 			row = parseRows({rows, fromRow: row + 1, depth: depth + 1, tree, parent: node});
 		} else {
 			break;
