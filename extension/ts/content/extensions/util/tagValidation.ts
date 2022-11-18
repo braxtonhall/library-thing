@@ -10,7 +10,7 @@ declare const SPREADSHEET_ID: string; // set by webpack
 type GetTagsOptions = {noCache: boolean};
 
 const applyHighlights = async (text: string): Promise<Highlight[]> => {
-	const validTags = await getTagTrees();
+	const validTags = await getTagTrees().catch(() => new Map());
 	return text
 		.split(",")
 		.flatMap((part) => {
@@ -101,6 +101,7 @@ const appendTagValidator = (onSave: OnSave, offSave: OffSave, input: Highlightab
 	const backdrop = highlighted(input, applyHighlights);
 	const saveButtonListener = () => handleSave(input, {noCache: false});
 	const showTagValidator = () => {
+		input.dispatchEvent(new Event("change"));
 		onSave(saveButtonListener);
 		backdrop.style.display = "";
 	};

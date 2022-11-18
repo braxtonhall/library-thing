@@ -13,14 +13,18 @@ const makeCache = <T>() => {
 	const _yield = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
 
 	const pollForBook = async (id: string): Promise<T> => {
-		const value = cache.get(id);
-		if (value === LOCK) {
-			// If the value is LOCK, then someone else is already working on the request.
-			// We should yield and then try again
-			await _yield();
-			return pollForBook(id);
+		if (cache.has(id)) {
+			const value = cache.get(id);
+			if (value === LOCK) {
+				// If the value is LOCK, then someone else is already working on the request.
+				// We should yield and then try again
+				await _yield();
+				return pollForBook(id);
+			} else {
+				return value;
+			}
 		} else {
-			return value;
+			throw new Error(`Concurrent execution failed for getting value of ${id}`);
 		}
 	};
 
@@ -36,12 +40,18 @@ const makeCache = <T>() => {
 	const asyncCached = async (id: string, implementation: () => Promise<T>): Promise<T> => {
 		if (!cache.has(id)) {
 			cache.set(id, LOCK as T); // Lock for other async calls!
-			const newValue = await implementation();
-			// Must check for lock in case Sync/Set cache
-			if (cache.get(id) === LOCK) {
-				cache.set(id, newValue); // Unlock other async calls!
+			try {
+				const newValue = await implementation();
+				// Must check for lock in case Sync/Set cache
+				if (cache.get(id) === LOCK) {
+					cache.set(id, newValue); // Unlock other async calls!
+				}
+				return cache.get(id);
+			} finally {
+				if (cache.get(id) === LOCK) {
+					cache.delete(id);
+				}
 			}
-			return cache.get(id);
 		} else {
 			return pollForBook(id);
 		}
