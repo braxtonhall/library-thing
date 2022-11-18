@@ -13,7 +13,9 @@
 			"matches": ["https://*.librarything.com/*"],
 			"js": ["js/bundle.js"]
 		}
-	], "options_page": "html/options.html", "action": {
+	],
+	"options_page": "html/options.html",
+	"action": {
 		"default_title": "Click Me",
 		"default_popup": "html/options.html"
 	},
