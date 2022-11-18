@@ -12,7 +12,7 @@ const getFormElements = (): FormAreaElement[] =>
 // This is relying on the fact that when the edit form is available, the html matches this selector,
 // and fails to match in all other cases. This IS brittle. If LibraryThing changes
 // the markup in any way this will just not work properly
-const formExists = (): boolean => !!document.querySelector("#book_editForm .book_bit");
+const formExists = (): boolean => !!document.querySelector("#book_editForm .book_bit #form_title"); // yes this is cursed, no we do not care
 
 const getForm = (): HTMLElement => document.getElementById("book_editForm");
 
