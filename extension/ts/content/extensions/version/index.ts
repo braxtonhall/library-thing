@@ -25,24 +25,25 @@ const beenAWhile = async (): Promise<boolean> => Date.now() > (await checkedTime
 
 const onANewVersion = async (): Promise<boolean> => versionLT(await lastSeenVersion.get(), getCurrentVersion());
 
-window.addEventListener("load", async () => {
-	if ((await onANewVersion()) || (await beenAWhile())) {
-		const {version: remoteVersion, download, html} = await getLatestRelease();
-		const currentVersion = getCurrentVersion();
-		if (versionLT(currentVersion, remoteVersion)) {
-			download &&
-				showToast("New version available!\n\nClick here to download it.", ToastType.INFO, () =>
-					window.open(download)
-				);
-		} else if (versionEQ(remoteVersion, currentVersion)) {
-			html &&
-				showToast(
-					"Looks like this is your first time on this version of Better LibraryThing!\n\nClick here to see what's new.",
-					ToastType.SUCCESS,
-					() => window.open(html)
-				);
+false &&
+	window.addEventListener("load", async () => {
+		if ((await onANewVersion()) || (await beenAWhile())) {
+			const {version: remoteVersion, download, html} = await getLatestRelease();
+			const currentVersion = getCurrentVersion();
+			if (versionLT(currentVersion, remoteVersion)) {
+				download &&
+					showToast("New version available!\n\nClick here to download it.", ToastType.INFO, () =>
+						window.open(download)
+					);
+			} else if (versionEQ(remoteVersion, currentVersion)) {
+				html &&
+					showToast(
+						"Looks like this is your first time on this version of Better LibraryThing!\n\nClick here to see what's new.",
+						ToastType.SUCCESS,
+						() => window.open(html)
+					);
+			}
+			await lastSeenVersion.set();
+			await checkedTime.set();
 		}
-		await lastSeenVersion.set();
-		await checkedTime.set();
-	}
-});
+	});
