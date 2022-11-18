@@ -37,7 +37,6 @@ const onceFormRender = (callback: FormRenderListener): void =>
 	window.addEventListener(FORM_RENDER_EVENT, encloseCallbackArguments(callback), {once: true});
 
 const handleFormMutation = () => {
-	console.log({a: formExists()});
 	if (formExists()) {
 		save = createOnSave();
 		window.dispatchEvent(new Event(FORM_RENDER_EVENT));
