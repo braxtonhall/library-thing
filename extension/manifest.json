@@ -22,7 +22,6 @@
 	"content_security_policy": {},
 	"host_permissions": [
 		"https://*.librarything.com/*",
-		"https://*.b-ok.cc/*",
 		"https://*.libgen.is/*",
 		"https://*.archive.org/*",
 		"https://*.goodreads.com/*",
