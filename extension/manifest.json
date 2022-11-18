@@ -13,9 +13,7 @@
 			"matches": ["https://*.librarything.com/*"],
 			"js": ["js/bundle.js"]
 		}
-	],
-	"options_page": "html/options.html",
-	"action": {
+	], "options_page": "html/options.html", "action": {
 		"default_title": "Click Me",
 		"default_popup": "html/options.html"
 	},
@@ -36,8 +34,6 @@
 	"oauth2": {
 		"client_id": "1065384085182-ojd9eluba1ht2lrp6jnfmj295uihlhdc.apps.googleusercontent.com",
 		"scopes": [
-			"https://www.googleapis.com/auth/drive",
-			"https://www.googleapis.com/auth/drive.file",
 			"https://www.googleapis.com/auth/spreadsheets"
 		]
 	},
