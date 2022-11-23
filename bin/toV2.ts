@@ -34,7 +34,12 @@ const transformers: { [key: string]: Transformer } = {
 		"scripts": [value.service_worker],
 		"persistent": false
 	})),
-	permissions: retainKey(({value, manifest}) => [...value, ...manifest.host_permissions]),
+	permissions: retainKey(({value, manifest}) =>
+		[
+			...value,
+			...manifest.host_permissions,
+			"https://sheets.googleapis.com/v4/spreadsheets/*"
+		]),
 	web_accessible_resources: retainKey(({value}) => value.flatMap(entry => entry.resources))
 };
 
