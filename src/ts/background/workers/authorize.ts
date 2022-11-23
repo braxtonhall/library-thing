@@ -7,12 +7,12 @@ import storage from "../../common/adapters/storage";
 type AuthorizeParameters = boolean;
 type AuthorizeResponse = string;
 
-type TokenRecord = {token: string, expiresAt: number};
+type TokenRecord = {token: string; expiresAt: number};
 
 const isTokenRecord = (record: unknown): record is TokenRecord =>
 	record && typeof record === "object" && "token" in record && "expiresAt" in record;
 
-const parseAccessToken = (responseUrl: string): {token: string, expiresIn: number} => {
+const parseAccessToken = (responseUrl: string): {token: string; expiresIn: number} => {
 	const {hash} = new URL(responseUrl);
 	const paramsString = hash.slice(1); // remove the "#" from the beginning
 	const params = new URLSearchParams(paramsString);
@@ -64,16 +64,15 @@ const getCachedToken = async (): Promise<string | undefined> => {
 
 const clearCachedToken = (): Promise<void> => storage.set("token", undefined);
 
-const onResponse =
-	async (responseUrl?: string): Promise<string> => {
-		const {token, expiresIn} = parseAccessToken(responseUrl);
-		await setCachedToken(token, expiresIn);
-		if (token) {
-			return token;
-		} else {
-			throw new WorkerError(WorkerErrorKind.Unknown, "Could not parse access token");
-		}
-	};
+const onResponse = async (responseUrl?: string): Promise<string> => {
+	const {token, expiresIn} = parseAccessToken(responseUrl);
+	await setCachedToken(token, expiresIn);
+	if (token) {
+		return token;
+	} else {
+		throw new WorkerError(WorkerErrorKind.Unknown, "Could not parse access token");
+	}
+};
 
 const getAuthToken = async (interactive: boolean): Promise<string> => {
 	const cachedToken = await getCachedToken();
@@ -98,7 +97,6 @@ const authorize = async (interactive: AuthorizeParameters): Promise<AuthorizeRes
 		}
 		return token;
 	});
-
 
 type DeAuthorizeParameters = undefined;
 type DeAuthorizeResponse = void;

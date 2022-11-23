@@ -43,12 +43,12 @@
 		"build": "yarn build:v2 && yarn build:v3",
 		"lint": "eslint src/ts/ --ext .ts",
 		"fix": "yarn lint --fix",
-		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write \\\"src/ts/**/*.ts\\\"",
+		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write \"src/ts/**/*.ts\"",
 		"test": "mocha --require ts-node/register --extension .spec.ts --recursive test",
 		"prepare": "husky install"
 	},
 	"lint-staged": {
-		"extension/**/*.ts": [
+		"{src,test}/**/*.ts": [
 			"yarn fix --cache",
 			"yarn pretty --cache"
 		]
