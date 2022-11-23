@@ -1,12 +1,14 @@
 import path from "path";
 import {Configuration, DefinePlugin, EnvironmentPlugin, WebpackOptionsNormalized} from "webpack";
+import CopyPlugin from "copy-webpack-plugin";
 
 import config from "./mv3-hot-reload.config";
 
 const isDev = (options: WebpackOptionsNormalized) => options.mode !== "production";
 
-const srcDir = path.join(__dirname, "extension");
+const srcDir = path.join(__dirname, "src");
 const tsSrcDir = path.join(srcDir, "ts");
+const outputDir = path.join(__dirname, "dist");
 const getEntry = (name: string, options) => {
 	return [path.join(tsSrcDir, name), "webextension-polyfill/dist/browser-polyfill.js", ...(isDev(options) ? [`mv3-hot-reload/${name}`] : [])];
 };
@@ -19,7 +21,7 @@ module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration =
 		background: getEntry("background", options),
 	},
 	output: {
-		path: path.join(srcDir, "js"),
+		path: path.join(outputDir, "js"),
 		filename: "[name].js",
 	},
 	module: {
@@ -60,5 +62,12 @@ module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration =
 		new EnvironmentPlugin({
 			MV3_HOT_RELOAD_PORT: config.port,
 		}),
+		new CopyPlugin({
+			patterns: [
+				{from: path.join(srcDir, "html"), to: path.join(outputDir, "html")},
+				{from: path.join(srcDir, "img"), to: path.join(outputDir, "img")},
+				{from: path.join(srcDir, "manifest.json"), to: path.join(outputDir, "manifest.json")},
+			]
+		})
 	],
 });

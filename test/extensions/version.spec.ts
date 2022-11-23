@@ -4,7 +4,7 @@ import {
 	Version,
 	versionEQ,
 	versionLT
-} from "../../extension/ts/content/extensions/version/version";
+} from "../../src/ts/content/extensions/version/version";
 
 describe("version", () => {
 	const testFunction = (fn: (a: Version, b: Version) => boolean) =>
