@@ -34,7 +34,7 @@
 	},
 	"permissions": ["tabs", "storage", "identity"],
 	"oauth2": {
-		"client_id": "1065384085182-ojd9eluba1ht2lrp6jnfmj295uihlhdc.apps.googleusercontent.com",
+		"client_id": "1065384085182-m6bva575fe1bdvu9r80s811trepat999.apps.googleusercontent.com",
 		"scopes": [
 			"https://www.googleapis.com/auth/spreadsheets"
 		]

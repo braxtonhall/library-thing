@@ -5,23 +5,50 @@ import {dispatchEvent} from "../util/dispatchEvent";
 type AuthorizeParameters = boolean;
 type AuthorizeResponse = string;
 
+const parseAccessToken = (responseUrl: string) => {
+	const {hash} = new URL(responseUrl);
+	const paramsString = hash.slice(1); // remove the "#" from the beginning
+	return new URLSearchParams(paramsString).get("access_token");
+};
+
+const getAuthUrl = () => {
+	const manifest = chrome.runtime.getManifest();
+	const url = new URL("https://accounts.google.com/o/oauth2/auth");
+	const params = new URLSearchParams({
+		client_id: manifest.oauth2.client_id,
+		response_type: "token",
+		redirect_uri: chrome.identity.getRedirectURL(),
+		scope: manifest.oauth2.scopes.join(","),
+	});
+	url.search = params.toString();
+	return url.toString();
+};
+
+const onResponse = (resolve, reject, interactive: boolean) => (responseUrl?: string) => {
+	if (responseUrl) {
+		const token = parseAccessToken(responseUrl);
+		if (token) {
+			if (interactive) {
+				dispatchEvent(BackgroundEvent.CompletedAuth);
+			}
+			resolve(token);
+		} else {
+			reject(new WorkerError(WorkerErrorKind.Unknown, "Could not parse access token"));
+		}
+	} else {
+		const {message} = chrome.runtime.lastError;
+		reject(new WorkerError(WorkerErrorKind.Unknown, message));
+	}
+};
+
 const authorize = (interactive: AuthorizeParameters): Promise<AuthorizeResponse> =>
 	new Promise((resolve, reject) => {
-		if (chrome?.identity?.getAuthToken) {
-			return chrome.identity.getAuthToken({interactive}, (auth) => {
-				if (auth) {
-					if (interactive) {
-						dispatchEvent(BackgroundEvent.CompletedAuth);
-					}
-					resolve(auth);
-				} else {
-					const {message} = chrome.runtime.lastError;
-					reject(new WorkerError(WorkerErrorKind.Unknown, message));
-				}
-			});
+		if (chrome?.identity?.launchWebAuthFlow) {
+			return chrome.identity.launchWebAuthFlow(
+				{url: getAuthUrl(), interactive},
+				onResponse(resolve, reject, interactive)
+			);
 		} else {
-			// TODO use chrome.identity.launchWebAuthFlow
-			// see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/identity/launchWebAuthFlow
 			return reject(new WorkerError(WorkerErrorKind.UnsupportedBrowser, "Unsupported browser :("));
 		}
 	});
