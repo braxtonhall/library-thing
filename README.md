@@ -36,7 +36,7 @@ Results are pulled from Goodreads and Amazon, with more websites to be added in 
 
 <sub>Please make sure to review the summaries! They may not be perfect!</sub>
 
-### Author Pages (Google Chrome only!)
+### Author Pages
 
 Edit an author's tags from the Author page! For more information, see the instructions [here](./docs/librarian/authors.md).
 

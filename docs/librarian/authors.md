@@ -4,8 +4,6 @@ Author Tags are used to store information about an author in a centralised way, 
 
 ## Prerequisites
 
-1. You must be using Google Chrome. While we hope to support other browsers in the future, Chrome is the only browser supported at the moment.
-
 1. You must be logged in with a Google account associated with the Better LibraryThing project.
 If you are a volunteer librarianette for VBL, you will find this account in the volunteer resources.
 Otherwise, you can request that _your_ Google account be added.
