@@ -19,11 +19,26 @@
 		"default_title": "Click Me",
 		"default_popup": "html/options.html"
 	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{ae1ccbaf-b9e4-44e4-b0b1-005db1c0dbd2}"
+		}
+	},
 	"background": {
 		"scripts": ["js/background.js"],
 		"persistent": false
 	},
-	"permissions": ["tabs", "storage", "identity"],
+	"permissions": [
+		"tabs", "storage", "identity",
+		"https://*.librarything.com/*",
+		"https://*.b-ok.cc/*",
+		"https://*.libgen.is/*",
+		"https://*.archive.org/*",
+		"https://*.goodreads.com/*",
+		"https://*.amazon.ca/*",
+		"https://*.amazon.com/*",
+		"https://sheets.googleapis.com/v4/spreadsheets/*"
+	],
 	"oauth2": {
 		"client_id": "1065384085182-m6bva575fe1bdvu9r80s811trepat999.apps.googleusercontent.com",
 		"scopes": [

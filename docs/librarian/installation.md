@@ -15,7 +15,11 @@
 
 
 ### Firefox
-Not yet supported
+1. Download and unzip the extension from the [releases page](https://github.com/braxtonhall/library-thing/releases)
+1. Navigate to [`about:debugging#/runtime/this-firefox`](about:debugging#/runtime/this-firefox)
+1. Click `Load Temporary Add-on...`
+1. Click `manifest.json` in the unzipped extension directory
+1. The extension should be installed!
 
 ### Safari
 Not yet supported
