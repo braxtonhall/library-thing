@@ -1,4 +1,5 @@
 import {tooltipped} from "./tooltip";
+import * as browser from "webextension-polyfill";
 
 const decorateWithDescription = <T extends HTMLElement>(button: T, description?: string): T => {
 	if (description) {
@@ -19,7 +20,7 @@ const createIconButton = (
 	td.className = "book_bitItem";
 	td.style.paddingLeft = "8px";
 	const img = document.createElement("img");
-	img.src = chrome.runtime.getURL(imgSrc);
+	img.src = browser.runtime.getURL(imgSrc);
 	const span = document.createElement("span");
 	span.innerHTML = buttonText;
 	span.className = "book_editTabText";

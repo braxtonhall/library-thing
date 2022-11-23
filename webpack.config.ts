@@ -8,7 +8,7 @@ const isDev = (options: WebpackOptionsNormalized) => options.mode !== "productio
 const srcDir = path.join(__dirname, "extension");
 const tsSrcDir = path.join(srcDir, "ts");
 const getEntry = (name: string, options) => {
-	return [path.join(tsSrcDir, name), ...(isDev(options) ? [`mv3-hot-reload/${name}`] : [])];
+	return [path.join(tsSrcDir, name), "webextension-polyfill/dist/browser-polyfill.js", ...(isDev(options) ? [`mv3-hot-reload/${name}`] : [])];
 };
 
 module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration => ({

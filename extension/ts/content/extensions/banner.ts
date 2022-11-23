@@ -1,5 +1,7 @@
 import "../../../sass/banner.sass";
 
+import * as browser from "webextension-polyfill";
+
 import Cookies from "../adapters/cookies";
 import {onLogged} from "./util/onLogged";
 
@@ -21,7 +23,7 @@ const editElement = <E extends HTMLElement>(id: string, callback: (element: E) =
 };
 
 const setLogo = (id: string) =>
-	editElement(id, (logo: HTMLImageElement) => (logo.src = chrome.runtime.getURL("img/icon128.png")));
+	editElement(id, (logo: HTMLImageElement) => (logo.src = browser.runtime.getURL("img/icon128.png")));
 
 const setCSS = (id: string, css: Partial<CSSStyleDeclaration>) =>
 	editElement(id, (element) => Object.entries(css).forEach(([key, value]) => (element.style[key] = value)));
@@ -30,7 +32,7 @@ const setFavicon = () =>
 	Array.from(document.getElementsByTagName("link"))
 		.filter((element) => element.rel === "icon")
 		.map((element) => {
-			element.href = chrome.runtime.getURL("img/favicon.ico");
+			element.href = browser.runtime.getURL("img/favicon.ico");
 			element.type = "image/x-icon";
 		});
 
@@ -43,7 +45,7 @@ const setMasthead = (authorized: boolean) =>
 	setCSS("masthead", {transition: "500ms", filter: selectFilter(authorized)});
 
 window.addEventListener("load", () => {
-	const background = `url(${chrome.runtime.getURL("img/icon128.png")}) no-repeat 16px 0`;
+	const background = `url(${browser.runtime.getURL("img/icon128.png")}) no-repeat 16px 0`;
 	setCSS("masthead_logo_wordmark", {background});
 	setLogo("masthead_lt_logo");
 	setFavicon();

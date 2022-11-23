@@ -1,5 +1,6 @@
 import {Message} from "../../common/types";
 import {BackgroundEvent, BackgroundEventMessage} from "../../common/backgroundEvent";
+import * as browser from "webextension-polyfill";
 
 type Listener = () => void;
 
@@ -12,7 +13,7 @@ const onBackgroundEvent = (kind: BackgroundEvent, callback: Listener): void => {
 
 const listeners = new Map<BackgroundEvent, Listener[]>(Object.values(BackgroundEvent).map((kind) => [kind, []]));
 
-chrome.runtime.onMessage.addListener((message: Message) => {
+browser.runtime.onMessage.addListener((message: Message) => {
 	if (isBackgroundEventMessage(message)) {
 		const {kind} = message;
 		listeners.get(kind).forEach((listener) => listener());
