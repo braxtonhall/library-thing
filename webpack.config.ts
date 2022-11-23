@@ -6,9 +6,10 @@ import config from "./mv3-hot-reload.config";
 
 const isDev = (options: WebpackOptionsNormalized) => options.mode !== "production";
 
+const manifestVersion = process.env.MANIFEST_VERSION ?? "v3";
 const srcDir = path.join(__dirname, "src");
 const tsSrcDir = path.join(srcDir, "ts");
-const outputDir = path.join(__dirname, "dist");
+const outputDir = path.join(__dirname, "dist", manifestVersion);
 const getEntry = (name: string, options) => {
 	return [path.join(tsSrcDir, name), "webextension-polyfill/dist/browser-polyfill.js", ...(isDev(options) ? [`mv3-hot-reload/${name}`] : [])];
 };
@@ -66,7 +67,10 @@ module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration =
 			patterns: [
 				{from: path.join(srcDir, "html"), to: path.join(outputDir, "html")},
 				{from: path.join(srcDir, "img"), to: path.join(outputDir, "img")},
-				{from: path.join(srcDir, "manifest.json"), to: path.join(outputDir, "manifest.json")},
+				{
+					from: path.join(srcDir, `manifest.${manifestVersion}.json`),
+					to: path.join(outputDir, "manifest.json"),
+				},
 			]
 		})
 	],

@@ -36,6 +36,7 @@
 		"watch:webpack": "webpack --watch --mode development",
 		"watch:mv3": "mv3-hot-reload",
 		"build": "webpack --mode production",
+		"build:v2": "MANIFEST_VERSION=v2 yarn build",
 		"lint": "eslint src/ts/ --ext .ts",
 		"fix": "yarn lint --fix",
 		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write \\\"src/ts/**/*.ts\\\"",
