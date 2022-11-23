@@ -61,4 +61,7 @@ module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration =
 			MV3_HOT_RELOAD_PORT: config.port,
 		}),
 	],
+	optimization: {
+		minimize: false
+	},
 });
