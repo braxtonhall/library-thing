@@ -36,16 +36,16 @@ jobs:
                 with:
                     type: "zip"
                     filename: "extension.zip"
-                    path: "dist/v3"
+                    directory: "dist/v3"
             -   name: Archive Firefox Release
                 uses: thedoctor0/zip-release@main
                 with:
                     type: "zip"
                     filename: "firefox.zip"
-                    path: "dist/v2"
+                    directory: "dist/v2"
             -   name: Upload Release
                 uses: ncipollo/release-action@v1
                 with:
-                    artifacts: "extension.zip,firefox.zip"
+                    artifacts: "dist/v3/extension.zip,dist/v2/firefox.zip"
                     bodyFile: "docs/releases/${{ steps.vars.outputs.tag }}.md"
                     token: ${{ secrets.YOUR_GITHUB_TOKEN }}
