@@ -24,11 +24,8 @@ const getRedirectURL = (): string => {
 	if (baseRedirectUrl.includes("chromium")) {
 		return baseRedirectUrl;
 	} else {
-		// TODO make this better lol
-		const redirectSubdomain = baseRedirectUrl.slice(0, baseRedirectUrl.indexOf('.')).replace('https://', '');
-		const redirectUri = 'http://127.0.0.1/mozoauth2/' + redirectSubdomain;
-		console.log(redirectUri);
-		return redirectUri;
+		const redirectSubdomain = baseRedirectUrl.match(/https:\/\/([^.]*)/)[1];
+		return `http://127.0.0.1/mozoauth2/${redirectSubdomain}`;
 	}
 };
 
