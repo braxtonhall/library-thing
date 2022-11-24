@@ -1,5 +1,5 @@
 import path from "path";
-import {Configuration, DefinePlugin, EnvironmentPlugin, WebpackOptionsNormalized} from "webpack";
+import {Configuration, EnvironmentPlugin, WebpackOptionsNormalized} from "webpack";
 import CopyPlugin, {TransformerFunction} from "copy-webpack-plugin";
 
 import config from "./mv3-hot-reload.config";
@@ -65,11 +65,6 @@ module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration =
 		extensions: [".tsx", ".ts", ".js"],
 	},
 	plugins: [
-		new DefinePlugin({
-			SPREADSHEET_ID: isDev(options)
-				? JSON.stringify("18I5LabO21LfV97CkBRBW6SeK5hPggitvnK-2joUJ8jU")
-				: JSON.stringify("1EfwBhY56M8OwgVjFTWxxxdoIxK8osw2vfgsXnCyGGuA"),
-		}),
 		new EnvironmentPlugin({
 			MV3_HOT_RELOAD_PORT: config.port,
 		}),

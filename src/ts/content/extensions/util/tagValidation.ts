@@ -4,8 +4,7 @@ import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {UIColour} from "../../../common/ui/colour";
 import {OnSave, OffSave} from "../../entities/bookForm";
 import {Highlight, Highlightable, highlighted} from "../../../common/ui/highlighter";
-
-declare const SPREADSHEET_ID: string; // set by webpack
+import {getSheetLink} from "../../../common/entities/spreadsheet";
 
 type GetTagsOptions = {noCache: boolean};
 
@@ -54,8 +53,8 @@ const getUserAcceptance = (
 		})
 	);
 
-const getSecondaryAcceptance = (saveHandler: (options: GetTagsOptions) => Promise<boolean>): Promise<boolean> => {
-	window.open(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}`);
+const getSecondaryAcceptance = async (saveHandler: (options: GetTagsOptions) => Promise<boolean>): Promise<boolean> => {
+	window.open(await getSheetLink());
 	return new Promise<boolean>((resolve) =>
 		createModal({
 			text: "Did you put the new tags in the Tag Index?",

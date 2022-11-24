@@ -3,8 +3,7 @@ import {TagSearchOptions, TagTrees} from "./types";
 import Sheets, {Range} from "../sheets";
 import {parseTree} from "./parseTags";
 import {incrementColumnBy} from "../sheets/util";
-
-declare const SPREADSHEET_ID: string; // Declared in webpack DefinePlugin
+import {getSheetId} from "../../../common/entities/spreadsheet";
 
 const META_TAG_SHEET = "Tag Index Index";
 /**
@@ -38,13 +37,13 @@ const rowToRange = ([sheet, topLeft, width]: string[]): Range => {
 
 const getTagRanges = async (): Promise<Range[]> => {
 	const range = Sheets.createRange(META_TAG_SHEET, "A", "C");
-	const response = await Sheets.readRanges(SPREADSHEET_ID, [range]);
+	const response = await Sheets.readRanges(await getSheetId(), [range]);
 	return response?.[0].values.filter(rowIsRange).map(rowToRange) ?? [];
 };
 
 const getSheetsTags = async (): Promise<string[][]> => {
 	const ranges = await getTagRanges();
-	const response = await Sheets.readRanges(SPREADSHEET_ID, ranges);
+	const response = await Sheets.readRanges(await getSheetId(), ranges);
 	return response?.flatMap((valueRange) => valueRange.values ?? []) ?? [];
 };
 
