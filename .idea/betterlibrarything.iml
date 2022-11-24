@@ -4,7 +4,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.husky/_" />
-      <excludeFolder url="file://$MODULE_DIR$/extension/js" />
+      <excludeFolder url="file://$MODULE_DIR$/src/js" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

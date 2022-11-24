@@ -1,5 +1,5 @@
-import {makeCache} from "../../extension/ts/common/util/cache";
-import {sleep} from "../../extension/ts/common/util/sleep";
+import {makeCache} from "../../src/ts/common/util/cache";
+import {sleep} from "../../src/ts/common/util/sleep";
 import {expect} from "chai";
 
 describe("cache", () => {

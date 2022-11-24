@@ -6,9 +6,9 @@ if (!/[0-9]+\.[0-9]+\.[0-9]+/.test(tag)) {
 	throw "Tag not formatted correctly. Should be of the form '*.*.*'";
 }
 
-const manifest = JSON.parse(fs.readFileSync("./extension/manifest.json").toString());
+const manifest = JSON.parse(fs.readFileSync("./src/manifest.json").toString());
 if (manifest.version !== tag) {
-	throw `Tag does not match manifest version '${manifest.version}'`;
+	throw `Tag does not match v3 manifest version '${manifest.version}'`;
 }
 
 const releaseNotes = fs.existsSync(`./docs/releases/${tag}.md`);

@@ -5,13 +5,14 @@
 	"license": "MIT",
 	"devDependencies": {
 		"@types/chai": "^4.3.3",
-		"@types/chrome": "^0.0.197",
 		"@types/mocha": "^10.0.0",
 		"@types/node": "^18.8.3",
+		"@types/webextension-polyfill": "^0.9.1",
 		"@typescript-eslint/eslint-plugin": "^5.39.0",
 		"@typescript-eslint/parser": "^5.39.0",
 		"chai": "^4.3.6",
 		"concurrently": "^7.5.0",
+		"copy-webpack-plugin": "^11.0.0",
 		"css-loader": "^6.7.1",
 		"eslint": "^8.24.0",
 		"eslint-config-prettier": "^8.5.0",
@@ -25,23 +26,29 @@
 		"style-loader": "^3.3.1",
 		"ts-loader": "^9.4.1",
 		"ts-node": "^10.9.1",
-		"typescript": "^4.8.4",
+		"typescript": "^4.9.3",
+		"webextension-polyfill": "^0.10.0",
 		"webpack": "^5.74.0",
 		"webpack-cli": "^4.10.0"
 	},
 	"scripts": {
 		"watch": "concurrently yarn:watch:*",
-		"watch:webpack": "webpack --watch --mode development",
+		"_watch:webpack": "webpack --watch --mode development",
 		"watch:mv3": "mv3-hot-reload",
-		"build": "webpack --mode production",
-		"lint": "eslint extension/ts/ --ext .ts",
+		"watch:webpack:v2": "MANIFEST_VERSION=v2 yarn _watch:webpack",
+		"watch:webpack:v3": "MANIFEST_VERSION=v3 yarn _watch:webpack",
+		"_build": "webpack --mode production",
+		"build:v2": "MANIFEST_VERSION=v2 yarn _build",
+		"build:v3": "MANIFEST_VERSION=v3 yarn _build",
+		"build": "yarn build:v2 && yarn build:v3",
+		"lint": "eslint src/ts/ --ext .ts",
 		"fix": "yarn lint --fix",
-		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write \"extension/ts/**/*.ts\"",
+		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write \"src/ts/**/*.ts\"",
 		"test": "mocha --require ts-node/register --extension .spec.ts --recursive test",
 		"prepare": "husky install"
 	},
 	"lint-staged": {
-		"extension/**/*.ts": [
+		"{src,test}/**/*.ts": [
 			"yarn fix --cache",
 			"yarn pretty --cache"
 		]

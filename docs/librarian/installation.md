@@ -13,15 +13,21 @@
 1. The extension should be installed!
    <img src="../img/installation/installed.png" style="padding: 12px 0px;" alt="extension installed">
 
-
 ### Firefox
-Not yet supported
-
-### Safari
-Not yet supported
+1. Download and unzip the extension from the [releases page](https://github.com/braxtonhall/library-thing/releases)
+1. Navigate to [`about:debugging#/runtime/this-firefox`](about:debugging#/runtime/this-firefox)
+1. Click `Load Temporary Add-on...`
+1. Click `manifest.json` in the unzipped extension directory
+1. The extension should be installed!
 
 ### Edge
-Not yet supported
+1. Download and unzip the extension from the [releases page](https://github.com/braxtonhall/library-thing/releases)
+1. Click `extension.zip` to download the extension zip file
+1. Navigate to [`edge://extensions`](edge://extensions)
+1. Toggle `Developer mode`
+1. Click `Load unpacked`
+1. Select the unzipped extension directory
+1. The extension should be installed!
 
 ### Opera
 1. Download and unzip the extension from the [releases page](https://github.com/braxtonhall/library-thing/releases)
@@ -40,3 +46,6 @@ Not yet supported
 1. Click `Load unpacked`
 1. Select the unzipped extension directory
 1. The extension should be installed!
+
+### Safari
+Not yet supported
