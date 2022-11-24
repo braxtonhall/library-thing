@@ -2,16 +2,23 @@ import "../../sass/options.sass";
 import {invokeWorker} from "../common/workers/invoker";
 import {WorkerKind} from "../common/workers/types";
 import {loaderOverlaid} from "../common/ui/loadingIndicator";
+import config, {ConfigKey} from "../common/entities/config";
 
 const getAuthorization = (interactive: boolean) => invokeWorker(WorkerKind.Authorize, interactive).catch(() => "");
 const removeAuthorization = () => invokeWorker(WorkerKind.DeAuthorize, null).catch(() => undefined);
 
 const isAuthorized = async (interactive: boolean) => !!(await getAuthorization(interactive));
 
-const getButton = (id: string) => () => document.getElementById(id) as HTMLButtonElement;
+const getElement =
+	<T extends HTMLElement>(id: string) =>
+	() =>
+		document.getElementById(id) as T;
 
-const logInButton = getButton("log-in-button");
-const logOutButton = getButton("log-out-button");
+const logInButton = getElement<HTMLButtonElement>("log-in-button");
+const logOutButton = getElement<HTMLButtonElement>("log-out-button");
+const saveButton = getElement<HTMLButtonElement>("save-tag-index");
+const tagIndexInput = getElement<HTMLInputElement>("tag-index");
+const moreInfo = getElement<HTMLDivElement>("more-info");
 
 const setClass = (canLogIn: boolean, canLogOut: boolean) => {
 	logInButton().disabled = !canLogIn;
@@ -30,8 +37,47 @@ const logOut = async () => {
 	setClass(true, false);
 };
 
+const isValidTagIndex = (tagIndex: string): boolean => {
+	try {
+		const url = new URL(tagIndex);
+		return url.host === "docs.google.com" && /\/spreadsheets\/d\/[a-zA-Z0-9]+/.test(url.pathname);
+	} catch {
+		return false;
+	}
+};
+
+const setTagIndex = async () => (tagIndexInput().value = (await config.get(ConfigKey.SpreadsheetLink)) ?? "");
+
+const onValidValue = (valid: (value: string) => void, invalid?: () => void) => () => {
+	const {value} = tagIndexInput();
+	if (isValidTagIndex(value)) {
+		return valid(value);
+	} else {
+		return invalid?.();
+	}
+};
+
+const getTagIndex = onValidValue(async (value) => {
+	await config.set(ConfigKey.SpreadsheetLink, value);
+	moreInfo().innerText = "SAVED";
+	saveButton().disabled = true;
+});
+
+const validateTagIndex = onValidValue(
+	() => {
+		moreInfo().innerText = "UNSAVED";
+		saveButton().disabled = false;
+	},
+	() => {
+		moreInfo().innerText = "INVALID";
+		saveButton().disabled = true;
+	}
+);
+
 window.addEventListener("pageshow", async () => {
 	logInButton().addEventListener("click", () => authorize(true));
 	logOutButton().addEventListener("click", logOut);
-	return authorize(false);
+	saveButton().addEventListener("click", getTagIndex);
+	tagIndexInput().addEventListener("input", validateTagIndex);
+	return Promise.all([authorize(false), setTagIndex()]);
 });
