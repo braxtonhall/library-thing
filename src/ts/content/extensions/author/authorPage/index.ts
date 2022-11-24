@@ -72,7 +72,7 @@ const onSync = async () => {
 	}
 };
 
-window.addEventListener("load", async () => {
+window.addEventListener("pageshow", async () => {
 	if (document.querySelector("body.authorpage")) {
 		const container = document.querySelector<HTMLTableCellElement>("table.authorContentTable td.middle");
 		if (container) {

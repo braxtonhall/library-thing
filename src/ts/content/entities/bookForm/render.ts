@@ -43,7 +43,7 @@ const handleFormMutation = () => {
 	}
 };
 
-window.addEventListener("load", () => {
+window.addEventListener("pageshow", () => {
 	const editForm = getForm();
 	if (editForm) {
 		new MutationObserver(handleFormMutation).observe(editForm, {subtree: false, childList: true});

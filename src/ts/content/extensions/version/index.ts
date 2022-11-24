@@ -27,7 +27,7 @@ const beenAWhile = async (): Promise<boolean> => Date.now() > (await checkedTime
 
 const onANewVersion = async (): Promise<boolean> => versionLT(await lastSeenVersion.get(), getCurrentVersion());
 
-window.addEventListener("load", async () => {
+window.addEventListener("pageshow", async () => {
 	if ((await onANewVersion()) || (await beenAWhile())) {
 		const {version: remoteVersion, download, html} = await getLatestRelease();
 		const currentVersion = getCurrentVersion();

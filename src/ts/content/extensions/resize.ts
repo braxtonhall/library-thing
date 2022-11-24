@@ -95,7 +95,7 @@ onFormRender((form: HTMLElement, forEachElement: ForEachFormElement) => {
 	forEachElement(ifTextArea(mutateTextArea(getSizeData())));
 });
 
-window.addEventListener("load", async () => {
+window.addEventListener("pageshow", async () => {
 	if (document.querySelector("body.authorpage")) {
 		const tagTextArea = document.getElementById(AUTHOR_TAG_INPUT_ID) as HTMLTextAreaElement;
 		mutateTextArea(getSizeData())(tagTextArea);

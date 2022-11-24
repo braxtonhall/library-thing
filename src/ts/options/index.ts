@@ -30,7 +30,7 @@ const logOut = async () => {
 	setClass(true, false);
 };
 
-window.addEventListener("load", async () => {
+window.addEventListener("pageshow", async () => {
 	logInButton().addEventListener("click", () => authorize(true));
 	logOutButton().addEventListener("click", logOut);
 	return authorize(false);

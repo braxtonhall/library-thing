@@ -75,7 +75,7 @@ const onLogged = async ({onLogIn, onLogOut, container, description}: OnLogOption
 	saveCallback(onLogOut, logoutCallbacks, authed === false);
 };
 
-window.addEventListener("load", () => {
+window.addEventListener("pageshow", () => {
 	onBackgroundEvent(BackgroundEvent.CompletedAuth, handleLogin);
 	onBackgroundEvent(BackgroundEvent.RemovedAuth, handleLogout);
 });

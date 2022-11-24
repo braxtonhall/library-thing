@@ -44,7 +44,7 @@ const loggedIn = (authorized: boolean): boolean => authorized && Cookies.get(LOG
 const setMasthead = (authorized: boolean) =>
 	setCSS("masthead", {transition: "500ms", filter: selectFilter(authorized)});
 
-window.addEventListener("load", () => {
+window.addEventListener("pageshow", () => {
 	const background = `url(${browser.runtime.getURL("img/icon128.png")}) no-repeat 16px 0`;
 	setCSS("masthead_logo_wordmark", {background});
 	setLogo("masthead_lt_logo");
