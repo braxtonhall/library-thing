@@ -29,14 +29,11 @@ browser.runtime.onMessage.addListener(
 			const request = typedRequest.request as WorkerRequest<Kind>;
 			const worker = workers[typedRequest.kind] as Worker<Kind>;
 			return worker(request)
-				.then((value) => {
-					const resolved: WorkerResponse<Kind> = {status: WorkerStatus.RESOLVED, value};
-					return resolved;
-				})
-				.catch(({message, kind = WorkerErrorKind.Unknown}) => {
-					const rejected: WorkerResponse<Kind> = {status: WorkerStatus.REJECTED, error: kind, message};
-					return rejected;
-				});
+				.then((value) => ({status: WorkerStatus.RESOLVED, value} satisfies WorkerResponse<Kind>))
+				.catch(
+					({message, kind = WorkerErrorKind.Unknown}) =>
+						({status: WorkerStatus.REJECTED, error: kind, message} satisfies WorkerResponse<Kind>)
+				);
 		}
 	}
 );

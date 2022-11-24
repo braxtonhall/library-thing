@@ -47,7 +47,7 @@ const setCachedToken = async (token: string, expiresIn: number): Promise<void> =
 	const now = Date.now();
 	const fiveMinuteBuffer = 1000 * 60 * 5;
 	const expiresAt = now + millisecondsRemaining - fiveMinuteBuffer;
-	await storage.set("token", {token, expiresAt}); // TODO use satisfies
+	await storage.set("token", {token, expiresAt} satisfies TokenRecord);
 };
 
 const getCachedToken = async (): Promise<string | undefined> => {
