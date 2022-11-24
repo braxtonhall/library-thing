@@ -45,7 +45,7 @@ const saveSize = ({id, width, height}: SizeRecord): void => saveSizeData({...get
 
 const getSizeData = (): SizeData => {
 	try {
-		return JSON.parse(localStorage.getItem(SIZE_LOCAL_STORAGE_KEY));
+		return JSON.parse(localStorage.getItem(SIZE_LOCAL_STORAGE_KEY) ?? "{}");
 	} catch (error) {
 		console.error(error);
 		return {};
