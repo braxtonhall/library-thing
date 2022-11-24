@@ -32,7 +32,7 @@
 	"background": {
 		"service_worker": "js/background.js"
 	},
-	"permissions": ["tabs", "storage", "identity"],
+	"permissions": ["storage", "identity"],
 	"oauth2": {
 		"client_id": "1065384085182-m6bva575fe1bdvu9r80s811trepat999.apps.googleusercontent.com",
 		"scopes": [
