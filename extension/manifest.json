@@ -31,7 +31,7 @@
 	"background": {
 		"service_worker": "js/background.js"
 	},
-	"permissions": ["tabs", "identity"],
+	"permissions": ["identity"],
 	"oauth2": {
 		"client_id": "1093815162744-vrvh40007vs3mvro8715c67sgcacun82.apps.googleusercontent.com",
 		"scopes": [
