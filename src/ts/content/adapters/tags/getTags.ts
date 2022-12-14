@@ -13,11 +13,13 @@ const META_TAG_SHEET = "Tag Index Index";
 /**
  * The Meta Tag Sheet stores information about where tags are in the spreadsheet
  * Each row is of the form
- *   | SHEET | TOP_LEFT | WIDTH |
+ *   | SHEET | TOP_LEFT | WIDTH | MAPPER? | AS? |
  * where
  * SHEET    is the name of a sheet in the spreadsheet where tags live
  * TOP_LEFT is the top left most cell in the sheet the contains a tag
  * WIDTH    is how many columns contain tags
+ * MAPPER   is how tags should be mapped to after being consumed by BLT
+ * AS       is how the (possibly artificial) sheet should be named by BLT
  *
  * Example:
  *   | Identity | A2 | 2 |
@@ -42,7 +44,7 @@ const rowToMappedRange = ([sheet, topLeft, width, userMapper]: string[]): Mapped
 };
 
 const getTagRanges = async (): Promise<MappedRange[]> => {
-	const range = Sheets.createRange(META_TAG_SHEET, "A", "D");
+	const range = Sheets.createRange(META_TAG_SHEET, "A", "E");
 	const response = await Sheets.readRanges(SPREADSHEET_ID, [range]);
 	return response?.[0].values.filter(rowIsRange).map(rowToMappedRange) ?? [];
 };
