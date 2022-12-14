@@ -14,4 +14,6 @@ interface TagSearchOptions {
 	noCache: boolean;
 }
 
-export {TagTree, TagTrees, TagSearchOptions};
+type TagMapper = `${string}$TAG${string}`;
+
+export {TagTree, TagTrees, TagMapper, TagSearchOptions};
