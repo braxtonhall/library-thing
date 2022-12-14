@@ -1,11 +1,12 @@
 import {makeCache} from "../../../common/util/cache";
-import {TagMapper, TagSearchOptions, TagTrees} from "./types";
+import {TagSearchOptions, TagTrees} from "./types";
 import Sheets, {Range, ValueRange} from "../sheets";
 import {parseTree} from "./parseTags";
 import {incrementColumnBy} from "../sheets/util";
 
 declare const SPREADSHEET_ID: string; // Declared in webpack DefinePlugin
 
+type TagMapper = `${string}$TAG${string}`;
 type MappedRange = {range: Range; mapper: TagMapper};
 
 const META_TAG_SHEET = "Tag Index Index";
