@@ -51,10 +51,11 @@ Example Tag Index _Index_:
 
 ### Tag Remapping
 
-A tag remapper is a string which transforms tags. A tag remapper _must_ contain `$TAG`.
-Tag remapping allows a Librarian to quickly add many tags that are transformations of existing tags.
+A tag remapper is a string which transforms tags as they are read by Better LibraryThing. A tag remapper _must_ contain `$TAG`.
+Tag remapping allows a Librarian to quickly add many tags that are transformations of existing tags without editing the existing spreadsheet.
 
 For example, given a `Colours` sheet containing the tags `Red`, `Green`, and `Blue`, and the tag remapper `$TAG author`,
-Better LibraryThing will artificially inflate the Tag Index with the new tags `Red author`, `Green author`, and `Blue author`.
+Better LibraryThing will artificially inflate the Tag Index with the new tags `Red author`, `Green author`, and `Blue author`
+when performing tag validation or tag auto-completion.
 
-Created for VBL with the intention of Librarians remapping the `Indentity` sheet with `$TAG author`.
+Created for VBL with the intention of Librarians remapping the `Identity` sheet with `$TAG author`.

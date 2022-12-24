@@ -19,6 +19,7 @@ const META_TAG_SHEET = "Tag Index Index";
  * TOP_LEFT is the top left most cell in the sheet the contains a tag
  * WIDTH    is how many columns contain tags
  * MAPPER   is how tags should be mapped to after being consumed by BLT
+ *           mapped tags only exist dynamically in BLT
  * AS       is how the (possibly artificial) sheet should be named by BLT
  *
  * Example:
