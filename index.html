@@ -59,7 +59,9 @@
 		$("a").each((_, element) => {
 			const $element = $(element);
 			const href = $element.attr("href");
-			$element.attr("href", `/library-thing/${href}.pretty`);
+			if (href.endsWith(".md")) {
+				$element.attr("href", `/library-thing/${href}.pretty`);
+			}
 		});
 
 	fetch(path)
