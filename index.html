@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#000000" />
+	<meta
+		name="description"
+		content="Better LibraryThing"
+	/>
+	<link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+	<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+	<title>Better LibraryThing</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js" integrity="sha512-SYfDUYPg5xspsG6OOpXU366G8SZsdHOhqk/icdrYJ2E/WKZxPxze7d2HD3AyXpT7U22PZ5y74xRpqZ6A2bJ+kQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<style>
+		body {
+			font-family: "proxima-nova","Helvetica Neue",Helvetica,Arial,sans-serif;
+		}
+		h1 {
+			font: 40px 'Montserrat', sans-serif;
+			font-weight: bolder;
+		}
+		h2 {
+			font: 40px 'Montserrat', sans-serif;
+		}
+		h3 {
+			font: 30px 'Montserrat', sans-serif;
+		}
+		h4 {
+			font: 20px 'Montserrat', sans-serif;
+		}
+		img {
+			max-width: 90vw;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.60))
+		}
+	</style>
+</head>
+<body>
+<script>
+	let md = "README.md";
+	if (window.location.hash.length > 1) {
+		const path = window.location.hash.replace('#', '');
+		history.pushState({ page: 1 }, "Redirecting", path);
+		md = path.replace(/\.pretty/, '');
+	}
+
+	const path = `https://raw.githubusercontent.com/braxtonhall/library-thing/main/${md}`;
+
+	const fixLinks = () =>
+		$("a").each((_, element) => {
+			const $element = $(element);
+			const href = $element.attr("href");
+			if (href.endsWith(".md")) {
+				$element.attr("href", `${href}.pretty`);
+			}
+		});
+
+	fetch(path)
+		.then((response) => response.text())
+		.then((text) => window.markdownit({html: true}).render(text))
+		.then((render) => $("#main").html(render))
+		.finally(fixLinks);
+
+</script>
+
+<div id="main"></div>
+
+</body>
+</html>
