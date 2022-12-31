@@ -48,8 +48,8 @@
 <script>
 	let md = "README.md";
 	if (window.location.hash.length > 1) {
-		const path = window.location.hash.replace('#', '').replace(/^\//, '');
-		history.pushState({ page: 1 }, "Redirecting", `/library-thing/${path}`);
+		const path = window.location.hash.replace('#', '');
+		history.pushState({ page: 1 }, "Redirecting", path);
 		md = path.replace(/\.pretty/, '');
 	}
 
@@ -60,7 +60,7 @@
 			const $element = $(element);
 			const href = $element.attr("href");
 			if (href.endsWith(".md")) {
-				$element.attr("href", `/library-thing/${href}.pretty`);
+				$element.attr("href", `${href}.pretty`);
 			}
 		});
 
