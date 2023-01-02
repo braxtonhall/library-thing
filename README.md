@@ -1,4 +1,4 @@
-# Better Library Thing
+# Better LibraryThing
 
 A browser extension to improve the LibraryThing cataloguing experience. Made in support of the [Vancouver Black Library](https://www.vancouverblacklibrary.org/).
 
@@ -65,3 +65,4 @@ See the [installation guide](./docs/librarian/installation.md).
 
 - [Managing the Tag Index](./docs/librarian/tag-index.md)
 - [Developing](./docs/developer/README.md)
+- [Privacy Policy](./docs/misc/privacy-policy.md)
