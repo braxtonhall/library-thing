@@ -80,4 +80,7 @@ module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration =
 			]
 		}),
 	],
+	optimization: {
+		minimize: false
+	},
 });
