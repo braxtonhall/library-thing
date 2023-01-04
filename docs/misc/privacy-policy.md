@@ -16,7 +16,7 @@ This Privacy Policy sets forth the general policies governing your use of our ap
 1. [Security](#security)
 1. [Links To External Sites](#links-to-external-sites)
 1. [Privacy Policy Changes](#privacy-policy-changes)
-1. [Contact Information & Credit](#contact-information--credit)
+1. [Contact Information](#contact-information)
 
 ## Data Collection
 Better LibraryThing does not collect your personal information in any way.
