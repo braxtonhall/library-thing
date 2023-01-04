@@ -12,11 +12,19 @@ This Privacy Policy sets forth the general policies governing your use of our ap
 
 ## Contents
 
+1. [Data Access & Use](#data-access--use)
 1. [Data Collection](#data-collection)
 1. [Security](#security)
 1. [Links To External Sites](#links-to-external-sites)
 1. [Privacy Policy Changes](#privacy-policy-changes)
 1. [Contact Information](#contact-information)
+
+## Data Access & Use
+
+Better LibraryThing accesses your Google account only when you explicitly log in to Google.
+Better LibraryThing will never access your information without your knowledge.
+
+Better LibraryThing uses your Google account to allow you to access and edit your own Google Sheets directly in the BetterLibrary Thing Chrome extension.
 
 ## Data Collection
 Better LibraryThing does not collect your personal information in any way.
