@@ -1,11 +1,12 @@
 import {invokeWorker} from "../../../common/workers/invoker";
 import {WorkerError, WorkerErrorKind, WorkerKind} from "../../../common/workers/types";
 import {createIconButton} from "../../../common/ui/button";
-import {isAuthorized} from "../author/util/isAuthorized";
 import {showToast, ToastType} from "../../../common/ui/toast";
 import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {BackgroundEvent} from "../../../common/backgroundEvent";
 import {onBackgroundEvent} from "../../util/onBackgroundEvent";
+import {isAuthorized} from "../author/util/isAuthorized";
+import {isSheetSet} from "../../../common/entities/spreadsheet";
 
 const BAD_BROWSER_INFO_URL =
 	"https://github.com/braxtonhall/library-thing/blob/main/docs/librarian/authors.md#prerequisites";
@@ -44,15 +45,17 @@ const removeInjectedButton = (button: HTMLTableCellElement) => {
 	button.remove();
 };
 
-const handleLog = (text: string, toastType: ToastType, callbacks: OnLoggedCallback[]) => () => {
+const handleStatusChange = (text: string, toastType: ToastType) => async () => {
 	showToast(text, toastType);
-	callbacks.map((callback) => callback());
+	const status = await getLogStatus();
+	if (status.ready) {
+		loginCallbacks.forEach((callback) => callback());
+	} else {
+		logoutCallbacks.forEach((callback) => callback());
+	}
 };
 
-const handleLogin = handleLog("Logged in!", ToastType.SUCCESS, loginCallbacks);
-const handleLogout = handleLog("Logged out!", ToastType.INFO, logoutCallbacks);
-
-const onClick = () => loaderOverlaid(() => authorize(true).catch(console.error));
+const onLoginClick = () => loaderOverlaid(() => authorize(true).catch(console.error));
 
 const compose =
 	(...listeners: OnLoggedCallback[]): OnLoggedCallback =>
@@ -64,20 +67,40 @@ const saveCallback = (callback: OnLoggedCallback, callbacks: OnLoggedCallback[],
 	applyNow && callback();
 };
 
+const getLogStatus = async () => {
+	const futureAuth = isAuthorized();
+	const futureSheetSet = isSheetSet();
+	const [authed, sheetSet] = await Promise.all([futureAuth, futureSheetSet]);
+	return {authed, sheetSet, ready: authed && sheetSet};
+};
+
 const onLogged = async ({onLogIn, onLogOut, container, description}: OnLogOptions) => {
-	const authed = await isAuthorized();
 	if (container) {
-		const button = createIconButton("Login", "img/login.png", onClick, description);
-		onLogIn = compose(() => removeInjectedButton(button), onLogIn);
-		onLogOut = compose(() => injectButton(button, container), onLogOut);
+		const loginButton = createIconButton("Login", "img/login.png", onLoginClick, description);
+		const sheetLinkButton = createIconButton("Add Tag Index", "img/login.png", onLoginClick);
+		onLogIn = compose(
+			() => removeInjectedButton(loginButton),
+			() => removeInjectedButton(sheetLinkButton),
+			onLogIn
+		);
+		onLogOut = compose(
+			() =>
+				getLogStatus().then(({authed, sheetSet}) => {
+					authed || injectButton(loginButton, container);
+					sheetSet || injectButton(sheetLinkButton, container);
+				}),
+			onLogOut
+		);
 	}
-	saveCallback(onLogIn, loginCallbacks, authed === true);
-	saveCallback(onLogOut, logoutCallbacks, authed === false);
+	const status = await getLogStatus();
+	saveCallback(onLogIn, loginCallbacks, status.ready === true);
+	saveCallback(onLogOut, logoutCallbacks, status.ready === false);
 };
 
 window.addEventListener("pageshow", () => {
-	onBackgroundEvent(BackgroundEvent.CompletedAuth, handleLogin);
-	onBackgroundEvent(BackgroundEvent.RemovedAuth, handleLogout);
+	onBackgroundEvent(BackgroundEvent.CompletedAuth, handleStatusChange("Logged in!", ToastType.SUCCESS));
+	onBackgroundEvent(BackgroundEvent.RemovedAuth, handleStatusChange("Logged out!", ToastType.INFO));
+	onBackgroundEvent(BackgroundEvent.AddedSheetLink, handleStatusChange("Tag Index set!", ToastType.SUCCESS));
 });
 
 export {onLogged};

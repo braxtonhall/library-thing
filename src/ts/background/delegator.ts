@@ -13,11 +13,13 @@ import {authorize, deAuthorize} from "./workers/authorize";
 import {Message} from "../common/types";
 
 import * as browser from "webextension-polyfill";
+import {dispatchEvent} from "./workers/dispatchEvent";
 
 const workers: Workers = {
 	[WorkerKind.Get]: get,
 	[WorkerKind.Authorize]: authorize,
 	[WorkerKind.DeAuthorize]: deAuthorize,
+	[WorkerKind.DispatchEvent]: dispatchEvent,
 };
 
 const isTypedWorkerRequest = <Kind extends WorkerKind>(request: Message): request is TypedWorkerRequest<Kind> =>

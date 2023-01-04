@@ -3,6 +3,7 @@ import {invokeWorker} from "../common/workers/invoker";
 import {WorkerKind} from "../common/workers/types";
 import {loaderOverlaid} from "../common/ui/loadingIndicator";
 import config, {ConfigKey} from "../common/entities/config";
+import {isValidSheetLink} from "../common/entities/spreadsheet";
 
 const getAuthorization = (interactive: boolean) => invokeWorker(WorkerKind.Authorize, interactive).catch(() => "");
 const removeAuthorization = () => invokeWorker(WorkerKind.DeAuthorize, null).catch(() => undefined);
@@ -37,20 +38,11 @@ const logOut = async () => {
 	setClass(true, false);
 };
 
-const isValidTagIndex = (tagIndex: string): boolean => {
-	try {
-		const url = new URL(tagIndex);
-		return url.host === "docs.google.com" && /\/spreadsheets\/d\/[a-zA-Z0-9]+/.test(url.pathname);
-	} catch {
-		return false;
-	}
-};
-
 const setTagIndex = async () => (tagIndexInput().value = (await config.get(ConfigKey.SpreadsheetLink)) ?? "");
 
-const onValidValue = (valid: (value: string) => void, invalid?: () => void) => () => {
+const onValidValue = (valid: (value: string) => void, invalid?: () => void) => async () => {
 	const {value} = tagIndexInput();
-	if (isValidTagIndex(value)) {
+	if (await isValidSheetLink(value)) {
 		return valid(value);
 	} else {
 		return invalid?.();
