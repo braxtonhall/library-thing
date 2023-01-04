@@ -36,4 +36,4 @@ Although most changes are likely to be minor, Better LibraryThing may change its
 Your continued use of this application after any change in this Privacy Policy will constitute your acceptance of such change.
 
 ## Contact Information
-If you have any questions about our Privacy Policy, please contact us via email at braxtonjhall@gmail.com.
+If you have any questions about our Privacy Policy, please contact us via email at adirar111@gmail.com.
