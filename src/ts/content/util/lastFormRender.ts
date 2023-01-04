@@ -1,17 +1,16 @@
 import {onFormRender} from "../entities/bookForm";
-
-const LAST_RENDER_KEY = "_last-form-render";
+import config, {ConfigKey} from "../../common/entities/config";
 
 let lastFormRender;
 
-const setLastFormRender = () => (lastFormRender = Number(localStorage.getItem(LAST_RENDER_KEY)) || 0);
+const setLastFormRender = async () => (lastFormRender = await config.get(ConfigKey.LatestRender));
 const getLastFormRender = () => lastFormRender;
 
 window.addEventListener("pageshow", setLastFormRender);
 
-onFormRender(() => {
-	lastFormRender = Number(localStorage.getItem(LAST_RENDER_KEY)) || 0;
-	localStorage.setItem(LAST_RENDER_KEY, String(Date.now()));
+onFormRender(async () => {
+	await setLastFormRender();
+	await config.set(ConfigKey.LatestRender, Date.now());
 });
 
 export {getLastFormRender};
