@@ -12,23 +12,18 @@ enum ConfigKey {
 	SizeData = "size-data",
 	LatestRender = "last-render",
 	FormData = "form-data",
-	CheckVersionInterval = "check-version-interval",
 }
-
-const ONE_DAY_MS = 86400000;
 
 type ConfigDefaults = {
 	[ConfigKey.SizeData]: SizeData;
 	[ConfigKey.LatestRender]: number;
 	[ConfigKey.FormData]: FormData;
-	[ConfigKey.CheckVersionInterval]: number;
 };
 
 const configDefaults: ConfigDefaults = {
 	[ConfigKey.SizeData]: {},
 	[ConfigKey.LatestRender]: 0,
 	[ConfigKey.FormData]: {},
-	[ConfigKey.CheckVersionInterval]: ONE_DAY_MS,
 };
 
 type ConfigGetter = <K extends ConfigKey>(key: K) => Promise<ConfigDefaults[K]>;
