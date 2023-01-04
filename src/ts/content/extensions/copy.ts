@@ -1,12 +1,11 @@
 import {showToast, ToastType} from "../../common/ui/toast";
 import {getFormData, insertFormData, onFormRender} from "../entities/bookForm";
 import {createIconButton} from "../../common/ui/button";
+import config, {ConfigKey} from "../../common/entities/config";
 
-const SAVE_DATA_KEY = "_save-data";
-
-const onCopy = (event: Event) => {
+const onCopy = async (event: Event) => {
 	event.preventDefault();
-	localStorage.setItem(SAVE_DATA_KEY, JSON.stringify(getFormData()));
+	await config.set(ConfigKey.FormData, getFormData());
 	showToast(
 		"The metadata for this book was saved!\n\nYou can use the Paste button on a different book's page to paste in your saved metadata.",
 		ToastType.SUCCESS
@@ -15,10 +14,10 @@ const onCopy = (event: Event) => {
 
 const isEmptySaveData = (saveData: object) => Object.keys(saveData).length === 0;
 
-const onPaste = (event: Event) => {
+const onPaste = async (event: Event) => {
 	event.preventDefault();
 	try {
-		const saveData = JSON.parse(localStorage.getItem(SAVE_DATA_KEY) ?? "{}");
+		const saveData = await config.get(ConfigKey.FormData);
 		if (isEmptySaveData(saveData)) {
 			showToast(
 				"No save data found. Try copying a book's data using the 'Copy' button before pasting",
