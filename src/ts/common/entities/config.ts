@@ -1,4 +1,6 @@
 import storage from "../adapters/storage";
+import {FormData} from "../../content/entities/bookForm";
+import {SizeData} from "../../content/extensions/resize";
 
 /**
  * The point is this file is to have storage,
@@ -6,12 +8,26 @@ import storage from "../adapters/storage";
  * also accessing the same configs
  */
 
-enum ConfigKey {}
+enum ConfigKey {
+	SizeData = "size-data",
+	LatestRender = "last-render",
+	FormData = "form-data",
+}
 
-const configDefaults = {};
+type ConfigDefaults = {
+	[ConfigKey.SizeData]: SizeData;
+	[ConfigKey.LatestRender]: number;
+	[ConfigKey.FormData]: FormData;
+};
 
-type ConfigGetter = <K extends ConfigKey>(key: K) => Promise<typeof configDefaults[K]>;
-type ConfigSetter = <K extends ConfigKey>(key: K, value: typeof configDefaults[K]) => Promise<typeof configDefaults[K]>;
+const configDefaults: ConfigDefaults = {
+	[ConfigKey.SizeData]: {},
+	[ConfigKey.LatestRender]: 0,
+	[ConfigKey.FormData]: {},
+};
+
+type ConfigGetter = <K extends ConfigKey>(key: K) => Promise<ConfigDefaults[K]>;
+type ConfigSetter = <K extends ConfigKey>(key: K, value: ConfigDefaults[K]) => Promise<ConfigDefaults[K]>;
 
 const get: ConfigGetter = (key) => storage.get(key, configDefaults[key]);
 const set: ConfigSetter = storage.set;
