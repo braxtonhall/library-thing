@@ -7,12 +7,14 @@ import {
 } from "../../background/workers/authorize";
 import {Message} from "../types";
 import {DispatchEventParameters, DispatchEventResponse} from "../../background/workers/dispatchEvent";
+import {OpenOptionsParameters, OpenOptionsResponse} from "../../background/workers/openOptions";
 
 enum WorkerKind {
 	Get = "get",
 	Authorize = "authorize",
 	DeAuthorize = "deauthorize",
 	DispatchEvent = "dispatch",
+	OpenOptions = "options",
 }
 
 enum WorkerStatus {
@@ -39,6 +41,8 @@ type WorkerRequest<Kind extends WorkerKind> = Kind extends WorkerKind.Get
 	? DeAuthorizeParameters
 	: Kind extends WorkerKind.DispatchEvent
 	? DispatchEventParameters
+	: Kind extends WorkerKind.OpenOptions
+	? OpenOptionsParameters
 	: never;
 
 interface TypedWorkerRequest<Kind extends WorkerKind> extends Message {
@@ -63,6 +67,8 @@ type WorkerResponseValue<Kind extends WorkerKind> = Kind extends WorkerKind.Get
 	? DeAuthorizeResponse
 	: Kind extends WorkerKind.DispatchEvent
 	? DispatchEventResponse
+	: Kind extends WorkerKind.OpenOptions
+	? OpenOptionsResponse
 	: never;
 
 type Worker<Kind extends WorkerKind> = (request: WorkerRequest<Kind>) => Promise<WorkerResponseValue<Kind>>;

@@ -4,6 +4,7 @@ import {WorkerKind} from "../common/workers/types";
 import {loaderOverlaid} from "../common/ui/loadingIndicator";
 import config, {ConfigKey} from "../common/entities/config";
 import {isValidSheetLink} from "../common/entities/spreadsheet";
+import {BackgroundEvent} from "../common/backgroundEvent";
 
 const getAuthorization = (interactive: boolean) => invokeWorker(WorkerKind.Authorize, interactive).catch(() => "");
 const removeAuthorization = () => invokeWorker(WorkerKind.DeAuthorize, null).catch(() => undefined);
@@ -53,6 +54,7 @@ const getTagIndex = onValidValue(async (value) => {
 	await config.set(ConfigKey.SpreadsheetLink, value);
 	moreInfo().innerText = "SAVED";
 	saveButton().disabled = true;
+	return invokeWorker(WorkerKind.DispatchEvent, BackgroundEvent.AddedSheetLink);
 });
 
 const validateTagIndex = onValidValue(

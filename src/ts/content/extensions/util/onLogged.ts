@@ -18,9 +18,11 @@ interface OnLogOptions {
 	description?: string;
 }
 
+type LoggedStatus = {authed: boolean; sheetSet: boolean; ready: boolean};
 type OnLoggedCallback = () => void;
-const loginCallbacks: OnLoggedCallback[] = [];
-const logoutCallbacks: OnLoggedCallback[] = [];
+type InternalOnLoggedCallback = (status: LoggedStatus) => void;
+const loginCallbacks: InternalOnLoggedCallback[] = [];
+const logoutCallbacks: InternalOnLoggedCallback[] = [];
 
 const authorize = (interactive: boolean) => invokeWorker(WorkerKind.Authorize, interactive).catch(handleAuthFailure);
 
@@ -49,52 +51,57 @@ const handleStatusChange = (text: string, toastType: ToastType) => async () => {
 	showToast(text, toastType);
 	const status = await getLogStatus();
 	if (status.ready) {
-		loginCallbacks.forEach((callback) => callback());
+		loginCallbacks.forEach((callback) => callback(status));
 	} else {
-		logoutCallbacks.forEach((callback) => callback());
+		logoutCallbacks.forEach((callback) => callback(status));
 	}
 };
 
 const onLoginClick = () => loaderOverlaid(() => authorize(true).catch(console.error));
+const onAddSheetClick = () => invokeWorker(WorkerKind.OpenOptions, null);
 
 const compose =
-	(...listeners: OnLoggedCallback[]): OnLoggedCallback =>
-	() =>
-		listeners.forEach((listener) => listener?.());
+	(...listeners: InternalOnLoggedCallback[]): InternalOnLoggedCallback =>
+	(status) =>
+		listeners.forEach((listener) => listener?.(status));
 
-const saveCallback = (callback: OnLoggedCallback, callbacks: OnLoggedCallback[], applyNow: boolean): void => {
+const saveCallback = (
+	callback: InternalOnLoggedCallback,
+	callbacks: InternalOnLoggedCallback[],
+	status: LoggedStatus,
+	applyNow: boolean
+): void => {
 	callbacks.push(callback);
-	applyNow && callback();
+	applyNow && callback(status);
 };
 
-const getLogStatus = async () => {
+const getLogStatus = async (): Promise<LoggedStatus> => {
 	const futureAuth = isAuthorized();
 	const futureSheetSet = isSheetSet();
 	const [authed, sheetSet] = await Promise.all([futureAuth, futureSheetSet]);
 	return {authed, sheetSet, ready: authed && sheetSet};
 };
 
-const onLogged = async ({onLogIn, onLogOut, container, description}: OnLogOptions) => {
+const onLogged = async ({onLogIn: userOnLogIn, onLogOut: userOnLogOut, container, description}: OnLogOptions) => {
+	let onLogIn: InternalOnLoggedCallback = userOnLogIn;
+	let onLogOut: InternalOnLoggedCallback = userOnLogOut;
 	if (container) {
 		const loginButton = createIconButton("Login", "img/login.png", onLoginClick, description);
-		const sheetLinkButton = createIconButton("Add Tag Index", "img/login.png", onLoginClick);
-		onLogIn = compose(
-			() => removeInjectedButton(loginButton),
-			() => removeInjectedButton(sheetLinkButton),
-			onLogIn
-		);
-		onLogOut = compose(
-			() =>
-				getLogStatus().then(({authed, sheetSet}) => {
-					authed || injectButton(loginButton, container);
-					sheetSet || injectButton(sheetLinkButton, container);
-				}),
-			onLogOut
-		);
+		const sheetLinkButton = createIconButton("Add Tag Index", "img/icon16.png", onAddSheetClick);
+		const removeButtons = () => {
+			removeInjectedButton(loginButton);
+			removeInjectedButton(sheetLinkButton);
+		};
+		onLogIn = compose(removeButtons, onLogIn);
+		onLogOut = compose(({authed, sheetSet}) => {
+			removeButtons();
+			authed || injectButton(loginButton, container);
+			sheetSet || injectButton(sheetLinkButton, container);
+		}, onLogOut);
 	}
 	const status = await getLogStatus();
-	saveCallback(onLogIn, loginCallbacks, status.ready === true);
-	saveCallback(onLogOut, logoutCallbacks, status.ready === false);
+	saveCallback(onLogIn, loginCallbacks, status, status.ready === true);
+	saveCallback(onLogOut, logoutCallbacks, status, status.ready === false);
 };
 
 window.addEventListener("pageshow", () => {
