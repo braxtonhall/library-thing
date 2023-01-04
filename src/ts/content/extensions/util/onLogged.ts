@@ -7,8 +7,7 @@ import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {BackgroundEvent} from "../../../common/backgroundEvent";
 import {onBackgroundEvent} from "../../util/onBackgroundEvent";
 
-const BAD_BROWSER_INFO_URL =
-	"https://github.com/braxtonhall/library-thing/blob/main/docs/librarian/authors.md#prerequisites";
+const BAD_BROWSER_INFO_URL = "https://betterlibrarything.com/docs/librarian/authors.md.pretty";
 
 interface OnLogOptions {
 	onLogIn?: OnLoggedCallback;
