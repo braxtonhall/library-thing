@@ -1,5 +1,6 @@
 import storage from "../adapters/storage";
 import {FormData} from "../../content/entities/bookForm";
+import {SizeData} from "../../content/extensions/resize";
 
 /**
  * The point is this file is to have storage,
@@ -8,6 +9,8 @@ import {FormData} from "../../content/entities/bookForm";
  */
 
 enum ConfigKey {
+	SizeData = "size-data",
+	LatestRender = "last-render",
 	FormData = "form-data",
 	CheckVersionInterval = "check-version-interval",
 }
@@ -15,11 +18,15 @@ enum ConfigKey {
 const ONE_DAY_MS = 86400000;
 
 type ConfigDefaults = {
+	[ConfigKey.SizeData]: SizeData;
+	[ConfigKey.LatestRender]: number;
 	[ConfigKey.FormData]: FormData;
 	[ConfigKey.CheckVersionInterval]: number;
 };
 
 const configDefaults: ConfigDefaults = {
+	[ConfigKey.SizeData]: {},
+	[ConfigKey.LatestRender]: 0,
 	[ConfigKey.FormData]: {},
 	[ConfigKey.CheckVersionInterval]: ONE_DAY_MS,
 };
