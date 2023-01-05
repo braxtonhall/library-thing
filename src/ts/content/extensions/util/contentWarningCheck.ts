@@ -30,16 +30,23 @@ const handleContentWarning = async (
 						kind: "input",
 						placeholder: "Enter a content warning",
 						ensureNonEmpty: true,
-						text: "Save",
+						text: "Save Warning",
 						colour: UIColour.GREY,
 						onSelect: async (userText) => {
 							saveContentWarning(commentsTextArea, userText);
 							resolve(true);
 						},
 					},
+					{
+						kind: "button",
+						text: "Save Without Warning",
+						colour: UIColour.GREY,
+						onClick: async () => resolve(true),
+					},
 					{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
 				],
 				colour: UIColour.PURPLE,
+				onCancel: async () => resolve(false),
 			})
 		);
 	} else {

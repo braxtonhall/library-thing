@@ -36,7 +36,7 @@ const MODAL_SUB_TEXT_CLASS_NAME = "better-library-thing-modal-sub-text";
 const MODAL_BUTTON_CLASS_NAME = "better-library-thing-modal-button";
 const MODAL_INPUT_CLASS_NAME = "better-library-thing-modal-input";
 const MODAL_INPUT_CONTAINER_CLASS_NAME = "better-library-thing-modal-input-container";
-const MODAL_ELEMENT_CONTAINER_CLASS_NAME = "better-library-thing-modal-button-container";
+const MODAL_ELEMENT_CONTAINER_CLASS_NAME = "better-library-thing-modal-element-container";
 
 const createWithClass = <K extends keyof HTMLElementTagNameMap>(
 	tag: K,
@@ -69,7 +69,7 @@ const createModalInput = (exit: () => void, {text, onSelect, colour, ensureNonEm
 			button.disabled = !input.value;
 		});
 	}
-	const container = createWithClass("div", `${MODAL_INPUT_CONTAINER_CLASS_NAME}`);
+	const container = createWithClass("div", `${MODAL_INPUT_CONTAINER_CLASS_NAME} ${colour}`);
 	container.append(input, button);
 	return container;
 };

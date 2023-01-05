@@ -51,6 +51,7 @@ const getUserAcceptance = (
 				{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
 			],
 			colour: UIColour.PURPLE,
+			onCancel: async () => resolve(false),
 		})
 	);
 
@@ -69,6 +70,7 @@ const getSecondaryAcceptance = async (saveHandler: (options: GetTagsOptions) => 
 				{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
 			],
 			colour: UIColour.PURPLE,
+			onCancel: async () => resolve(false),
 		})
 	);
 };
