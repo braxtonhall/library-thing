@@ -1,8 +1,8 @@
 import Sheets, {Range, ValueRange} from "./sheets";
 import {filterAuthorTags} from "../util/filterAuthorTags";
 import {makeCache} from "../../common/util/cache";
+import {getSheetId} from "../../common/entities/spreadsheet";
 
-declare const SPREADSHEET_ID: string; // Declared in webpack DefinePlugin
 const AUTHOR_SHEET = "Authors";
 const QUERY_SHEET = "LOOKUP";
 
@@ -34,7 +34,7 @@ const selectRow = (row: number) => Sheets.createRange(AUTHOR_SHEET, `${Columns.U
 const getAuthorRowIndex = async (uuid: string): Promise<number | null> => {
 	// This is a little cursed, but to query the authors, we write a formula in a hidden cell that does the query
 	// The Sheets response is the new value at the cell, which should be the result of the query
-	const update = await Sheets.updateRowInSheet(SPREADSHEET_ID, Sheets.createRange(QUERY_SHEET, "A1"), [
+	const update = await Sheets.updateRowInSheet(await getSheetId(), Sheets.createRange(QUERY_SHEET, "A1"), [
 		[`=MATCH("${uuid}", ${Sheets.createRange(AUTHOR_SHEET, Columns.UUID, Columns.UUID)}, 0)`],
 	]);
 	const [[rowIndexString]] = update?.values ?? [];
@@ -48,7 +48,7 @@ const getAuthorRange = async (uuid: string): Promise<Range> => {
 };
 
 const getAllAuthors = async (): Promise<AuthorRecord[]> => {
-	const authorTagData = await Sheets.readRanges(SPREADSHEET_ID, [selectAll]);
+	const authorTagData = await Sheets.readRanges(await getSheetId(), [selectAll]);
 	return transformReadSheetsData(authorTagData);
 };
 
@@ -63,13 +63,13 @@ const writeAuthor = async ({uuid, name, tags}: AuthorRecord): Promise<AuthorReco
 };
 
 const createAuthor = async ({uuid, name, tags}: AuthorRecord): Promise<AuthorRecord | null> => {
-	const appendRes = await Sheets.appendRowToSheet(SPREADSHEET_ID, selectAll, [[uuid, name, tags.join(", ")]]);
+	const appendRes = await Sheets.appendRowToSheet(await getSheetId(), selectAll, [[uuid, name, tags.join(", ")]]);
 	return valueRangeToAuthors(appendRes)?.[0] ?? null;
 };
 
 const updateAuthor = async (rowIndex: number, {uuid, name, tags}: AuthorRecord): Promise<AuthorRecord | null> => {
 	const range = Sheets.createRange(AUTHOR_SHEET, `${Columns.UUID}${rowIndex}`, `${Columns.TAGS}${rowIndex}`);
-	const updateRes = await Sheets.updateRowInSheet(SPREADSHEET_ID, range, [[uuid, name, tags.join(", ")]]);
+	const updateRes = await Sheets.updateRowInSheet(await getSheetId(), range, [[uuid, name, tags.join(", ")]]);
 	return valueRangeToAuthors(updateRes)?.[0] ?? null;
 };
 
@@ -88,7 +88,7 @@ const getAuthor = async (uuid: string): Promise<AuthorRecord> => {
 	return asyncCached(uuid, async () => {
 		const range = await getAuthorRange(uuid);
 		if (range !== null) {
-			const author = await Sheets.readRanges(SPREADSHEET_ID, [range]);
+			const author = await Sheets.readRanges(await getSheetId(), [range]);
 			return transformReadSheetsData(author)?.[0] ?? null;
 		}
 		return null;

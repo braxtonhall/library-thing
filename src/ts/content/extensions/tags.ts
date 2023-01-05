@@ -56,6 +56,12 @@ onFormRender((form, forEachElement, onSave, offSave) => {
 
 		const {showTagValidator, hideTagValidator} = appendTagValidator(onSave, offSave, textArea);
 
+		const onLogOut = () => {
+			hideAuthorPull();
+			hideAncestors();
+			hideTagValidator();
+		};
+		onLogOut(); // Do it now so things don't pop in and out
 		return onLogged({
 			container: textAreaContainer,
 			description: "Log in for tag validation and to sync this book's tags with its authors' tags",
@@ -64,11 +70,7 @@ onFormRender((form, forEachElement, onSave, offSave) => {
 				showAncestors();
 				showTagValidator();
 			},
-			onLogOut: () => {
-				hideAuthorPull();
-				hideAncestors();
-				hideTagValidator();
-			},
+			onLogOut,
 		});
 	}
 });

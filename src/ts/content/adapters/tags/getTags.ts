@@ -3,8 +3,7 @@ import {TagSearchOptions, TagTrees, WarnedTag} from "./types";
 import Sheets, {Range, ValueRange} from "../sheets";
 import {parseTree} from "./parseTags";
 import {incrementColumnBy} from "../sheets/util";
-
-declare const SPREADSHEET_ID: string; // Declared in webpack DefinePlugin
+import {getSheetId} from "../../../common/entities/spreadsheet";
 
 type TagMapper = `${string}$TAG${string}`;
 type MappedRange = {range: Range; mapper: TagMapper; name: string; cwRange?: Range};
@@ -49,7 +48,7 @@ const rowToMappedRange = ([sheet, topLeft, width, cwColumn, userMapper, as]: str
 
 const getTagRanges = async (): Promise<MappedRange[]> => {
 	const range = Sheets.createRange(META_TAG_SHEET, "A", "E");
-	const response = await Sheets.readRanges(SPREADSHEET_ID, [range]);
+	const response = await Sheets.readRanges(await getSheetId(), [range]);
 	return response?.[0].values.filter(rowIsRange).map(rowToMappedRange) ?? [];
 };
 
@@ -78,7 +77,7 @@ const toWarningTags = (namedResponses: Map<Range, ValueRange>) => (mappedRange: 
 const getSheetsTags = async (): Promise<WarnedTag[][]> => {
 	const mappedRanges = await getTagRanges();
 	const ranges = [...extractRanges(mappedRanges)]; // We might have duplicate ranges, so we use a set when extracting
-	const response = await Sheets.readRanges(SPREADSHEET_ID, [...ranges]);
+	const response = await Sheets.readRanges(await getSheetId(), [...ranges]);
 	const namedResponses = nameResponses(ranges, response);
 	return mappedRanges.flatMap(toWarningTags(namedResponses));
 };
