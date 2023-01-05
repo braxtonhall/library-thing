@@ -7,7 +7,6 @@ import {Highlight, Highlightable, highlighted} from "../../../common/ui/highligh
 import {getSheetLink} from "../../../common/entities/spreadsheet";
 
 type GetTagsOptions = {noCache: boolean};
-type TagCheck = {invalidTags: string[]; warningRequiredTags: string[]};
 
 const applyHighlights = async (text: string): Promise<Highlight[]> => {
 	const validTags = await getTagTrees().catch(() => new Map());
@@ -30,22 +29,10 @@ const applyHighlights = async (text: string): Promise<Highlight[]> => {
 		.slice(0, -1); // Remove the trailing comma
 };
 
-const contentWarningIsPresent = (): boolean => {
-	return false; // TODO
-};
-
 const getInvalidTags = (tags: string[], trees: TagTrees): string[] =>
 	tags.filter((tag) => !trees.has(tag.toLowerCase()));
 
-const getWarningRequiredTags = (tags: string[], trees: TagTrees): string[] => {
-	if (contentWarningIsPresent()) {
-		return [];
-	} else {
-		return tags.filter((tag) => !!trees.get(tag.toLowerCase())?.warning);
-	}
-};
-
-const getInvalidTagsUserAcceptance = (
+const getUserAcceptance = (
 	invalidTags: string[],
 	saveHandler: (options: GetTagsOptions) => Promise<boolean>
 ): Promise<boolean> =>
@@ -94,56 +81,22 @@ const setTags = (tagInput: Highlightable, tags: Iterable<string>) => {
 	tagInput.dispatchEvent(new Event("change"));
 };
 
-const saveContentWarning = (contentWarning: string): void => {
-	console.log(contentWarning);
-};
-
-const checkTags = async (tagInput: Highlightable, options: GetTagsOptions): Promise<TagCheck> =>
+const checkTags = async (tagInput: Highlightable, options: GetTagsOptions) =>
 	loaderOverlaid(async () => {
 		const trees = await getTagTrees(options);
 		const userTags = getTagsFromElement(tagInput);
 		const properCaseTags = fixTagsCase(userTags, trees);
 		setTags(tagInput, properCaseTags);
-		const invalidTags = getInvalidTags(properCaseTags, trees);
-		const warningRequiredTags = getWarningRequiredTags(properCaseTags, trees);
-		return {invalidTags, warningRequiredTags};
+		return getInvalidTags(properCaseTags, trees);
 	});
-
-const handleContentWarning = async (tagsRequiringWarning: string[]): Promise<boolean> => {
-	if (tagsRequiringWarning.length > 0) {
-		return new Promise<boolean>((resolve) =>
-			createModal({
-				text: "Don't forget a Content Warning. The following tags require a Content Warning",
-				subText: tagsRequiringWarning,
-				elements: [
-					{
-						kind: "input",
-						placeholder: "Enter a content warning",
-						ensureNonEmpty: true,
-						text: "Save",
-						colour: UIColour.GREY,
-						onSelect: async (userText) => {
-							saveContentWarning(userText);
-							resolve(true);
-						},
-					},
-					{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
-				],
-				colour: UIColour.PURPLE,
-			})
-		);
-	} else {
-		return true;
-	}
-};
 
 const handleSave = (tagInput: Highlightable, options: GetTagsOptions) => {
 	const saveHandler = (options: GetTagsOptions): Promise<boolean> =>
-		checkTags(tagInput, options).then(({invalidTags, warningRequiredTags}) => {
+		checkTags(tagInput, options).then((invalidTags) => {
 			if (invalidTags.length > 0) {
-				return getInvalidTagsUserAcceptance(invalidTags, saveHandler);
+				return getUserAcceptance(invalidTags, saveHandler);
 			} else {
-				return handleContentWarning(warningRequiredTags);
+				return true;
 			}
 		});
 	return saveHandler(options);
