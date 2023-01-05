@@ -11,7 +11,7 @@ You'll know you've completed everything correctly when the banner at the top of 
 
 1. Get a link to a Tag Index!
    - If you are a VBL librarianette, the link to the Tag Index will be in the volunteer resources.
-   - If you are using Better LibraryThing for your
+   - If you are using Better LibraryThing for your own library, see the [instructions on how to manage/create a Tag Index](./tag-index-management.md).
 1. With Better LibraryThing installed, open the extension options, and save the Tag Index link. 
 
 ### Accessing the Tag Index

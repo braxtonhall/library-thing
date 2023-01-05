@@ -3,6 +3,10 @@
 The document is intended for VBL librarians.
 It describes the requirements of [The Tag Index](https://docs.google.com/spreadsheets/d/1EfwBhY56M8OwgVjFTWxxxdoIxK8osw2vfgsXnCyGGuA) such that it integrates with Better LibraryThing.
 
+## Availability
+1. The Tag Index must be a [Google Sheet](https://docs.google.com/spreadsheets).
+1. Anyone who will be using Better LibraryThing with this Tag Index must be able to edit the sheet.
+
 ## Authors Sheet
 
 In order to support [author tagging](./authors.md), Better LibraryThing will store author tags in The Tag Index.
