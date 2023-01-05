@@ -1,6 +1,7 @@
 import {FormData} from "../../entities/bookForm";
 import config, {ConfigKey} from "../../../common/entities/config";
 import {showToast, ToastType} from "../../../common/ui/toast";
+import {createIconButton} from "../../../common/ui/button";
 
 const saveFormData = async (formData: FormData) => {
 	await config.set(ConfigKey.FormData, formData);
@@ -10,4 +11,17 @@ const saveFormData = async (formData: FormData) => {
 	);
 };
 
-export {saveFormData};
+type RowButton = {text: string; img: string; onClick: () => void};
+const appendRow = (table: HTMLTableElement, ...buttons: RowButton[]) => {
+	const [row] = Array.from(table.getElementsByTagName("tr"));
+	buttons.forEach(({text, img, onClick}) => appendButton(row, text, img, onClick));
+};
+
+const appendButton = (element: HTMLElement, text: string, imgSrc: string, onClick: (event: Event) => void) => {
+	const button = createIconButton(text, imgSrc, onClick);
+	button.style.padding = "0px 8px";
+	const deleteButtonIndex = element.children.length - 1;
+	element.insertBefore(button, element.children[deleteButtonIndex]);
+};
+
+export {saveFormData, appendRow};
