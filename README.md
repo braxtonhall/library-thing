@@ -6,6 +6,14 @@ A browser extension to improve the LibraryThing cataloguing experience. Made in 
 	<img src="src/img/vbl.png" alt="vancouver black library" style="width: 100px; height: auto">
 </p>
 
+## Installation
+
+[link-chrome]: https://chrome.google.com/webstore/detail/better-librarything/hbnlneckiahefebnpdhgpohonfkkcaln 'Version published on Chrome Web Store'
+[link-firefox]: https://addons.mozilla.org/en-US/firefox/ 'Version published on Mozilla Add-ons (TODO)'
+
+[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/chrome/chrome.svg" width="48" alt="Chrome" valign="middle">][link-chrome] [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/lmjdlojahmbbcodnpecnjnmlddbkjhnn.svg?label=%20">][link-chrome] also compatible with [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/edge/edge.svg" width="24" alt="Edge" valign="middle">][link-chrome] [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/opera/opera.svg" width="24" alt="Opera" valign="middle">][link-chrome] [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/brave/brave.svg" width="24" alt="Brave" valign="middle">][link-chrome]
+[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/firefox/firefox.svg" width="48" alt="Firefox" valign="middle">][link-firefox] [<img valign="middle" src="https://img.shields.io/amo/v/notifier-for-github.svg?label=%20">][link-firefox]
+
 ## Features
 
 ### Warnings
@@ -57,9 +65,6 @@ The banner will also be grey if you are not logged in to the VanBlackLibrary Lib
 ### Misc. Improvements
 - **Resizes**: When you resize a text area in a book form, the new size saved for the next time you visit!
 - **Sort Indicator**: Changing a book title's sorting will show you what the book will be sorted as directly on the form.
-
-## Installation
-See the [installation guide](./docs/librarian/installation.md).
 
 ## Documentation
 
