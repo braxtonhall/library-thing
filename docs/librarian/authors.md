@@ -4,20 +4,7 @@ Author Tags are used to store information about an author in a centralised way, 
 
 ## Prerequisites
 
-[//]: # (TODO ok so this is not where we should be linking. Perhaps we have an options page describing the options?)
-[//]: # (TODO also wrong... The steps for logging in)
-1. You must have set the [Tag Index](tag-index.md) in your extension options.
-1. You must be logged in with a Google account associated with the Better LibraryThing project.
-   ### Logging In
-   1. With Better LibraryThing installed, click Extensions, and then Better LibraryThing
-	  <img src="../img/authors/sign-in-1.png" alt="click better library thing">
-   1. Next click Log In
-	  <img src="../img/authors/sign-in-2.png" alt="click sign in">
-   1. Google will present you with a pop-up and warn you that this app hasn't been verified. Click Continue.
-	  <img src="../img/authors/sign-in-3.png" alt="click continue">
-   1. Click Allow
-	  <img src="../img/authors/sign-in-4.png" alt="click allow">
-   1. You are now logged in!
+1. You must have given Better LibraryThing access to a [Tag Index](tag-index.md). See the instructions [here](tag-index.md).
 
 ## Features
 

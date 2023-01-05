@@ -49,11 +49,23 @@ Results are pulled from Goodreads and Amazon, with more websites to be added in 
 
 Edit an author's tags from the Author page! For more information, see the instructions [here](./docs/librarian/authors.md).
 
+Requires a [Tag Index](./docs/librarian/tag-index.md).
+
 ### Tag Validation
 
 While inputting tags, if you enter a tag that is has not been added to The Tag Index, you will receive a warning from Better LibraryThing.
 
 Additionally, tags that are cased incorrectly can be automatically fixed, and the ancestors of nested tags can be automatically inserted.
+
+Requires a [Tag Index](./docs/librarian/tag-index.md).
+
+### Content Warning Reminders
+
+While inputting tags, if you enter a tag that requires a Content Warning (according to the Tag Index) and you have forgotten to input it, you will receive a warning from Better LibraryThing.
+
+<img src="docs/img/content-warning.png" alt="forgotten content warning modal">
+
+Requires a [Tag Index](./docs/librarian/tag-index.md).
 
 ### VBL Banner
 
@@ -69,6 +81,8 @@ The banner will also be grey if you are not logged in to the VanBlackLibrary Lib
 
 ## Documentation
 
-- [Managing the Tag Index](./docs/librarian/tag-index.md)
+- [Author Pages](./docs/librarian/authors.md)
+- [The Tag Index](./docs/librarian/tag-index.md)
+- [Managing the Tag Index](./docs/librarian/tag-index-management.md)
 - [Developing](./docs/developer/README.md)
 - [Privacy Policy](./docs/misc/privacy-policy.md)
