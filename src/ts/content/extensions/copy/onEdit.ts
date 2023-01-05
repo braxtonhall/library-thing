@@ -1,5 +1,5 @@
 import config, {ConfigKey} from "../../../common/entities/config";
-import {getFormData, insertFormData, onFormRender} from "../../entities/bookForm";
+import {FormData, getFormData, insertFormData, onFormRender} from "../../entities/bookForm";
 import {showToast, ToastType} from "../../../common/ui/toast";
 import {createIconButton} from "../../../common/ui/button";
 import {saveFormData} from "./common";
@@ -9,7 +9,7 @@ const onCopy = async (event: Event) => {
 	await saveFormData(getFormData());
 };
 
-const isEmptySaveData = (saveData: object) => Object.keys(saveData).length === 0;
+const isEmptySaveData = (saveData: FormData) => Object.keys(saveData).length === 0;
 
 const onPaste = async (event: Event) => {
 	event.preventDefault();
