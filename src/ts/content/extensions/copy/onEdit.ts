@@ -1,15 +1,12 @@
-import {showToast, ToastType} from "../../common/ui/toast";
-import {getFormData, insertFormData, onFormRender} from "../entities/bookForm";
-import {createIconButton} from "../../common/ui/button";
-import config, {ConfigKey} from "../../common/entities/config";
+import config, {ConfigKey} from "../../../common/entities/config";
+import {getFormData, insertFormData, onFormRender} from "../../entities/bookForm";
+import {showToast, ToastType} from "../../../common/ui/toast";
+import {createIconButton} from "../../../common/ui/button";
+import {saveFormData} from "./common";
 
 const onCopy = async (event: Event) => {
 	event.preventDefault();
-	await config.set(ConfigKey.FormData, getFormData());
-	showToast(
-		"The metadata for this book was saved!\n\nYou can use the Paste button on a different book's page to paste in your saved metadata.",
-		ToastType.SUCCESS
-	);
+	await saveFormData(getFormData());
 };
 
 const isEmptySaveData = (saveData: object) => Object.keys(saveData).length === 0;

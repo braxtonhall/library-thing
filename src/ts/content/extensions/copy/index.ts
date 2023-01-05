@@ -1,0 +1,2 @@
+import "./onSearch";
+import "./onEdit";
