@@ -1,2 +1,2 @@
-import "./onSearch";
+import "./onView";
 import "./onEdit";
