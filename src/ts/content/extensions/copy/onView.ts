@@ -31,7 +31,7 @@ const appendCopyToRow = (link: string) => (table: HTMLTableElement) =>
 
 const saveImage = browser.runtime.getURL("img/save.png");
 const searchCopyImage = `<img src="${saveImage}" class="sp_c20" style="background-position: 0px -178px; " title="copy" alt="copy">`;
-const workViewCopyImage = `<img src="${saveImage}" class="icon" style="filter: grayscale(0) brightness(5) contrast(0.1);" alt="edit book">`;
+const workViewCopyImage = `<img src="${saveImage}" class="icon" style="filter: grayscale(1) brightness(5) contrast(0.1);" alt="edit book">`;
 
 window.addEventListener("pageshow", () => {
 	Array.from(document.querySelectorAll(".tools")).forEach(addCopyButton(searchCopyImage));
