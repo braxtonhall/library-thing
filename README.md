@@ -86,3 +86,4 @@ The banner will also be grey if you are not logged in to the VanBlackLibrary Lib
 - [Managing the Tag Index](./docs/librarian/tag-index-management.md)
 - [Developing](./docs/developer/README.md)
 - [Privacy Policy](./docs/misc/privacy-policy.md)
+- [Release History](https://github.com/braxtonhall/library-thing/releases)
