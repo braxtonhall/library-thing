@@ -7,6 +7,7 @@ import {Highlight, Highlightable, highlighted} from "../../../common/ui/highligh
 import {getSheetLink} from "../../../common/entities/spreadsheet";
 
 type GetTagsOptions = {noCache: boolean};
+type TagCheck = {invalidTags: string[]; warningRequiredTags: string[]};
 
 const applyHighlights = async (text: string): Promise<Highlight[]> => {
 	const validTags = await getTagTrees().catch(() => new Map());
@@ -29,10 +30,22 @@ const applyHighlights = async (text: string): Promise<Highlight[]> => {
 		.slice(0, -1); // Remove the trailing comma
 };
 
+const contentWarningIsPresent = (): boolean => {
+	return false; // TODO
+};
+
 const getInvalidTags = (tags: string[], trees: TagTrees): string[] =>
 	tags.filter((tag) => !trees.has(tag.toLowerCase()));
 
-const getUserAcceptance = (
+const getWarningRequiredTags = (tags: string[], trees: TagTrees): string[] => {
+	if (contentWarningIsPresent()) {
+		return [];
+	} else {
+		return tags.filter((tag) => !!trees.get(tag.toLowerCase())?.warning);
+	}
+};
+
+const getInvalidTagsUserAcceptance = (
 	invalidTags: string[],
 	saveHandler: (options: GetTagsOptions) => Promise<boolean>
 ): Promise<boolean> =>
@@ -40,14 +53,15 @@ const getUserAcceptance = (
 		createModal({
 			text: "Are you sure? The following tags are not in the Tag Index",
 			subText: invalidTags,
-			buttons: [
+			elements: [
 				{
+					kind: "button",
 					text: "Open the Tag Index",
 					colour: UIColour.GREY,
 					onClick: async () => resolve(getSecondaryAcceptance(saveHandler)),
 				},
-				{text: "Save anyway", colour: UIColour.GREY, onClick: async () => resolve(true)},
-				{text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
+				{kind: "button", text: "Save anyway", colour: UIColour.GREY, onClick: async () => resolve(true)},
+				{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
 			],
 			colour: UIColour.PURPLE,
 		})
@@ -58,9 +72,14 @@ const getSecondaryAcceptance = async (saveHandler: (options: GetTagsOptions) => 
 	return new Promise<boolean>((resolve) =>
 		createModal({
 			text: "Did you put the new tags in the Tag Index?",
-			buttons: [
-				{text: "Yes!", colour: UIColour.GREY, onClick: async () => resolve(saveHandler({noCache: true}))},
-				{text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
+			elements: [
+				{
+					kind: "button",
+					text: "Yes!",
+					colour: UIColour.GREY,
+					onClick: async () => resolve(saveHandler({noCache: true})),
+				},
+				{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
 			],
 			colour: UIColour.PURPLE,
 		})
@@ -75,22 +94,56 @@ const setTags = (tagInput: Highlightable, tags: Iterable<string>) => {
 	tagInput.dispatchEvent(new Event("change"));
 };
 
-const checkTags = async (tagInput: Highlightable, options: GetTagsOptions) =>
+const saveContentWarning = (contentWarning: string): void => {
+	console.log(contentWarning);
+};
+
+const checkTags = async (tagInput: Highlightable, options: GetTagsOptions): Promise<TagCheck> =>
 	loaderOverlaid(async () => {
 		const trees = await getTagTrees(options);
 		const userTags = getTagsFromElement(tagInput);
 		const properCaseTags = fixTagsCase(userTags, trees);
 		setTags(tagInput, properCaseTags);
-		return getInvalidTags(getTagsFromElement(tagInput), trees);
+		const invalidTags = getInvalidTags(properCaseTags, trees);
+		const warningRequiredTags = getWarningRequiredTags(properCaseTags, trees);
+		return {invalidTags, warningRequiredTags};
 	});
+
+const handleContentWarning = async (tagsRequiringWarning: string[]): Promise<boolean> => {
+	if (tagsRequiringWarning.length > 0) {
+		return new Promise<boolean>((resolve) =>
+			createModal({
+				text: "Don't forget a Content Warning. The following tags require a Content Warning",
+				subText: tagsRequiringWarning,
+				elements: [
+					{
+						kind: "input",
+						placeholder: "Enter a content warning",
+						ensureNonEmpty: true,
+						text: "Save",
+						colour: UIColour.GREY,
+						onSelect: async (userText) => {
+							saveContentWarning(userText);
+							resolve(true);
+						},
+					},
+					{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
+				],
+				colour: UIColour.PURPLE,
+			})
+		);
+	} else {
+		return true;
+	}
+};
 
 const handleSave = (tagInput: Highlightable, options: GetTagsOptions) => {
 	const saveHandler = (options: GetTagsOptions): Promise<boolean> =>
-		checkTags(tagInput, options).then((invalidTags) => {
+		checkTags(tagInput, options).then(({invalidTags, warningRequiredTags}) => {
 			if (invalidTags.length > 0) {
-				return getUserAcceptance(invalidTags, saveHandler);
+				return getInvalidTagsUserAcceptance(invalidTags, saveHandler);
 			} else {
-				return true;
+				return handleContentWarning(warningRequiredTags);
 			}
 		});
 	return saveHandler(options);
