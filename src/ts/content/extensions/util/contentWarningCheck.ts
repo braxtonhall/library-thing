@@ -5,11 +5,14 @@ import {createModal} from "../../../common/ui/modal";
 import {UIColour} from "../../../common/ui/colour";
 
 const contentWarningIsPresent = (commentsTextArea: HTMLTextAreaElement): boolean =>
-	commentsTextArea.textContent.split("\n").some((line) => line.startsWith("CW:"));
+	commentsTextArea.value
+		.toLowerCase()
+		.split("\n")
+		.some((line) => line.startsWith("cw:"));
 
 const saveContentWarning = (commentsTextArea: HTMLTextAreaElement, contentWarning: string): void => {
-	const cleanedWarning = contentWarning.replace(/^CW:\s*/, "");
-	commentsTextArea.textContent = `CW: ${cleanedWarning}\n${commentsTextArea.textContent}`;
+	const cleanedWarning = contentWarning.replace(/^CW:\s*/i, "");
+	commentsTextArea.value = `CW: ${cleanedWarning}\n${commentsTextArea.value}`;
 	commentsTextArea.dispatchEvent(new Event("change"));
 };
 

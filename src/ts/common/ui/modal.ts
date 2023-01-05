@@ -17,8 +17,8 @@ interface ModalButton extends ModalElement {
 interface ModalInput extends ModalElement {
 	kind: "input";
 	placeholder: string;
-	ensureNonEmpty: true;
-	onSelect?: (userText: string) => Promise<void>;
+	ensureNonEmpty: boolean;
+	onSelect: (userText: string) => Promise<void>;
 }
 
 interface ModalOptions {
@@ -34,6 +34,8 @@ const MODAL_TEXT_CLASS_NAME = "better-library-thing-modal-text-container";
 const MODAL_MAIN_TEXT_CLASS_NAME = "better-library-thing-modal-main-text";
 const MODAL_SUB_TEXT_CLASS_NAME = "better-library-thing-modal-sub-text";
 const MODAL_BUTTON_CLASS_NAME = "better-library-thing-modal-button";
+const MODAL_INPUT_CLASS_NAME = "better-library-thing-modal-input";
+const MODAL_INPUT_CONTAINER_CLASS_NAME = "better-library-thing-modal-input-container";
 const MODAL_ELEMENT_CONTAINER_CLASS_NAME = "better-library-thing-modal-button-container";
 
 const createWithClass = <K extends keyof HTMLElementTagNameMap>(
@@ -55,8 +57,21 @@ const createModalButton = (exit: () => void, {text, onClick, colour}: ModalButto
 };
 
 const createModalInput = (exit: () => void, {text, onSelect, colour, ensureNonEmpty, placeholder}: ModalInput) => {
-	// TODO actually implement this
-	return createModalButton(exit, {text, colour, kind: "button"});
+	const input = createWithClass("input", `${MODAL_INPUT_CLASS_NAME} ${colour}`);
+	input.placeholder = placeholder;
+	const decoratedExit = ensureNonEmpty
+		? () => input.value && onSelect(input.value).finally(exit)
+		: () => onSelect(input.value).finally(exit);
+	const button = createModalButton(decoratedExit, {text, colour, kind: "button"});
+	if (ensureNonEmpty) {
+		button.disabled = true;
+		input.addEventListener("keyup", () => {
+			button.disabled = !input.value;
+		});
+	}
+	const container = createWithClass("div", `${MODAL_INPUT_CONTAINER_CLASS_NAME}`);
+	container.append(input, button);
+	return container;
 };
 
 const createModalElement = (exit: () => void) => (element: ModalButton | ModalInput) => {

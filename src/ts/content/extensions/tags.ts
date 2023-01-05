@@ -24,7 +24,7 @@ const getAncestorTags = async (tags: string[]): Promise<string[]> => {
 onFormRender((form, forEachElement, onSave, offSave) => {
 	const tagsTextAreaContainerId = "bookedit_tags";
 	const tagsTextAreaId = "form_tags";
-	const commentsTextArea = document.getElementById("bookedit_comments") as HTMLTextAreaElement;
+	const commentsTextArea = document.getElementById("form_comments") as HTMLTextAreaElement;
 	const tagsTextAreaContainer = document.getElementById(tagsTextAreaContainerId);
 	const tagsTextArea = document.getElementById(tagsTextAreaId) as HTMLTextAreaElement;
 	if (tagsTextAreaContainer && tagsTextArea && commentsTextArea) {
