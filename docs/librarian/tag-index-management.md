@@ -63,6 +63,7 @@ formatted as:
 
 In the Tag Index, to say that a Content Warning is required,
 a tag's row will have a cell flagging it as needed one.
+As long as the cell is not empty, the tag is considered flagged for needed a Content Warning.
 All Content Warning flags are in the same column for each sheet.
 
 To tell Better LibraryThing where these Content Warning flags are,
