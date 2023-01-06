@@ -44,8 +44,10 @@ const appendCopyPaste = (table: HTMLTableElement) => {
 const onHoverPasteButton = (editTooltip: (text: string) => void) => async () => {
 	const formData = await config.get(ConfigKey.FormData);
 	const existingTitle = formData["form_title"]?.["value"];
-	if (existingTitle) {
+	if (existingTitle !== undefined) {
 		editTooltip(`Paste "${existingTitle}"`);
+	} else {
+		editTooltip("Nothing to paste");
 	}
 };
 
