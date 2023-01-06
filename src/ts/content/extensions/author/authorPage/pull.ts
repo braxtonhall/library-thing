@@ -25,13 +25,14 @@ const uncertainTagModal =
 			text: `Additional tag${strings.s}`,
 			subText: [...uncertainTags],
 			colour: UIColour.BLUE,
-			buttons: [
+			elements: [
 				{
+					kind: "button",
 					text: `Add${strings.all}`,
 					colour: UIColour.RED,
 					onClick: async () => insertTags([...certainTags, ...uncertainTags]),
 				},
-				{text: "Back", colour: UIColour.BLUE},
+				{kind: "button", text: "Back", colour: UIColour.BLUE},
 			],
 		});
 

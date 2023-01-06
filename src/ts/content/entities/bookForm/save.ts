@@ -2,15 +2,15 @@ type OnSave = (callback: OnSaveListener) => void;
 type OffSave = OnSave;
 type OnSaveListener = () => Promise<boolean>;
 
-const maybeClick =
-	(realButton: HTMLElement, clickedButton: HTMLElement, listeners: Set<OnSaveListener>) => async () => {
-		const futureApprovals = [...listeners.values()].map((listener) => listener());
-		const approvals = await Promise.all(futureApprovals);
-		if (approvals.every((approval) => approval)) {
-			clickedButton.style.display = "none";
-			realButton.dispatchEvent(new Event("click"));
-		}
-	};
+const maybeClick = (realButton: HTMLElement, clickedButton: HTMLElement, listeners: Set<OnSaveListener>) => async () =>
+	Array.from(listeners.values())
+		.reduce((promise, listener) => promise.then((result) => result && listener()), Promise.resolve(true))
+		.then((result) => {
+			if (result) {
+				clickedButton.style.display = "none";
+				realButton.dispatchEvent(new Event("click"));
+			}
+		});
 
 const replaceButton = (button: HTMLElement, listeners: Set<OnSaveListener>) => {
 	const td = document.createElement("td");

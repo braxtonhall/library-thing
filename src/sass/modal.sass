@@ -38,9 +38,34 @@ $modal-background-colour: colours.$white
 				padding: 0 20px
 				margin-bottom: 0
 
-		.better-library-thing-modal-button-container
+		.better-library-thing-modal-element-container
 			width: 100%
 			margin-top: 20px
+
+			.better-library-thing-modal-input-container
+				margin-bottom: 10px
+
+				.better-library-thing-modal-button
+					margin-bottom: 0
+
+			.better-library-thing-modal-input
+				border-radius: 2px
+				border-style: solid
+				margin-bottom: 5px
+				height: 30px
+				width: calc(100% - 8px)
+				&.vbl-red
+					border-color: colours.$red
+				&.vbl-amber
+					border-color: colours.$amber
+				&.vbl-green
+					border-color: colours.$green
+				&.vbl-blue
+					border-color: colours.$blue
+				&.vbl-purple
+					border-color: colours.$purple
+				&.vbl-grey
+					border-color: colours.$grey
 
 			.better-library-thing-modal-button
 				margin-bottom: 10px
@@ -52,7 +77,10 @@ $modal-background-colour: colours.$white
 				text-transform: uppercase
 				transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1)
 				line-height: 36px
-				&:hover
+				&:disabled
+					color: colours.$dark-grey
+					filter: saturate(50%) brightness(130%)
+				&:hover:not(:disabled)
 					filter: saturate(110%) brightness(110%)
 					cursor: pointer
 

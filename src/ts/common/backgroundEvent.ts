@@ -3,6 +3,7 @@ import {Message} from "./types";
 enum BackgroundEvent {
 	CompletedAuth = "authed",
 	RemovedAuth = "de-authed",
+	AddedSheetLink = "sheet-link",
 }
 
 interface BackgroundEventMessage extends Message {
