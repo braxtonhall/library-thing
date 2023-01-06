@@ -1,6 +1,6 @@
 import {WorkerError, WorkerErrorKind} from "../../common/workers/types";
 import {BackgroundEvent} from "../../common/backgroundEvent";
-import {dispatchEvent} from "../util/dispatchEvent";
+import {dispatchEvent} from "./dispatchEvent";
 import * as browser from "webextension-polyfill";
 import storage from "../../common/adapters/storage";
 

@@ -4,6 +4,7 @@ enum BackgroundEvent {
 	CompletedAuth = "authed",
 	RemovedAuth = "de-authed",
 	BookCopied = "book-copied",
+	AddedSheetLink = "sheet-link",
 }
 
 interface BackgroundEventMessage extends Message {

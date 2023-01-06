@@ -4,7 +4,6 @@ body
 	font-size: 15px
 
 .log-button
-	margin-top: 20px
 	background-image: linear-gradient(140deg, colours.$purple 0%, colours.$amber 50%, colours.$red 75%)
 	color: colours.$white
 	height: 36px
@@ -19,15 +18,14 @@ body
 		display: none
 
 	&:not(:disabled)
-		&#log-in-button
+		&.colour-default
 			filter: saturate(0)
 			&:hover
 				filter: saturate(120%)
-		&#log-out-button
+		&.grey-default
 			filter: saturate(120%)
 			&:hover
 				filter: saturate(0)
-
 		&:hover
 			cursor: pointer
 
@@ -42,12 +40,17 @@ body
 
 	.label
 		padding: 0.5em 0.5em 0
-		margin-bottom: 0
+		margin-bottom: 20px
+
 	.sub-label
-		padding-left: 0.5em
-		padding-right: 0.5em
-		margin-bottom: 0
-		font-size: 8px
+		font-size: x-small
+		margin-left: 2px
+
+	input
+		width: calc(100% - 4px)
+		padding: 0
+		margin-bottom: 1em
+
 
 .footer
 	text-align: center

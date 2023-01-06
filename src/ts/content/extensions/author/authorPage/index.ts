@@ -57,9 +57,9 @@ const userIsSure = (): Promise<boolean> =>
 			],
 			onCancel: async () => resolve(false),
 			colour: UIColour.PURPLE,
-			buttons: [
-				{text: "Sync", colour: UIColour.GREY, onClick: async () => resolve(true)},
-				{text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
+			elements: [
+				{kind: "button", text: "Sync", colour: UIColour.GREY, onClick: async () => resolve(true)},
+				{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
 			],
 		});
 	});

@@ -10,8 +10,17 @@
 
 <div class="form">
 	<h4 class="label">Google Account</h4>
-	<button id="log-in-button" class="log-button" disabled>Log In</button>
-	<button id="log-out-button" class="log-button" disabled>Log Out</button>
+	<button id="log-in-button" class="log-button colour-default">Log In</button>
+	<button id="log-out-button" class="log-button grey-default" disabled>Log Out</button>
+</div>
+
+<div class="form">
+	<!-- TODO we probably want to use a different link than this -->
+	<h4 class="label"><a href="https://betterlibrarything.com/docs/librarian/tag-index.md.pretty">Tag Index</a> Link</h4>
+	<label for="tag-index"></label>
+	<div class="sub-label" id="more-info"></div>
+	<input id="tag-index" autocomplete="off" placeholder="https://docs.google.com/spreadsheets/d/abcd1234efgh5678ijkl90">
+	<button id="save-tag-index" class="log-button colour-default" disabled>Save</button>
 </div>
 
 <hr/>
