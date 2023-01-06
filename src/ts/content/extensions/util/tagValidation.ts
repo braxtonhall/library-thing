@@ -4,8 +4,7 @@ import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {UIColour} from "../../../common/ui/colour";
 import {OnSave, OffSave} from "../../entities/bookForm";
 import {Highlight, Highlightable, highlighted} from "../../../common/ui/highlighter";
-
-declare const SPREADSHEET_ID: string; // set by webpack
+import {getSheetLink} from "../../../common/entities/spreadsheet";
 
 type GetTagsOptions = {noCache: boolean};
 
@@ -41,29 +40,37 @@ const getUserAcceptance = (
 		createModal({
 			text: "Are you sure? The following tags are not in the Tag Index",
 			subText: invalidTags,
-			buttons: [
+			elements: [
 				{
+					kind: "button",
 					text: "Open the Tag Index",
 					colour: UIColour.GREY,
 					onClick: async () => resolve(getSecondaryAcceptance(saveHandler)),
 				},
-				{text: "Save anyway", colour: UIColour.GREY, onClick: async () => resolve(true)},
-				{text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
+				{kind: "button", text: "Save anyway", colour: UIColour.GREY, onClick: async () => resolve(true)},
+				{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
 			],
 			colour: UIColour.PURPLE,
+			onCancel: async () => resolve(false),
 		})
 	);
 
-const getSecondaryAcceptance = (saveHandler: (options: GetTagsOptions) => Promise<boolean>): Promise<boolean> => {
-	window.open(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}`);
+const getSecondaryAcceptance = async (saveHandler: (options: GetTagsOptions) => Promise<boolean>): Promise<boolean> => {
+	window.open(await getSheetLink());
 	return new Promise<boolean>((resolve) =>
 		createModal({
 			text: "Did you put the new tags in the Tag Index?",
-			buttons: [
-				{text: "Yes!", colour: UIColour.GREY, onClick: async () => resolve(saveHandler({noCache: true}))},
-				{text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
+			elements: [
+				{
+					kind: "button",
+					text: "Yes!",
+					colour: UIColour.GREY,
+					onClick: async () => resolve(saveHandler({noCache: true})),
+				},
+				{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
 			],
 			colour: UIColour.PURPLE,
+			onCancel: async () => resolve(false),
 		})
 	);
 };
@@ -82,7 +89,7 @@ const checkTags = async (tagInput: Highlightable, options: GetTagsOptions) =>
 		const userTags = getTagsFromElement(tagInput);
 		const properCaseTags = fixTagsCase(userTags, trees);
 		setTags(tagInput, properCaseTags);
-		return getInvalidTags(getTagsFromElement(tagInput), trees);
+		return getInvalidTags(properCaseTags, trees);
 	});
 
 const handleSave = (tagInput: Highlightable, options: GetTagsOptions) => {

@@ -42,6 +42,7 @@
 	"web_accessible_resources": [
 		{
 			"resources": [
+				"img/icon16.png",
 				"img/icon128.png",
 				"img/favicon.ico",
 				"img/search.png",

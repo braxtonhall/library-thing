@@ -18,7 +18,13 @@ const fixedValue = (value: unknown) => retainKey(() => value);
 const identity = retainKey(({value}) => value);
 const transformers: { [key: string]: Transformer } = {
 	manifest_version: fixedValue(2),
-	options_page: fixedValue(undefined),
+	options_page: ({value}) => ({
+		key: "options_ui",
+		value: {
+			page: value,
+			browser_style: true
+		}
+	}),
 	action: ({value}) => ({key: "browser_action", value}),
 	content_security_policy: fixedValue(undefined),
 	key: () => ({
@@ -31,8 +37,8 @@ const transformers: { [key: string]: Transformer } = {
 	}),
 	host_permissions: fixedValue(undefined),
 	background: retainKey(({value}) => ({
-		"scripts": [value.service_worker],
-		"persistent": false
+		scripts: [value.service_worker],
+		persistent: false
 	})),
 	permissions: retainKey(({value, manifest}) =>
 		[

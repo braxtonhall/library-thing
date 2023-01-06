@@ -9,18 +9,21 @@ import {SizeData} from "../../content/extensions/resize";
  */
 
 enum ConfigKey {
+	SpreadsheetLink = "spreadsheet-link",
 	SizeData = "size-data",
 	LatestRender = "last-render",
 	FormData = "form-data",
 }
 
 type ConfigDefaults = {
+	[ConfigKey.SpreadsheetLink]: string;
 	[ConfigKey.SizeData]: SizeData;
 	[ConfigKey.LatestRender]: number;
 	[ConfigKey.FormData]: FormData;
 };
 
 const configDefaults: ConfigDefaults = {
+	[ConfigKey.SpreadsheetLink]: "",
 	[ConfigKey.SizeData]: {},
 	[ConfigKey.LatestRender]: 0,
 	[ConfigKey.FormData]: {},
