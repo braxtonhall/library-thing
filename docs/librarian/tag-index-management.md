@@ -37,6 +37,9 @@ Examples:
 
 ## Tag Index _Index_
 
+TODO! This is no longer correct.
+This should also list the content warning thing
+
 The Tag Index _Index_ is used to tell Better Library Thing where all the tables of tags are.
 
 1. There _must_ be a single sheet in The Tag Index called **Tag Index Index**
