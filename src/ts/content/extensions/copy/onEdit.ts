@@ -1,7 +1,17 @@
 import config, {ConfigKey} from "../../../common/entities/config";
-import {FormData, getFormData, insertFormData, onFormRender} from "../../entities/bookForm";
+import {
+	FormData,
+	getFormData,
+	insertFormData,
+	onceFormRender,
+	onFormRemoved,
+	onFormRender,
+} from "../../entities/bookForm";
 import {showToast, ToastType} from "../../../common/ui/toast";
-import {appendRow, saveFormData} from "./common";
+import {appendRow, makeButton, saveFormData} from "./common";
+import {addTooltip} from "../../../common/ui/tooltip";
+import {onBackgroundEvent} from "../../util/onBackgroundEvent";
+import {BackgroundEvent} from "../../../common/backgroundEvent";
 
 const onCopy = () => saveFormData(getFormData());
 
@@ -24,11 +34,27 @@ const onPaste = async () => {
 	}
 };
 
-const appendCopyPaste = (table: HTMLTableElement) =>
-	appendRow(
-		table,
-		{text: "Copy book", img: "img/save.png", onClick: onCopy},
-		{text: "Paste book", img: "img/paste.png", onClick: onPaste}
-	);
+const tooltipEditors = new Set<(text: string) => void>();
 
-onFormRender((form: HTMLElement) => Array.from(form.getElementsByClassName("book_bitTable")).forEach(appendCopyPaste));
+const appendCopyPaste = (table: HTMLTableElement) => {
+	const pasteButton = makeButton("Paste book", "img/paste.png", onPaste);
+	const editTooltip = addTooltip(pasteButton, {text: "Paste"});
+	tooltipEditors.add(editTooltip);
+	appendRow(table, makeButton("Copy book", "img/save.png", onCopy), pasteButton);
+};
+
+const onBookCopied = () => {
+	const existingTitle = getFormData()?.["form_title"]?.["value"];
+	if (existingTitle) {
+		tooltipEditors.forEach((editor) => editor(`Paste "${existingTitle}"`));
+	}
+};
+
+onceFormRender(() => onBackgroundEvent(BackgroundEvent.BookCopied, onBookCopied));
+
+onFormRender((form: HTMLElement) => {
+	Array.from(form.getElementsByClassName("book_bitTable")).forEach(appendCopyPaste);
+	onBookCopied();
+});
+
+onFormRemoved(() => tooltipEditors.clear());

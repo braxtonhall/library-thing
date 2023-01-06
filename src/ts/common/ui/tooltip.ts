@@ -15,22 +15,28 @@ interface TooltipOptions {
 	text: string;
 }
 
-const tooltipped = <T extends HTMLElement>(
-	element: T,
+const tooltipped = <T extends HTMLElement>(element: T, options: TooltipOptions): T => {
+	addTooltip(element, options);
+	return element;
+};
+
+const addTooltip = (
+	element: HTMLElement,
 	{text, colour = UIColour.GREY, position = TooltipPosition.TOP}: TooltipOptions
-): T => {
+): ((text: string) => void) => {
 	// This MiiIIIght not age well. Probably smarter to add an invisible anchor point inside element
 	element.style.position = "relative";
 
 	const span = document.createElement("span");
-	span.innerText = text;
+	const setText = (_text: string) => (span.innerText = _text);
+	setText(text);
 
 	const tooltip = document.createElement("div");
 	tooltip.className = `vbl-tool-tip ${colour} ${position}`;
 	tooltip.append(span);
 
 	element.append(tooltip);
-	return element;
+	return setText;
 };
 
-export {TooltipOptions, TooltipPosition, tooltipped};
+export {TooltipOptions, TooltipPosition, tooltipped, addTooltip};
