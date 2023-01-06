@@ -2,9 +2,6 @@ import {FormData} from "../../entities/bookForm";
 import config, {ConfigKey} from "../../../common/entities/config";
 import {showToast, ToastType} from "../../../common/ui/toast";
 import {createIconButton} from "../../../common/ui/button";
-import {invokeWorker} from "../../../common/workers/invoker";
-import {WorkerKind} from "../../../common/workers/types";
-import {BackgroundEvent} from "../../../common/backgroundEvent";
 
 const saveFormData = async (formData: FormData) => {
 	await config.set(ConfigKey.FormData, formData);
@@ -12,7 +9,6 @@ const saveFormData = async (formData: FormData) => {
 		"The metadata for this book was saved!\n\nYou can use the Paste button on a different book's page to paste in your saved metadata.",
 		ToastType.SUCCESS
 	);
-	await invokeWorker(WorkerKind.DispatchEvent, BackgroundEvent.BookCopied);
 };
 
 const appendRow = (table: HTMLTableElement, ...buttons: HTMLTableCellElement[]) => {

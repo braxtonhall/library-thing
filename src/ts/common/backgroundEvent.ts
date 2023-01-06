@@ -3,7 +3,6 @@ import {Message} from "./types";
 enum BackgroundEvent {
 	CompletedAuth = "authed",
 	RemovedAuth = "de-authed",
-	BookCopied = "book-copied",
 	AddedSheetLink = "sheet-link",
 }
 

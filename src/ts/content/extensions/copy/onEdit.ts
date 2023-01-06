@@ -34,27 +34,19 @@ const onPaste = async () => {
 	}
 };
 
-const tooltipEditors = new Set<(text: string) => void>();
-
 const appendCopyPaste = (table: HTMLTableElement) => {
 	const pasteButton = makeButton("Paste book", "img/paste.png", onPaste);
 	const editTooltip = addTooltip(pasteButton, {text: "Paste"});
-	tooltipEditors.add(editTooltip);
+	pasteButton.addEventListener("mouseenter", onHoverPasteButton(editTooltip));
 	appendRow(table, makeButton("Copy book", "img/save.png", onCopy), pasteButton);
 };
 
-const onBookCopied = () => {
-	const existingTitle = getFormData()?.["form_title"]?.["value"];
+const onHoverPasteButton = (editTooltip: (text: string) => void) => async () => {
+	const formData = await config.get(ConfigKey.FormData);
+	const existingTitle = formData["form_title"]?.["value"];
 	if (existingTitle) {
-		tooltipEditors.forEach((editor) => editor(`Paste "${existingTitle}"`));
+		editTooltip(`Paste "${existingTitle}"`);
 	}
 };
 
-onceFormRender(() => onBackgroundEvent(BackgroundEvent.BookCopied, onBookCopied));
-
-onFormRender((form: HTMLElement) => {
-	Array.from(form.getElementsByClassName("book_bitTable")).forEach(appendCopyPaste);
-	onBookCopied();
-});
-
-onFormRemoved(() => tooltipEditors.clear());
+onFormRender((form: HTMLElement) => Array.from(form.getElementsByClassName("book_bitTable")).forEach(appendCopyPaste));
