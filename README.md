@@ -9,7 +9,7 @@ A browser extension to improve the LibraryThing cataloguing experience. Made in 
 ## Installation
 
 [link-chrome]: https://chrome.google.com/webstore/detail/better-librarything/hbnlneckiahefebnpdhgpohonfkkcaln 'Version published on Chrome Web Store'
-[link-firefox]: https://addons.mozilla.org/en-US/firefox/ 'Version published on Mozilla Add-ons (TODO)'
+[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/betterlibrarything/ 'Version published on Mozilla Add-ons'
 
 [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/chrome/chrome.svg" width="48" alt="Chrome" valign="middle">][link-chrome] also compatible with [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/edge/edge.svg" width="24" alt="Edge" valign="middle">][link-chrome] [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/opera/opera.svg" width="24" alt="Opera" valign="middle">][link-chrome] [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/brave/brave.svg" width="24" alt="Brave" valign="middle">][link-chrome]
 
