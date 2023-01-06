@@ -1,17 +1,8 @@
 import config, {ConfigKey} from "../../../common/entities/config";
-import {
-	FormData,
-	getFormData,
-	insertFormData,
-	onceFormRender,
-	onFormRemoved,
-	onFormRender,
-} from "../../entities/bookForm";
+import {FormData, getFormData, insertFormData, onFormRender} from "../../entities/bookForm";
 import {showToast, ToastType} from "../../../common/ui/toast";
 import {appendRow, makeButton, saveFormData} from "./common";
 import {addTooltip} from "../../../common/ui/tooltip";
-import {onBackgroundEvent} from "../../util/onBackgroundEvent";
-import {BackgroundEvent} from "../../../common/backgroundEvent";
 
 const onCopy = () => saveFormData(getFormData());
 
