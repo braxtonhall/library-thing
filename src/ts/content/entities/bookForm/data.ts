@@ -22,10 +22,13 @@ const extractSaveDataFor = (targetElement: Element, formData: FormData) => {
 
 // form metadata is data ABOUT the form. this could be extended in the future,
 // like ... for physical description
-const getFormMetadata = (): FormData => ({[FORM_META_DATA_KEY]: {[ROLES_INPUT_COUNT_KEY]: getRolesInputCount()}});
+const getFormMetadata = (document: Document): FormData => ({
+	[FORM_META_DATA_KEY]: {[ROLES_INPUT_COUNT_KEY]: getRolesInputCount(document)},
+});
 
 // We subtract one to omit the main author, who is not part of the roles section
-const getRolesInputCount = (): number => document.querySelectorAll("input.bookEditInput.bookPersonName").length - 1;
+const getRolesInputCount = (document: Document): number =>
+	document.querySelectorAll("input.bookEditInput.bookPersonName").length - 1;
 
 // We can't change hidden elements because LibraryThing relies
 // on hidden form inputs to send additional, form-specific metadata
@@ -33,8 +36,8 @@ const getRolesInputCount = (): number => document.querySelectorAll("input.bookEd
 const isFormDataElement = (element: FormAreaElement): boolean =>
 	element && element.id && element.type !== "hidden" && !ID_BLACKLIST.has(element.id);
 
-const getFormData = () =>
-	getFormElements().reduce((saveData: FormData, element: any) => {
+const getFormData = (_document = document) =>
+	getFormElements(_document).reduce((saveData: FormData, element: any) => {
 		if (isFormDataElement(element)) {
 			const {value, checked} = element;
 			if (element.id.startsWith(COLLECTIONS_ID_PREFIX)) {
@@ -47,11 +50,11 @@ const getFormData = () =>
 			}
 		}
 		return saveData;
-	}, getFormMetadata());
+	}, getFormMetadata(_document));
 
 const insertFormData = (saveData: FormData) => {
 	ensureRolesInputCount(saveData?.[FORM_META_DATA_KEY]?.[ROLES_INPUT_COUNT_KEY] ?? 0);
-	getFormElements().forEach((element: any) => {
+	getFormElements(document).forEach((element: any) => {
 		if (isFormDataElement(element)) {
 			const {value, checked} = extractSaveDataFor(element, saveData);
 			if (element.value !== value || element.checked !== checked) {

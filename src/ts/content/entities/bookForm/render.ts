@@ -11,16 +11,17 @@ type FormRenderListener = (
 ) => void;
 
 const FORM_RENDER_EVENT = "library-thing-form-rendered";
+const FORM_REMOVED_EVENT = "library-thing-form-removed";
 
 const forEachFormElement: ForEachFormElement = (callback: (element: FormAreaElement) => void): void =>
-	getFormElements().forEach(callback);
+	getFormElements(document).forEach(callback);
 
 const listeners = new Map<FormRenderListener, () => void>();
 // kinda gross but i don't have a better idea without a bIG refactor
 let save: {onSave: OnSave; offSave: OffSave};
 
 const encloseCallbackArguments = (callback: FormRenderListener) => () =>
-	callback(getForm(), forEachFormElement, save.onSave, save.offSave);
+	callback(getForm(document), forEachFormElement, save.onSave, save.offSave);
 
 const onFormRender = (callback: FormRenderListener): void => {
 	const listener = encloseCallbackArguments(callback);
@@ -36,15 +37,22 @@ const offFormRender = (callback: FormRenderListener): void => {
 const onceFormRender = (callback: FormRenderListener): void =>
 	window.addEventListener(FORM_RENDER_EVENT, encloseCallbackArguments(callback), {once: true});
 
+const onFormRemoved = (callback: () => void): void => window.addEventListener(FORM_REMOVED_EVENT, callback);
+const offFormRemoved = (callback: () => void): void => window.removeEventListener(FORM_REMOVED_EVENT, callback);
+const onceFormRemoved = (callback: () => void): void =>
+	window.addEventListener(FORM_REMOVED_EVENT, callback, {once: true});
+
 const handleFormMutation = () => {
 	if (formExists()) {
 		save = createOnSave();
 		window.dispatchEvent(new Event(FORM_RENDER_EVENT));
+	} else {
+		window.dispatchEvent(new Event(FORM_REMOVED_EVENT));
 	}
 };
 
 window.addEventListener("pageshow", () => {
-	const editForm = getForm();
+	const editForm = getForm(document);
 	if (editForm) {
 		new MutationObserver(handleFormMutation).observe(editForm, {subtree: false, childList: true});
 		handleFormMutation();
@@ -52,4 +60,4 @@ window.addEventListener("pageshow", () => {
 });
 
 export type {ForEachFormElement, FormRenderListener};
-export {onFormRender, offFormRender, onceFormRender};
+export {onFormRender, offFormRender, onceFormRender, onFormRemoved, onceFormRemoved, offFormRemoved};
