@@ -1,7 +1,8 @@
 import config, {ConfigKey} from "../../../common/entities/config";
 import {FormData, getFormData, insertFormData, onFormRender} from "../../entities/bookForm";
 import {showToast, ToastType} from "../../../common/ui/toast";
-import {appendRow, saveFormData} from "./common";
+import {appendRow, makeButton, saveFormData} from "./common";
+import {addTooltip} from "../../../common/ui/tooltip";
 
 const onCopy = () => saveFormData(getFormData());
 
@@ -24,11 +25,21 @@ const onPaste = async () => {
 	}
 };
 
-const appendCopyPaste = (table: HTMLTableElement) =>
-	appendRow(
-		table,
-		{text: "Copy book", img: "img/save.png", onClick: onCopy},
-		{text: "Paste book", img: "img/paste.png", onClick: onPaste}
-	);
+const appendCopyPaste = (table: HTMLTableElement) => {
+	const pasteButton = makeButton("Paste book", "img/paste.png", onPaste);
+	const editTooltip = addTooltip(pasteButton, {text: "Paste"});
+	pasteButton.addEventListener("mouseenter", onHoverPasteButton(editTooltip));
+	appendRow(table, makeButton("Copy book", "img/save.png", onCopy), pasteButton);
+};
+
+const onHoverPasteButton = (editTooltip: (text: string) => void) => async () => {
+	const formData = await config.get(ConfigKey.FormData);
+	const existingTitle = formData["form_title"]?.["value"];
+	if (existingTitle !== undefined) {
+		editTooltip(`Paste "${existingTitle}"`);
+	} else {
+		editTooltip("Nothing to paste");
+	}
+};
 
 onFormRender((form: HTMLElement) => Array.from(form.getElementsByClassName("book_bitTable")).forEach(appendCopyPaste));

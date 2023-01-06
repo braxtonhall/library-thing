@@ -11,17 +11,20 @@ const saveFormData = async (formData: FormData) => {
 	);
 };
 
-type RowButton = {text: string; img: string; onClick: () => void};
-const appendRow = (table: HTMLTableElement, ...buttons: RowButton[]) => {
-	const [row] = Array.from(table.getElementsByTagName("tr"));
-	buttons.forEach(({text, img, onClick}) => appendButton(row, text, img, onClick));
+const appendRow = (table: HTMLTableElement, ...buttons: HTMLTableCellElement[]) => {
+	const row = table.getElementsByTagName("tr").item(0);
+	buttons.forEach(appendButton(row));
 };
 
-const appendButton = (element: HTMLElement, text: string, imgSrc: string, onClick: (event: Event) => void) => {
+const makeButton = (text: string, imgSrc: string, onClick: (event: Event) => void): HTMLTableCellElement => {
 	const button = createIconButton(text, imgSrc, onClick);
 	button.style.padding = "0px 8px";
+	return button;
+};
+
+const appendButton = (element: HTMLElement) => (button: HTMLTableCellElement) => {
 	const deleteButtonIndex = element.children.length - 1;
 	element.insertBefore(button, element.children[deleteButtonIndex]);
 };
 
-export {saveFormData, appendRow};
+export {saveFormData, appendRow, makeButton};

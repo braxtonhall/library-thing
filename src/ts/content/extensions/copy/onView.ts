@@ -1,4 +1,4 @@
-import {appendRow, saveFormData} from "./common";
+import {appendRow, makeButton, saveFormData} from "./common";
 import * as browser from "webextension-polyfill";
 import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {getDocument} from "../../services/finder/util/getDocument";
@@ -27,7 +27,7 @@ const addCopyButton = (buttonHTML: string) => (element: HTMLElement) => {
 };
 
 const appendCopyToRow = (link: string) => (table: HTMLTableElement) =>
-	appendRow(table, {text: "Copy book", img: "img/save.png", onClick: handleClick(link)});
+	appendRow(table, makeButton("Copy book", "img/save.png", handleClick(link)));
 
 const saveImage = browser.runtime.getURL("img/save.png");
 const searchCopyImage = `<img src="${saveImage}" class="sp_c20" style="background-position: 0px -178px; " title="copy" alt="copy">`;
