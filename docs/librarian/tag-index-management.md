@@ -37,16 +37,14 @@ Examples:
 
 ## Tag Index _Index_
 
-TODO! This is no longer correct.
-This should also list the content warning thing
-
 The Tag Index _Index_ is used to tell Better Library Thing where all the tables of tags are.
 
 1. There _must_ be a single sheet in The Tag Index called **Tag Index Index**
 1. Column `A` _must_ be the name of a sheet where there are tags
 1. Column `B` _must_ be the top left cell in that sheet where there are tags
 1. Column `C` _must_ be the width of the table in that sheet that contains tags
-1. Column `D` is optional, and can [remap tags](#tag-remapping).
+1. Column `D` is optional, and can specify which column contains a [Content Warning](#content-warnings)
+1. Column `E` is optional, and can [remap tags](#tag-remapping)
 
 Example sheet with Tags:
 
@@ -55,6 +53,26 @@ Example sheet with Tags:
 Example Tag Index _Index_:
 
 <img src="../img/tag-index/tag-index-index.png" alt="Example Tag Index Index">
+
+### Content Warnings
+
+Some tags may require a content warning, which is a short
+description of possible trigger material in a book entry's comments,
+formatted as:
+> CW: actual content warning
+
+In the Tag Index, to say that a Content Warning is required,
+a tag's row will have a cell flagging it as needed one.
+All Content Warning flags are in the same column for each sheet.
+
+To tell Better LibraryThing where these Content Warning flags are,
+in the [Tag Index _Index_'s](#tag-index-index) Content Warning Column,
+indicate the column containing Content Warning flags by its exact letter.
+
+If the Tag Index _Index_ is formatted correctly, and a tag is flagged
+as requiring a Content Warning, then catalogers will be notified
+if they have included a tag that requires a Content Warning if they
+forgot to include one.
 
 ### Tag Remapping
 
