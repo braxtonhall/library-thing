@@ -24,9 +24,10 @@ interface ModalInput extends ModalElement {
 interface ModalOptions {
 	text: string;
 	subText?: string[];
-	elements: (ModalButton | ModalInput)[];
+	elements?: (ModalButton | ModalInput)[];
 	onCancel?: () => Promise<void>;
 	colour: UIColour;
+	exitable?: boolean;
 }
 
 const MODAL_CLASS_NAME = "better-library-thing-modal";
@@ -96,12 +97,19 @@ const addOnClick = (element: HTMLElement, exit: () => void, onClick?: () => Prom
 	element.addEventListener("click", () => callback().finally(exit));
 };
 
-const createModal = ({text, subText, elements, onCancel, colour}: ModalOptions): void => {
+const createModal = ({
+	text,
+	subText,
+	elements = [],
+	onCancel,
+	colour,
+	exitable = true,
+}: ModalOptions): (() => HTMLDivElement) => {
 	const exit = () => document.body.removeChild(overlay);
 
 	const overlay = createOverlay();
 	overlay.classList.add("modal");
-	addOnClick(overlay, exit, onCancel);
+	exitable && addOnClick(overlay, exit, onCancel);
 
 	const modal = createWithClass("div", `${MODAL_CLASS_NAME} ${colour}`);
 	modal.addEventListener("click", (event) => event.stopPropagation());
@@ -115,6 +123,8 @@ const createModal = ({text, subText, elements, onCancel, colour}: ModalOptions):
 	modal.append(textContainer, elementContainer);
 	overlay.append(modal);
 	document.body.appendChild(overlay);
+
+	return exit;
 };
 
 export {createModal};
