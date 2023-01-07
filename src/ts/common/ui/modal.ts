@@ -1,6 +1,6 @@
 import "../../../sass/modal.sass";
 
-import {createOverlay} from "./overlay";
+import {createOverlay, removeOverlay} from "./overlay";
 import {UIColour} from "./colour";
 
 interface ModalElement {
@@ -24,7 +24,7 @@ interface ModalInput extends ModalElement {
 interface ModalOptions {
 	text: string;
 	subText?: string[];
-	elements?: (ModalButton | ModalInput)[];
+	elements: (ModalButton | ModalInput)[];
 	onCancel?: () => Promise<void>;
 	colour: UIColour;
 	exitable?: boolean;
@@ -97,15 +97,8 @@ const addOnClick = (element: HTMLElement, exit: () => void, onClick?: () => Prom
 	element.addEventListener("click", () => callback().finally(exit));
 };
 
-const createModal = ({
-	text,
-	subText,
-	elements = [],
-	onCancel,
-	colour,
-	exitable = true,
-}: ModalOptions): (() => HTMLDivElement) => {
-	const exit = () => document.body.removeChild(overlay);
+const createModal = ({text, subText, elements, onCancel, colour, exitable = true}: ModalOptions): void => {
+	const exit = removeOverlay;
 
 	const overlay = createOverlay();
 	overlay.classList.add("modal");
@@ -123,8 +116,6 @@ const createModal = ({
 	modal.append(textContainer, elementContainer);
 	overlay.append(modal);
 	document.body.appendChild(overlay);
-
-	return exit;
 };
 
 export {createModal};
