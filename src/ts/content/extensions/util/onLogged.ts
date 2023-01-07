@@ -8,8 +8,7 @@ import {onBackgroundEvent} from "../../util/onBackgroundEvent";
 import {isAuthorized} from "../author/util/isAuthorized";
 import {isSheetSet} from "../../../common/entities/spreadsheet";
 
-const BAD_BROWSER_INFO_URL =
-	"https://github.com/braxtonhall/library-thing/blob/main/docs/librarian/authors.md#prerequisites";
+const BAD_BROWSER_INFO_URL = "https://betterlibrarything.com/";
 
 interface OnLogOptions {
 	onLogIn?: OnLoggedCallback;
