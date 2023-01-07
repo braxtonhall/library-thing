@@ -1,7 +1,11 @@
 # Tag Index Requirements
 
 The document is intended for VBL librarians.
-It describes the requirements of [The Tag Index](https://docs.google.com/spreadsheets/d/1EfwBhY56M8OwgVjFTWxxxdoIxK8osw2vfgsXnCyGGuA) such that it integrates with Better LibraryThing.
+It describes the requirements of The Tag Index such that it integrates with Better LibraryThing.
+
+## Example
+
+[Here's an example Tag Index!](https://docs.google.com/spreadsheets/d/17JPwEnhxwKDvSITn6fWcj-D8ZXL2MAcVmOCgu8tmjes)
 
 ## Availability
 1. The Tag Index must be a [Google Sheet](https://docs.google.com/spreadsheets).
