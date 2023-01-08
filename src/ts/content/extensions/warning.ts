@@ -25,7 +25,8 @@ const onExit = (event: Event) => {
 const addUnloadListener = () => window.addEventListener("beforeunload", onExit);
 
 onceFormRender(addUnloadListener);
-onFormRender(() => {
+onFormRender((form, forEachElement, onSave, offSave, onConfirm) => {
 	undoEdits();
 	addUndoEditListener();
+	onConfirm(undoEdits);
 });

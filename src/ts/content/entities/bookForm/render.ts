@@ -1,13 +1,14 @@
 import {FormAreaElement} from "./types";
 import {formExists, getForm, getFormElements} from "./util";
-import {createOnSave, OffSave, OnSave} from "./save";
+import {createOnSave, OffSave, OnConfirm, OnSave} from "./save";
 
 type ForEachFormElement = (callback: (element: FormAreaElement) => void) => void;
 type FormRenderListener = (
 	form: HTMLElement,
 	forEachElement: ForEachFormElement,
 	onSave: OnSave,
-	offSave: OffSave
+	offSave: OffSave,
+	onConfirm: OnConfirm
 ) => void;
 
 const FORM_RENDER_EVENT = "library-thing-form-rendered";
@@ -18,10 +19,10 @@ const forEachFormElement: ForEachFormElement = (callback: (element: FormAreaElem
 
 const listeners = new Map<FormRenderListener, () => void>();
 // kinda gross but i don't have a better idea without a bIG refactor
-let save: {onSave: OnSave; offSave: OffSave};
+let save: {onSave: OnSave; offSave: OffSave; onConfirm: OnConfirm};
 
 const encloseCallbackArguments = (callback: FormRenderListener) => () =>
-	callback(getForm(document), forEachFormElement, save.onSave, save.offSave);
+	callback(getForm(document), forEachFormElement, save.onSave, save.offSave, save.onConfirm);
 
 const onFormRender = (callback: FormRenderListener): void => {
 	const listener = encloseCallbackArguments(callback);
