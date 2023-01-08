@@ -85,6 +85,7 @@ const toggleEnforceToggle = async () => {
 	await config.set(ConfigKey.EnforceTagIndexAccess, !currentToggleStatus);
 	await setEnforceToggle();
 	showEnforceToggleWarning(!currentToggleStatus);
+	return invokeWorker(WorkerKind.DispatchEvent, BackgroundEvent.EditEnforcement);
 };
 
 window.addEventListener("pageshow", async () => {
