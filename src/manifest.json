@@ -1,6 +1,6 @@
 {
 	"name": "Better LibraryThing",
-	"version": "1.3.2",
+	"version": "2.0.0",
 	"manifest_version": 3,
 	"description": "Improves the LibraryThing cataloging experience",
 	"icons": {
