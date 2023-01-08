@@ -13,6 +13,7 @@ enum ConfigKey {
 	SizeData = "size-data",
 	LatestRender = "last-render",
 	FormData = "form-data",
+	EnforceTagIndexAccess = "enforce-tag-index-access",
 }
 
 type ConfigDefaults = {
@@ -20,6 +21,7 @@ type ConfigDefaults = {
 	[ConfigKey.SizeData]: SizeData;
 	[ConfigKey.LatestRender]: number;
 	[ConfigKey.FormData]: FormData;
+	[ConfigKey.EnforceTagIndexAccess]: boolean;
 };
 
 const configDefaults: ConfigDefaults = {
@@ -27,6 +29,7 @@ const configDefaults: ConfigDefaults = {
 	[ConfigKey.SizeData]: {},
 	[ConfigKey.LatestRender]: 0,
 	[ConfigKey.FormData]: {},
+	[ConfigKey.EnforceTagIndexAccess]: true,
 };
 
 type ConfigGetter = <K extends ConfigKey>(key: K) => Promise<ConfigDefaults[K]>;

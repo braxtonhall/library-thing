@@ -21,6 +21,8 @@ const logOutButton = getElement<HTMLButtonElement>("log-out-button");
 const saveButton = getElement<HTMLButtonElement>("save-tag-index");
 const tagIndexInput = getElement<HTMLInputElement>("tag-index");
 const moreInfo = getElement<HTMLDivElement>("more-info");
+const enforceLoginAndSheetToggle = getElement<HTMLInputElement>("enforce-toggle");
+const enforceToggleWarning = getElement<HTMLHeadingElement>("enforce-toggle-warning");
 
 const setClass = (canLogIn: boolean, canLogOut: boolean) => {
 	logInButton().disabled = !canLogIn;
@@ -68,10 +70,28 @@ const validateTagIndex = onValidValue(
 	}
 );
 
+const showEnforceToggleWarning = (isEnforceTagIndexAccess: boolean) => {
+	enforceToggleWarning().style.display = isEnforceTagIndexAccess ? "none" : "";
+};
+
+const setEnforceToggle = async () => {
+	const currentToggleStatus = await config.get(ConfigKey.EnforceTagIndexAccess);
+	enforceLoginAndSheetToggle().checked = currentToggleStatus;
+	showEnforceToggleWarning(currentToggleStatus);
+};
+
+const toggleEnforceToggle = async () => {
+	const currentToggleStatus = await config.get(ConfigKey.EnforceTagIndexAccess);
+	await config.set(ConfigKey.EnforceTagIndexAccess, !currentToggleStatus);
+	await setEnforceToggle();
+	showEnforceToggleWarning(!currentToggleStatus);
+};
+
 window.addEventListener("pageshow", async () => {
 	logInButton().addEventListener("click", () => authorize(true));
 	logOutButton().addEventListener("click", logOut);
 	saveButton().addEventListener("click", getTagIndex);
 	tagIndexInput().addEventListener("input", validateTagIndex);
-	return Promise.all([authorize(false), setTagIndex()]);
+	enforceLoginAndSheetToggle().addEventListener("click", toggleEnforceToggle);
+	return Promise.all([authorize(false), setTagIndex(), setEnforceToggle()]);
 });
