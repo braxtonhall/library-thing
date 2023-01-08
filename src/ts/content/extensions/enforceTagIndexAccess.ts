@@ -8,13 +8,13 @@ import {WorkerKind} from "../../common/workers/types";
 import {onBackgroundEvent} from "../util/onBackgroundEvent";
 import {BackgroundEvent} from "../../common/backgroundEvent";
 
-let ready = false;
+let canAccessTagIndex = true; // default to true to reduce likelihood of pop in (very unlikely)
 
 const enforceTagIndexAccess = async () => {
 	clearOverlays();
 	if (await config.get(ConfigKey.EnforceTagIndexAccess)) {
 		const createWarningModal = async () => {
-			ready === false &&
+			canAccessTagIndex === false &&
 				createModal({
 					text: "Hey there!",
 					subText: [
@@ -44,11 +44,11 @@ onBackgroundEvent(BackgroundEvent.EditEnforcement, enforceTagIndexAccess);
 window.addEventListener("pageshow", async () => {
 	await onLogged({
 		onLogIn: () => {
-			ready = true;
+			canAccessTagIndex = true;
 			return enforceTagIndexAccess();
 		},
 		onLogOut: () => {
-			ready = false;
+			canAccessTagIndex = false;
 			return enforceTagIndexAccess();
 		},
 	});
