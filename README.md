@@ -25,7 +25,10 @@ While Editing a book, leaving the page without hitting Save, Cancel, or Delete B
 
 ### Copy/Paste
 
-While on the Edit book page, a Copy and Paste button appear to allow you to Copy and Paste entire book entries.
+On any book's page or catalog entry, click the Copy button to save a book's metadata.
+
+You can then click the Paste button while editing a book or creating a new entry
+to paste the entire book entry (except the barcode, of course).
 
 <img src="docs/img/copy.gif" alt="warning">
 
