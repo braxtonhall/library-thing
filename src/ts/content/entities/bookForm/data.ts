@@ -10,6 +10,13 @@ const ROLES_INPUT_COUNT_KEY = "___roles-count_";
 
 // IDs of elements we don't want to copy/paste
 const ID_BLACKLIST = new Set(["item_inventory_barcode_1"]);
+const TRANSFORMERS = {
+	form_comments: (comments: string): string => {
+		const lines = comments.split("\n");
+		const withoutLocation = lines.filter((line) => !/^LOCATION:/i.test(line));
+		return withoutLocation.join("\n");
+	},
+};
 
 const extractSaveDataFor = (targetElement: Element, formData: FormData) => {
 	if (targetElement.id.startsWith(COLLECTIONS_ID_PREFIX)) {
@@ -58,7 +65,9 @@ const insertFormData = (saveData: FormData) => {
 		if (isFormDataElement(element)) {
 			const {value, checked} = extractSaveDataFor(element, saveData);
 			if (element.value !== value || element.checked !== checked) {
-				element.value = value;
+				// We transform AFTER checking equality, because we want to ensure
+				// self-pasting doesn't modify data
+				element.value = TRANSFORMERS[element.id]?.(value) ?? value;
 				element.checked = checked;
 				element.dispatchEvent(new Event("change"));
 				ensureVisible(element);
