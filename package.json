@@ -48,7 +48,7 @@
 		"prepare": "husky install"
 	},
 	"lint-staged": {
-		"*.{yml,json,ts,js,html}": "prettier --write"
+		"*.{yml,md,json,ts,js,html}": "prettier --write"
 	},
 	"prettier": {
 		"useTabs": true,
