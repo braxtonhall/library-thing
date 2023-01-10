@@ -1,10 +1,10 @@
 # Better LibraryThing
 
-A browser extension to improve the [LibraryThing](https://www.librarything.com/) cataloguing experience. Made in support of the [Vancouver Black Library](https://www.vancouverblacklibrary.org/).
+[link-vbl]: https://www.vancouverblacklibrary.org/ 'Vancouver Black Library'
 
-<p align="center">
-	<img src="src/img/vbl.png" alt="vancouver black library" style="width: 100px; height: auto">
-</p>
+A browser extension to improve the [LibraryThing](https://www.librarything.com/) cataloguing experience. Made in support of the [Vancouver Black Library][link-vbl].
+
+[<p align="center"><img src="src/img/vbl.png" alt="vancouver black library" style="width: 100px; height: auto"></p>][link-vbl]
 
 ## Installation
 
