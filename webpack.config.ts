@@ -12,7 +12,11 @@ const srcDir = path.join(__dirname, "src");
 const tsSrcDir = path.join(srcDir, "ts");
 const outputDir = path.join(__dirname, "dist", manifestVersion);
 const getEntry = (name: string, options) => {
-	return [path.join(tsSrcDir, name), "webextension-polyfill/dist/browser-polyfill.js", ...(isDev(options) ? [`mv3-hot-reload/${name}`] : [])];
+	return [
+		path.join(tsSrcDir, name),
+		"webextension-polyfill/dist/browser-polyfill.js",
+		...(isDev(options) ? [`mv3-hot-reload/${name}`] : []),
+	];
 };
 
 const transform: TransformerFunction = (input: Buffer) => {
@@ -21,8 +25,7 @@ const transform: TransformerFunction = (input: Buffer) => {
 	return JSON.stringify(v2, null, "\t");
 };
 
-const maybeTransform = () =>
-	manifestVersion === "v2" && {transform};
+const maybeTransform = () => manifestVersion === "v2" && {transform};
 
 module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration => ({
 	devtool: isDev(options) ? "source-map" : undefined,
@@ -76,11 +79,11 @@ module.exports = (_env: any, options: WebpackOptionsNormalized): Configuration =
 					from: path.join(srcDir, "manifest.json"),
 					to: path.join(outputDir, "manifest.json"),
 					...maybeTransform(),
-				}
-			]
+				},
+			],
 		}),
 	],
 	optimization: {
-		minimize: false
+		minimize: false,
 	},
 });
