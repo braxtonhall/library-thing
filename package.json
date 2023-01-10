@@ -41,7 +41,7 @@
 		"build:v2": "MANIFEST_VERSION=v2 yarn _build",
 		"build:v3": "MANIFEST_VERSION=v3 yarn _build",
 		"build": "yarn build:v2 && yarn build:v3",
-		"lint": "eslint src/ts/ --ext .ts",
+		"lint": "eslint .",
 		"fix": "yarn lint --fix",
 		"pretty": "yarn prettier --write .",
 		"test": "mocha --require ts-node/register --extension .spec.ts --recursive test",
