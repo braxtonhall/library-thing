@@ -1,47 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<title>Better Library Thing Options</title>
-	<script type="text/javascript" src="../js/options.js"></script>
-</head>
-<body>
+	<head>
+		<title>Better Library Thing Options</title>
+		<script type="text/javascript" src="../js/options.js"></script>
+	</head>
+	<body>
+		<h3 class="title">Better Library Thing Options</h3>
 
-<h3 class="title">Better Library Thing Options</h3>
+		<div class="form">
+			<h4 class="label">Google Account</h4>
+			<button id="log-in-button" class="log-button colour-default">Log In</button>
+			<button id="log-out-button" class="log-button grey-default" disabled>Log Out</button>
+		</div>
 
-<div class="form">
-	<h4 class="label">Google Account</h4>
-	<button id="log-in-button" class="log-button colour-default">Log In</button>
-	<button id="log-out-button" class="log-button grey-default" disabled>Log Out</button>
-</div>
+		<div class="form">
+			<h4 class="label">
+				<a href="https://betterlibrarything.com/docs/librarian/tag-index.md.pretty">Tag Index</a> Link
+			</h4>
+			<label for="tag-index"></label>
+			<div class="sub-label" id="more-info"></div>
+			<input
+				id="tag-index"
+				autocomplete="off"
+				placeholder="https://docs.google.com/spreadsheets/d/abcd1234efgh5678ijkl90"
+			/>
+			<button id="save-tag-index" class="log-button colour-default" disabled>Save</button>
+		</div>
 
-<div class="form">
-	<h4 class="label"><a href="https://betterlibrarything.com/docs/librarian/tag-index.md.pretty">Tag Index</a> Link</h4>
-	<label for="tag-index"></label>
-	<div class="sub-label" id="more-info"></div>
-	<input id="tag-index" autocomplete="off" placeholder="https://docs.google.com/spreadsheets/d/abcd1234efgh5678ijkl90">
-	<button id="save-tag-index" class="log-button colour-default" disabled>Save</button>
-</div>
+		<div class="form">
+			<h4 class="label">Enforce Tag Index Access</h4>
+			<h4 id="enforce-toggle-warning" class="warning">
+				WARNING: This config option is HIGHLY recommended to avoid any unwanted and unintended changes to the
+				catalog
+			</h4>
+			<div class="switch-container">
+				<label class="switch">
+					<input id="enforce-toggle" type="checkbox" />
+					<span class="slider round"></span>
+				</label>
+			</div>
+		</div>
 
-<div class="form">
-	<h4 class="label">Enforce Tag Index Access</h4>
-	<h4 id="enforce-toggle-warning" class="warning">WARNING: This config option is HIGHLY recommended to avoid any unwanted and unintended changes to the catalog</h4>
-	<div class="switch-container">
-		<label class="switch">
-		  <input id="enforce-toggle" type="checkbox">
-		  <span class="slider round"></span>
-		</label>
-	</div>
-</div>
+		<hr />
 
-<hr/>
-
-<div class="footer">
-	<div class="footer-image-container">
-		<a href="https://www.vancouverblacklibrary.org/" target="_blank" rel="noopener noreferrer">
-			<img class="footer-image" src="../img/vbl.png" alt="Vancouver Black Library">
-		</a>
-	</div>
-</div>
-
-</body>
+		<div class="footer">
+			<div class="footer-image-container">
+				<a href="https://www.vancouverblacklibrary.org/" target="_blank" rel="noopener noreferrer">
+					<img class="footer-image" src="../img/vbl.png" alt="Vancouver Black Library" />
+				</a>
+			</div>
+		</div>
+	</body>
 </html>

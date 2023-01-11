@@ -5,15 +5,8 @@
 		"target": "ES2015",
 		"moduleResolution": "node",
 		"strict": false,
-		"types": [
-			"node",
-			"mocha"
-		],
-		"lib": [
-			"ES2021"
-		]
+		"types": ["node", "mocha"],
+		"lib": ["ES2021"]
 	},
-	"exclude": [
-		"node_modules"
-	]
+	"exclude": ["node_modules"]
 }

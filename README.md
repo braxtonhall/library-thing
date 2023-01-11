@@ -1,6 +1,6 @@
 # Better LibraryThing
 
-[link-vbl]: https://www.vancouverblacklibrary.org/ 'Vancouver Black Library'
+[link-vbl]: https://www.vancouverblacklibrary.org/ "Vancouver Black Library"
 
 A browser extension to improve the [LibraryThing](https://www.librarything.com/) cataloguing experience. Made in support of the [Vancouver Black Library][link-vbl].
 
@@ -8,8 +8,8 @@ A browser extension to improve the [LibraryThing](https://www.librarything.com/)
 
 ## Installation
 
-[link-chrome]: https://chrome.google.com/webstore/detail/better-librarything/hbnlneckiahefebnpdhgpohonfkkcaln 'Version published on Chrome Web Store'
-[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/betterlibrarything/ 'Version published on Mozilla Add-ons'
+[link-chrome]: https://chrome.google.com/webstore/detail/better-librarything/hbnlneckiahefebnpdhgpohonfkkcaln "Version published on Chrome Web Store"
+[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/betterlibrarything/ "Version published on Mozilla Add-ons"
 
 [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/chrome/chrome.svg" width="48" alt="Chrome" valign="middle">][link-chrome] also compatible with [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/edge/edge.svg" width="24" alt="Edge" valign="middle">][link-chrome] [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/opera/opera.svg" width="24" alt="Opera" valign="middle">][link-chrome] [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/brave/brave.svg" width="24" alt="Brave" valign="middle">][link-chrome]
 
@@ -79,6 +79,7 @@ The banner will also be grey if you are not logged in to the VanBlackLibrary Lib
 <img src="docs/img/banner.png" alt="banner">
 
 ### Misc. Improvements
+
 - **Resizes**: When you resize a text area in a book form, the new size saved for the next time you visit!
 - **Sort Indicator**: Changing a book title's sorting will show you what the book will be sorted as directly on the form.
 

@@ -3,7 +3,7 @@ name: Release
 on:
     push:
         tags:
-            - '*.*.*'
+            - "*.*.*"
 
 jobs:
     build:
@@ -11,41 +11,41 @@ jobs:
 
         strategy:
             matrix:
-                node: [ 16.x ]
+                node: [16.x]
 
         permissions:
             contents: write
 
         steps:
-            -   uses: actions/checkout@v2
-            -   name: Set output
-                id: vars
-                run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-            -   name: Install modules with Node ${{ matrix.node }}
-                uses: actions/setup-node@v1
-                with:
-                    node-version: ${{ matrix.node }}
-            -   name: Install packages
-                run: yarn install
-            -   name: Compile TypeScript
-                run: yarn build
-            -   name: Check release version
-                run: yarn ts-node bin/checkRelease.ts ${{ steps.vars.outputs.tag }}
-            -   name: Archive Release
-                uses: thedoctor0/zip-release@main
-                with:
-                    type: "zip"
-                    filename: "extension.zip"
-                    directory: "dist/v3"
-            -   name: Archive Firefox Release
-                uses: thedoctor0/zip-release@main
-                with:
-                    type: "zip"
-                    filename: "firefox.zip"
-                    directory: "dist/v2"
-            -   name: Upload Release
-                uses: ncipollo/release-action@v1
-                with:
-                    artifacts: "dist/v3/extension.zip,dist/v2/firefox.zip"
-                    bodyFile: "docs/releases/${{ steps.vars.outputs.tag }}.md"
-                    token: ${{ secrets.YOUR_GITHUB_TOKEN }}
+            - uses: actions/checkout@v2
+            - name: Set output
+              id: vars
+              run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+            - name: Install modules with Node ${{ matrix.node }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node }}
+            - name: Install packages
+              run: yarn install
+            - name: Compile TypeScript
+              run: yarn build
+            - name: Check release version
+              run: yarn ts-node bin/checkRelease.ts ${{ steps.vars.outputs.tag }}
+            - name: Archive Release
+              uses: thedoctor0/zip-release@main
+              with:
+                  type: "zip"
+                  filename: "extension.zip"
+                  directory: "dist/v3"
+            - name: Archive Firefox Release
+              uses: thedoctor0/zip-release@main
+              with:
+                  type: "zip"
+                  filename: "firefox.zip"
+                  directory: "dist/v2"
+            - name: Upload Release
+              uses: ncipollo/release-action@v1
+              with:
+                  artifacts: "dist/v3/extension.zip,dist/v2/firefox.zip"
+                  bodyFile: "docs/releases/${{ steps.vars.outputs.tag }}.md"
+                  token: ${{ secrets.YOUR_GITHUB_TOKEN }}

@@ -35,9 +35,7 @@
 	"permissions": ["storage", "identity"],
 	"oauth2": {
 		"client_id": "1093815162744-4pmdau7ho27uovaim1tqcohob9mklkgk.apps.googleusercontent.com",
-		"scopes": [
-			"https://www.googleapis.com/auth/spreadsheets"
-		]
+		"scopes": ["https://www.googleapis.com/auth/spreadsheets"]
 	},
 	"key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs1cIx3BZ3W5BbCrX7AtvJQ6l6jdMNgMdk0HnKEFcCfLin2/rAYOJxRX/cnjCfFKlLzojh70eYDH86ookpQ/v8wO3I1VyLyJhqSoEfGV0AczyAjlfnG00pgXI34mGcP3xVle0yS8Wx2DfYObHVlouCnaJgMUOHUg55CPs7+RiKX7S3PseK70wUd/utunV0E6QEHWOfsnVbyfnNgNsMj4zF/mB0PigwStWVNRLtK2mvG8Ubp4qLid9OgMApnJY2o+I8mkchMy1yz57aVYq8iTT+alXUAQhqk9c2mA/cwfBdGLBJWnRaHdkX/2QL6LyQQfz7ilMmwGIKkfKEL5hLbEs/wIDAQAB",
 	"web_accessible_resources": [

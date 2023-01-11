@@ -3,9 +3,6 @@
 		"strict": false,
 		"moduleResolution": "node",
 		"target": "ES2015",
-		"lib": [
-			"DOM",
-			"ES2021"
-		]
+		"lib": ["DOM", "ES2021"]
 	}
 }

@@ -41,16 +41,18 @@
 		"build:v2": "MANIFEST_VERSION=v2 yarn _build",
 		"build:v3": "MANIFEST_VERSION=v3 yarn _build",
 		"build": "yarn build:v2 && yarn build:v3",
-		"lint": "eslint src/ts/ --ext .ts",
+		"lint": "eslint .",
 		"fix": "yarn lint --fix",
-		"pretty": "yarn prettier --editorconfig true --config ./.prettierrc.json --write \"src/ts/**/*.ts\"",
+		"pretty": "yarn prettier --write .",
 		"test": "mocha --require ts-node/register --extension .spec.ts --recursive test",
 		"prepare": "husky install"
 	},
 	"lint-staged": {
-		"{src,test}/**/*.ts": [
-			"yarn fix --cache",
-			"yarn pretty --cache"
-		]
+		"*.{yml,md,json,ts,js,html}": "prettier --write"
+	},
+	"prettier": {
+		"useTabs": true,
+		"printWidth": 120,
+		"bracketSpacing": false
 	}
 }

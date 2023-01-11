@@ -1,6 +1,7 @@
 # Development
 
 ## Contributing
+
 To contribute just make a PR into the `main` branch!
 
 1. Click `Fork` button in the top right of the [GitHub page](https://github.com/braxtonhall/library-thing)
@@ -10,10 +11,12 @@ To contribute just make a PR into the `main` branch!
 1. Click `Create pull request`
 
 ## Requirements
+
 - [Node](https://nodejs.org/en/)
 - [Yarn](https://classic.yarnpkg.com/en/docs/install)
 
 ## Scripts
+
 - **`yarn install`**: Gathers all dependencies. This should be run at the start of development on a new clone in the root.
 - **`yarn build`**: Compiles the `.ts` files to `.js` files in the `extension/js/` dir.
 - **`yarn watch`**: Runs a new build any time any file changes are detected and hot reloads the extension and page.
