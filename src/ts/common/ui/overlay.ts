@@ -8,9 +8,4 @@ const createOverlay = () => {
 	return element;
 };
 
-const clearOverlays = () => {
-	const overlays = document.getElementsByClassName(OVERLAY_CLASS_NAME);
-	Array.from(overlays).forEach((overlay) => overlay.remove());
-};
-
-export {createOverlay, clearOverlays};
+export {createOverlay};
