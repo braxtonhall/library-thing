@@ -30,7 +30,7 @@ const getInvalidTags = (tags: string[], trees: TagNodes): string[] =>
 	tags.filter((tag) => !trees.has(tag.toLowerCase()));
 
 const fixTagsCase = (tags: string[], trees: TagNodes): string[] =>
-	tags.map((tag) => trees.get(tag.toLowerCase())?.tag ?? tag);
+	tags.map((tag) => trees.get(tag.toLowerCase())?.name ?? tag);
 
 const setTags = (tagInput: Highlightable, tags: Iterable<string>) => {
 	tagInput.value = [...tags].join(", ");

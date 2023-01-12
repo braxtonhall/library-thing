@@ -11,7 +11,7 @@ type TagRoot = RawTagSheet & {children: TagTree[]};
  * A tag tree contains the properly cased tag at the root,
  * and a pointer to its parent in the tree
  */
-type TagTree = {tag: string; parent: TagTree | TagRoot; warning: boolean; children: TagTree[]};
+type TagTree = {name: string; parent: TagTree | TagRoot; warning: boolean; children: TagTree[]};
 
 /**
  * TagNodes is a map of lowercase tag to the tag subtree at that tag

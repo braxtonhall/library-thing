@@ -6,14 +6,14 @@ const getAncestry = async (tag: string): Promise<string[]> => {
 	const ancestry = [];
 	for (let node: TagTree["parent"] = nodes.get(tag.toLowerCase()); node && "parent" in node; node = node.parent) {
 		// TODO maybe we should detect collisions here and then create a modal?
-		"tag" in node && ancestry.push(node.tag);
+		"tag" in node && ancestry.push(node.name);
 	}
 	return ancestry;
 };
 
 const getTagList = async (options: TagSearchOptions = {noCache: false}) => {
 	const nodes = (await getTagTrees(options)).nodes.values();
-	const tags = [...nodes].map((node) => node.tag);
+	const tags = [...nodes].map((node) => node.name);
 	return new Set(tags);
 };
 

@@ -44,7 +44,7 @@ const rowToSheetDescriptor = ([sheet, topLeft, width, cwColumn, userMapper, as]:
 };
 
 const getSheetDescriptors = async (): Promise<TagSheetDescriptor[]> => {
-	const range = Sheets.createRange(META_TAG_SHEET, "A", "E");
+	const range = Sheets.createRange(META_TAG_SHEET, "A", "F");
 	const response = await Sheets.readRanges(await getSheetId(), [range]);
 	return response?.[0].values.filter(rowIsRange).map(rowToSheetDescriptor) ?? [];
 };
