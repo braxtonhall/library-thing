@@ -27,9 +27,17 @@ interface ModalOptions {
 	elements: (ModalButton | ModalInput)[];
 	onCancel?: () => Promise<void>;
 	colour: UIColour;
+	/**
+	 * Whether a user can exit the modal by clicking outside it
+	 */
 	exitable?: boolean;
-	id?: string;
+	/**
+	 * A name for the modal that can be used to programmatically query for it
+	 */
+	tag?: string;
 }
+
+type DismissModal = () => Promise<void>;
 
 const MODAL_CLASS_NAME = "better-library-thing-modal";
 const MODAL_TEXT_CLASS_NAME = "better-library-thing-modal-text-container";
@@ -39,10 +47,16 @@ const MODAL_BUTTON_CLASS_NAME = "better-library-thing-modal-button";
 const MODAL_INPUT_CLASS_NAME = "better-library-thing-modal-input";
 const MODAL_INPUT_CONTAINER_CLASS_NAME = "better-library-thing-modal-input-container";
 const MODAL_ELEMENT_CONTAINER_CLASS_NAME = "better-library-thing-modal-element-container";
-const MODAL_ID_ATTR = "modal-id";
-const DEFAULT_ID = "_unset";
+const MODAL_TAG_ATTR = "modal-tag";
+const DEFAULT_MODAL_TAG = "_unset";
 
-const activeModals = new Map<HTMLElement, () => Promise<void>>();
+/**
+ * Essentially a set of all active modals.
+ * Also stores its "dismiss" callback, which can be invoked to
+ * dismiss the modal.
+ * REQUIRES that `DismissModal` will actually delete/deregister the modal
+ */
+const activeModals = new Map<HTMLElement, DismissModal>();
 
 const createWithClass = <K extends keyof HTMLElementTagNameMap>(
 	tag: K,
@@ -97,37 +111,48 @@ const createTextContainer = (text: string, subTexts?: string[]) => {
 	return container;
 };
 
-const createOnClick = (exit: () => void, onClick?: () => Promise<void>) => {
+const createDismissModal = (exit: () => void, onClick?: () => Promise<void>): DismissModal => {
 	const callback = onClick ?? (() => Promise.resolve());
 	return () => callback().finally(exit);
 };
 
 const addOnClick = (element: HTMLElement, exit: () => void, onClick?: () => Promise<void>) =>
-	element.addEventListener("click", createOnClick(exit, onClick));
+	element.addEventListener("click", createDismissModal(exit, onClick));
 
-const dismissModals = (id = DEFAULT_ID): void =>
-	activeModals.forEach((onCancel, modal) => modal.getAttribute(MODAL_ID_ATTR) === id && onCancel());
+/**
+ * Saves the modal so that its dismiss callback can be invoked when
+ *  it is dismissed via `dismissModals`
+ * @param modal - The HTML tree that implements the modal
+ * @param dismissal - The function that will dismiss the modal
+ */
+const registerModal = (modal: HTMLElement, dismissal: DismissModal): void => void activeModals.set(modal, dismissal);
 
-const createDismissal = (overlay: HTMLElement) => () => {
-	activeModals.delete(overlay);
-	overlay.remove();
+/**
+ * Removes a modal from the list of active modals
+ * This modal can no longer be dismissed via `dismissModals`
+ * @param modal
+ */
+const deregisterModal = (modal: HTMLElement): void => void activeModals.delete(modal);
+
+/**
+ * For each modal matching the `tag`, invoke its dismiss function (which should dismiss it)
+ * @param tag - Identifier used to query the set of modals for a subset which should be dismissed
+ */
+const dismissModals = (tag = DEFAULT_MODAL_TAG): void =>
+	activeModals.forEach((dismiss, modal) => modal.getAttribute(MODAL_TAG_ATTR) === tag && dismiss());
+
+const createExitModal = (modal: HTMLElement) => () => {
+	deregisterModal(modal);
+	modal.remove();
 };
 
-const decorateOverlay = (
-	overlay: HTMLElement,
-	id: string,
-	exitable: boolean,
-	dismiss: () => void,
-	onCancel?: () => Promise<void>
-) => {
-	const onExit = createOnClick(dismiss, onCancel);
+const decorateOverlay = (overlay: HTMLElement, id: string, exitable: boolean, dismissModal: DismissModal) => {
 	overlay.classList.add("modal");
-	overlay.setAttribute(MODAL_ID_ATTR, id);
+	overlay.setAttribute(MODAL_TAG_ATTR, id);
 	if (exitable) {
 		overlay.classList.add("exitable");
-		overlay.addEventListener("click", onExit);
+		overlay.addEventListener("click", dismissModal);
 	}
-	activeModals.set(overlay, onExit);
 };
 
 const createModal = ({
@@ -137,12 +162,14 @@ const createModal = ({
 	onCancel,
 	colour,
 	exitable = true,
-	id = DEFAULT_ID,
+	tag = DEFAULT_MODAL_TAG,
 }: ModalOptions): void => {
 	const overlay = createOverlay();
-	const dismiss = createDismissal(overlay);
+	const exitModal = createExitModal(overlay);
 
-	decorateOverlay(overlay, id, exitable, dismiss, onCancel);
+	const defaultDismissal = createDismissModal(exitModal, onCancel);
+	decorateOverlay(overlay, tag, exitable, defaultDismissal);
+	registerModal(overlay, defaultDismissal);
 
 	const modal = createWithClass("div", `${MODAL_CLASS_NAME} ${colour}`);
 	modal.addEventListener("click", (event) => event.stopPropagation());
@@ -150,7 +177,7 @@ const createModal = ({
 	const textContainer = createTextContainer(text, subText);
 
 	const elementContainer = createWithClass("div", MODAL_ELEMENT_CONTAINER_CLASS_NAME);
-	const modalElements = elements.map(createModalElement(dismiss));
+	const modalElements = elements.map(createModalElement(exitModal));
 
 	elementContainer.append(...modalElements);
 	modal.append(textContainer, elementContainer);
