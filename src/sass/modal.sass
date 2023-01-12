@@ -3,7 +3,11 @@
 $modal-background-colour: colours.$white
 
 .better-library-thing-overlay.modal
-	cursor: pointer
+	&:not(.exitable)
+		cursor: unset
+
+	.exitable
+		cursor: pointer
 
 	.better-library-thing-modal
 		text-align: center

@@ -27,6 +27,8 @@ interface ModalOptions {
 	elements: (ModalButton | ModalInput)[];
 	onCancel?: () => Promise<void>;
 	colour: UIColour;
+	exitable?: boolean;
+	id?: string;
 }
 
 const MODAL_CLASS_NAME = "better-library-thing-modal";
@@ -37,8 +39,10 @@ const MODAL_BUTTON_CLASS_NAME = "better-library-thing-modal-button";
 const MODAL_INPUT_CLASS_NAME = "better-library-thing-modal-input";
 const MODAL_INPUT_CONTAINER_CLASS_NAME = "better-library-thing-modal-input-container";
 const MODAL_ELEMENT_CONTAINER_CLASS_NAME = "better-library-thing-modal-element-container";
+const MODAL_ID_ATTR = "modal-id";
+const DEFAULT_ID = "_unset";
 
-const activeOverlays = new Set<HTMLElement>();
+const activeModals = new Map<HTMLElement, () => Promise<void>>();
 
 const createWithClass = <K extends keyof HTMLElementTagNameMap>(
 	tag: K,
@@ -93,23 +97,52 @@ const createTextContainer = (text: string, subTexts?: string[]) => {
 	return container;
 };
 
-const addOnClick = (element: HTMLElement, exit: () => void, onClick?: () => Promise<void>) => {
+const createOnClick = (exit: () => void, onClick?: () => Promise<void>) => {
 	const callback = onClick ?? (() => Promise.resolve());
-	element.addEventListener("click", () => callback().finally(exit));
+	return () => callback().finally(exit);
 };
 
-const dismissModals = (): void => activeOverlays.forEach((modal) => modal.dispatchEvent(new Event("click")));
+const addOnClick = (element: HTMLElement, exit: () => void, onClick?: () => Promise<void>) =>
+	element.addEventListener("click", createOnClick(exit, onClick));
 
-const createModal = ({text, subText, elements, onCancel, colour}: ModalOptions): void => {
-	const exit = () => {
-		activeOverlays.delete(overlay);
-		overlay.remove();
-	};
+const dismissModals = (id = DEFAULT_ID): void =>
+	activeModals.forEach((onCancel, modal) => modal.getAttribute(MODAL_ID_ATTR) === id && onCancel());
 
-	const overlay = createOverlay();
+const createDismissal = (overlay: HTMLElement) => () => {
+	activeModals.delete(overlay);
+	overlay.remove();
+};
+
+const decorateOverlay = (
+	overlay: HTMLElement,
+	id: string,
+	exitable: boolean,
+	dismiss: () => void,
+	onCancel?: () => Promise<void>
+) => {
+	const onExit = createOnClick(dismiss, onCancel);
 	overlay.classList.add("modal");
-	addOnClick(overlay, exit, onCancel);
-	activeOverlays.add(overlay);
+	overlay.setAttribute(MODAL_ID_ATTR, id);
+	if (exitable) {
+		overlay.classList.add("exitable");
+		overlay.addEventListener("click", onExit);
+	}
+	activeModals.set(overlay, onExit);
+};
+
+const createModal = ({
+	text,
+	subText,
+	elements,
+	onCancel,
+	colour,
+	exitable = true,
+	id = DEFAULT_ID,
+}: ModalOptions): void => {
+	const overlay = createOverlay();
+	const dismiss = createDismissal(overlay);
+
+	decorateOverlay(overlay, id, exitable, dismiss, onCancel);
 
 	const modal = createWithClass("div", `${MODAL_CLASS_NAME} ${colour}`);
 	modal.addEventListener("click", (event) => event.stopPropagation());
@@ -117,7 +150,7 @@ const createModal = ({text, subText, elements, onCancel, colour}: ModalOptions):
 	const textContainer = createTextContainer(text, subText);
 
 	const elementContainer = createWithClass("div", MODAL_ELEMENT_CONTAINER_CLASS_NAME);
-	const modalElements = elements.map(createModalElement(exit));
+	const modalElements = elements.map(createModalElement(dismiss));
 
 	elementContainer.append(...modalElements);
 	modal.append(textContainer, elementContainer);

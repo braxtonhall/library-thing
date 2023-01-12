@@ -9,8 +9,10 @@ import {BackgroundEvent} from "../../common/backgroundEvent";
 
 let canAccessTagIndex = true; // default to true to reduce likelihood of pop in (very unlikely)
 
+const ENFORCEMENT_MODAL_ID = "enforce-tag-index-modal";
+
 const enforceTagIndexAccess = async () => {
-	dismissModals();
+	dismissModals(ENFORCEMENT_MODAL_ID);
 	if (await config.get(ConfigKey.EnforceTagIndexAccess)) {
 		const createWarningModal = async () => {
 			canAccessTagIndex === false &&
@@ -32,7 +34,8 @@ const enforceTagIndexAccess = async () => {
 						},
 					],
 					colour: UIColour.PURPLE,
-					onCancel: createWarningModal,
+					id: ENFORCEMENT_MODAL_ID,
+					exitable: false,
 				});
 		};
 		return createWarningModal();
