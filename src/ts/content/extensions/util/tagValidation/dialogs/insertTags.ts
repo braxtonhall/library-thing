@@ -49,12 +49,16 @@ const confirm = (tag: string, remainingTags: string[], node: TagRoot | TagTree) 
 					colour: UIColour.GREY,
 					onClick: async () => resolve(remainingTags.filter((otherTag) => otherTag !== tag)),
 				},
-				{
-					kind: "button",
-					text: "Deeper",
-					colour: UIColour.BLUE,
-					onClick: async () => resolve(insertTagIntoOneOf(tag, remainingTags, node.children)),
-				},
+				...(node.children.length // TODO this kinda but better and checking for depth
+					? [
+							{
+								kind: "button" as const,
+								text: "Deeper",
+								colour: UIColour.BLUE,
+								onClick: async () => resolve(insertTagIntoOneOf(tag, remainingTags, node.children)),
+							},
+					  ]
+					: []),
 				{kind: "button", text: "Back", colour: UIColour.RED, onClick: async () => resolve(remainingTags)},
 			],
 			colour: UIColour.BLUE,
