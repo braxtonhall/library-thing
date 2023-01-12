@@ -17,7 +17,7 @@ const insertTags = async (tags: string[]): Promise<boolean> => {
 				text: "Which tag would you like to insert?",
 				elements: [
 					...tags.map(toInsertionButton(tags, resolve)),
-					{kind: "button", colour: UIColour.RED, text: "Back", onClick: async () => resolve(false)},
+					{kind: "button", colour: UIColour.RED, text: "Done", onClick: async () => resolve(false)},
 				],
 				colour: UIColour.BLUE,
 				onCancel: async () => resolve(false),

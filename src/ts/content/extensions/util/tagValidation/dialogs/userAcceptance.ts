@@ -15,15 +15,15 @@ const getUserAcceptance = (
 			elements: [
 				{
 					kind: "button",
-					text: "Open the Tag Index",
-					colour: UIColour.GREY,
-					onClick: async () => resolve(getSecondaryAcceptance(saveHandler)),
-				},
-				{
-					kind: "button",
 					text: "Insert Tags",
 					colour: UIColour.GREY,
 					onClick: async () => resolve(insertTags(invalidTags).then(() => saveHandler({noCache: true}))),
+				},
+				{
+					kind: "button",
+					text: "Open the Tag Index",
+					colour: UIColour.GREY,
+					onClick: async () => resolve(getSecondaryAcceptance(saveHandler)),
 				},
 				{kind: "button", text: "Save anyway", colour: UIColour.GREY, onClick: async () => resolve(true)},
 				{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
