@@ -1,14 +1,14 @@
-import {createModal} from "../../common/ui/modal";
-import {UIColour} from "../../common/ui/colour";
+import {UIColour} from "../../../../../common/ui/colour";
+import {createModal} from "../../../../../common/ui/modal";
 
 const toInsertionButton = (remainingTags: string[], resolve: (value) => void) => (tag: string) => ({
 	kind: "button" as const,
 	colour: UIColour.BLUE,
 	text: tag,
-	onClick: async () => resolve(insertTag(tag, remainingTags).then(insertTagsDialogs)),
+	onClick: async () => resolve(insertTag(tag, remainingTags).then(insertTags)),
 });
 
-const insertTagsDialogs = async (tags: string[]): Promise<boolean> => {
+const insertTags = async (tags: string[]): Promise<boolean> => {
 	if (tags.length === 0) {
 		return Promise.resolve(true);
 	} else {
@@ -44,4 +44,4 @@ const insertTag = (tag: string, remainingTags: string[]): Promise<string[]> =>
 		})
 	);
 
-export {insertTagsDialogs};
+export {insertTags};

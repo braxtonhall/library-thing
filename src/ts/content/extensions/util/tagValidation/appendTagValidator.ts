@@ -1,13 +1,9 @@
-import {getTagsFromElement, getTagTrees, TagTrees} from "../../adapters/tags";
-import {createModal} from "../../../common/ui/modal";
-import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
-import {UIColour} from "../../../common/ui/colour";
-import {OffSave, OnSave} from "../../entities/bookForm";
-import {Highlight, Highlightable, highlighted} from "../../../common/ui/highlighter";
-import {getSheetLink} from "../../../common/entities/spreadsheet";
-import {insertTagsDialogs} from "../../dialogs/insertTags";
-
-type GetTagsOptions = {noCache: boolean};
+import {getTagsFromElement, getTagTrees, TagTrees} from "../../../adapters/tags";
+import {loaderOverlaid} from "../../../../common/ui/loadingIndicator";
+import {OffSave, OnSave} from "../../../entities/bookForm";
+import {Highlight, Highlightable, highlighted} from "../../../../common/ui/highlighter";
+import {getUserAcceptance} from "./dialogs/userAcceptance";
+import {GetTagsOptions} from "./types";
 
 const applyHighlights = async (text: string): Promise<Highlight[]> => {
 	const validTags = await getTagTrees().catch(() => new Map());
@@ -32,56 +28,6 @@ const applyHighlights = async (text: string): Promise<Highlight[]> => {
 
 const getInvalidTags = (tags: string[], trees: TagTrees): string[] =>
 	tags.filter((tag) => !trees.has(tag.toLowerCase()));
-
-const getUserAcceptance = (
-	invalidTags: string[],
-	saveHandler: (options: GetTagsOptions) => Promise<boolean>
-): Promise<boolean> =>
-	new Promise<boolean>((resolve) =>
-		createModal({
-			text: "Are you sure? The following tags are not in the Tag Index",
-			subText: invalidTags,
-			elements: [
-				{
-					kind: "button",
-					text: "Open the Tag Index",
-					colour: UIColour.GREY,
-					onClick: async () => resolve(getSecondaryAcceptance(saveHandler)),
-				},
-				{
-					kind: "button",
-					text: "Insert Tags",
-					colour: UIColour.GREY,
-					onClick: async () =>
-						resolve(insertTagsDialogs(invalidTags).then(() => saveHandler({noCache: true}))),
-				},
-				{kind: "button", text: "Save anyway", colour: UIColour.GREY, onClick: async () => resolve(true)},
-				{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
-			],
-			colour: UIColour.PURPLE,
-			onCancel: async () => resolve(false),
-		})
-	);
-
-const getSecondaryAcceptance = async (saveHandler: (options: GetTagsOptions) => Promise<boolean>): Promise<boolean> => {
-	window.open(await getSheetLink());
-	return new Promise<boolean>((resolve) =>
-		createModal({
-			text: "Did you put the new tags in the Tag Index?",
-			elements: [
-				{
-					kind: "button",
-					text: "Yes!",
-					colour: UIColour.GREY,
-					onClick: async () => resolve(saveHandler({noCache: true})),
-				},
-				{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},
-			],
-			colour: UIColour.PURPLE,
-			onCancel: async () => resolve(false),
-		})
-	);
-};
 
 const fixTagsCase = (tags: string[], trees: TagTrees): string[] =>
 	tags.map((tag) => trees.get(tag.toLowerCase())?.tag ?? tag);
