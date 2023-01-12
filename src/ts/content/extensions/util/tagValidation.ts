@@ -2,9 +2,10 @@ import {getTagsFromElement, getTagTrees, TagTrees} from "../../adapters/tags";
 import {createModal} from "../../../common/ui/modal";
 import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {UIColour} from "../../../common/ui/colour";
-import {OnSave, OffSave} from "../../entities/bookForm";
+import {OffSave, OnSave} from "../../entities/bookForm";
 import {Highlight, Highlightable, highlighted} from "../../../common/ui/highlighter";
 import {getSheetLink} from "../../../common/entities/spreadsheet";
+import {insertTagsDialogs} from "../../dialogs/insertTags";
 
 type GetTagsOptions = {noCache: boolean};
 
@@ -46,6 +47,13 @@ const getUserAcceptance = (
 					text: "Open the Tag Index",
 					colour: UIColour.GREY,
 					onClick: async () => resolve(getSecondaryAcceptance(saveHandler)),
+				},
+				{
+					kind: "button",
+					text: "Insert Tags",
+					colour: UIColour.GREY,
+					onClick: async () =>
+						resolve(insertTagsDialogs(invalidTags).then(() => saveHandler({noCache: true}))),
 				},
 				{kind: "button", text: "Save anyway", colour: UIColour.GREY, onClick: async () => resolve(true)},
 				{kind: "button", text: "Cancel", colour: UIColour.PURPLE, onClick: async () => resolve(false)},

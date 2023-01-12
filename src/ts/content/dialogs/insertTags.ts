@@ -1,21 +1,24 @@
 import {createModal} from "../../common/ui/modal";
 import {UIColour} from "../../common/ui/colour";
 
-const insertTags = async (tags: string[]): Promise<boolean> => {
+const toInsertionButton = (remainingTags: string[], resolve: (value) => void) => (tag: string) => ({
+	kind: "button" as const,
+	colour: UIColour.BLUE,
+	text: tag,
+	onClick: async () => resolve(insertTag(tag, remainingTags).then(insertTagsDialogs)),
+});
+
+const insertTagsDialogs = async (tags: string[]): Promise<boolean> => {
 	if (tags.length === 0) {
 		return Promise.resolve(true);
 	} else {
 		return new Promise<boolean>((resolve) =>
 			createModal({
 				text: "Which tag would you like to insert?",
-				elements: tags.map((tag) => ({
-					kind: "button",
-					colour: UIColour.BLUE,
-					text: tag,
-					onClick: async () => {
-						resolve(insertTag(tag, tags).then(insertTags));
-					},
-				})),
+				elements: [
+					...tags.map(toInsertionButton(tags, resolve)),
+					{kind: "button", colour: UIColour.RED, text: "Back", onClick: async () => resolve(false)},
+				],
 				colour: UIColour.BLUE,
 				onCancel: async () => resolve(false),
 			})
@@ -41,4 +44,4 @@ const insertTag = (tag: string, remainingTags: string[]): Promise<string[]> =>
 		})
 	);
 
-export {insertTags};
+export {insertTagsDialogs};
