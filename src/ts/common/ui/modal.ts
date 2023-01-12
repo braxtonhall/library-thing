@@ -100,15 +100,17 @@ const addOnClick = (element: HTMLElement, exit: () => void, onClick?: () => Prom
 
 const dismissModals = (): void => activeOverlays.forEach((modal) => modal.dispatchEvent(new Event("click")));
 
-const createModal = ({text, subText, elements, onCancel, colour}: ModalOptions): void => {
-	const exit = () => {
-		activeOverlays.delete(overlay);
-		overlay.remove();
-	};
+const createDismiss = (overlay) => () => {
+	activeOverlays.delete(overlay);
+	overlay.remove();
+};
 
+const createModal = ({text, subText, elements, onCancel, colour}: ModalOptions): void => {
 	const overlay = createOverlay();
+	const dismiss = createDismiss(overlay);
+
 	overlay.classList.add("modal");
-	addOnClick(overlay, exit, onCancel);
+	addOnClick(overlay, dismiss, onCancel);
 	activeOverlays.add(overlay);
 
 	const modal = createWithClass("div", `${MODAL_CLASS_NAME} ${colour}`);
@@ -117,7 +119,7 @@ const createModal = ({text, subText, elements, onCancel, colour}: ModalOptions):
 	const textContainer = createTextContainer(text, subText);
 
 	const elementContainer = createWithClass("div", MODAL_ELEMENT_CONTAINER_CLASS_NAME);
-	const modalElements = elements.map(createModalElement(exit));
+	const modalElements = elements.map(createModalElement(dismiss));
 
 	elementContainer.append(...modalElements);
 	modal.append(textContainer, elementContainer);
@@ -125,4 +127,5 @@ const createModal = ({text, subText, elements, onCancel, colour}: ModalOptions):
 	document.body.appendChild(overlay);
 };
 
+export type {ModalButton, ModalInput};
 export {createModal, dismissModals};
