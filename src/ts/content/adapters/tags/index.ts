@@ -1,17 +1,18 @@
-import {TagSearchOptions, TagTrees} from "./types";
+import {TagSearchOptions, TagNodes, TagTree} from "./types";
 import {getTagTrees} from "./getTags";
 
 const getAncestry = async (tag: string): Promise<string[]> => {
-	const trees = await getTagTrees();
+	const {nodes} = await getTagTrees();
 	const ancestry = [];
-	for (let node = trees.get(tag.toLowerCase()); node; node = node.parent) {
-		ancestry.push(node.tag);
+	for (let node: TagTree["parent"] = nodes.get(tag.toLowerCase()); node && "parent" in node; node = node.parent) {
+		// TODO maybe we should detect collisions here and then create a modal?
+		"tag" in node && ancestry.push(node.tag);
 	}
 	return ancestry;
 };
 
 const getTagList = async (options: TagSearchOptions = {noCache: false}) => {
-	const nodes = (await getTagTrees(options)).values();
+	const nodes = (await getTagTrees(options)).nodes.values();
 	const tags = [...nodes].map((node) => node.tag);
 	return new Set(tags);
 };
@@ -36,5 +37,5 @@ const getTagsFromElement = (element: HTMLTextAreaElement | HTMLInputElement): st
 		.map((tag) => tag.trim())
 		.filter((tag) => !!tag) ?? [];
 
-export type {TagTrees};
+export type {TagNodes};
 export {getAncestry, getTagList, getTagsIncluding, getTagTrees, getTagsFromElement};

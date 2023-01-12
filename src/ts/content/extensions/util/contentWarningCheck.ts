@@ -1,6 +1,6 @@
 import {OffSave, OnSave} from "../../entities/bookForm";
 import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
-import {getTagsFromElement, getTagTrees, TagTrees} from "../../adapters/tags";
+import {getTagsFromElement, getTagTrees, TagNodes} from "../../adapters/tags";
 import {createModal} from "../../../common/ui/modal";
 import {UIColour} from "../../../common/ui/colour";
 
@@ -53,7 +53,7 @@ const handleContentWarning = async (
 		return true;
 	}
 };
-const getWarningRequiredTags = (commentsTextArea: HTMLTextAreaElement, tags: string[], trees: TagTrees): string[] => {
+const getWarningRequiredTags = (commentsTextArea: HTMLTextAreaElement, tags: string[], trees: TagNodes): string[] => {
 	if (contentWarningIsPresent(commentsTextArea)) {
 		return [];
 	} else {
@@ -63,9 +63,9 @@ const getWarningRequiredTags = (commentsTextArea: HTMLTextAreaElement, tags: str
 
 const checkTags = async (tagInput: HTMLTextAreaElement, commentsTextArea: HTMLTextAreaElement): Promise<string[]> =>
 	loaderOverlaid(async () => {
-		const trees = await getTagTrees();
+		const {nodes} = await getTagTrees();
 		const userTags = getTagsFromElement(tagInput);
-		return getWarningRequiredTags(commentsTextArea, userTags, trees);
+		return getWarningRequiredTags(commentsTextArea, userTags, nodes);
 	});
 
 const handleSave = (tagsTextArea: HTMLTextAreaElement, commentsTextArea: HTMLTextAreaElement): Promise<boolean> =>

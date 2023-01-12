@@ -1,4 +1,4 @@
-import {getTagsFromElement, getTagTrees, TagTrees} from "../../../adapters/tags";
+import {getTagsFromElement, getTagTrees, TagNodes} from "../../../adapters/tags";
 import {loaderOverlaid} from "../../../../common/ui/loadingIndicator";
 import {OffSave, OnSave} from "../../../entities/bookForm";
 import {Highlight, Highlightable, highlighted} from "../../../../common/ui/highlighter";
@@ -6,7 +6,7 @@ import {getUserAcceptance} from "./dialogs/userAcceptance";
 import {GetTagsOptions} from "./types";
 
 const applyHighlights = async (text: string): Promise<Highlight[]> => {
-	const validTags = await getTagTrees().catch(() => new Map());
+	const {nodes: validTags} = await getTagTrees().catch(() => ({nodes: new Map()}));
 	return text
 		.split(",")
 		.flatMap((part) => {
@@ -26,10 +26,10 @@ const applyHighlights = async (text: string): Promise<Highlight[]> => {
 		.slice(0, -1); // Remove the trailing comma
 };
 
-const getInvalidTags = (tags: string[], trees: TagTrees): string[] =>
+const getInvalidTags = (tags: string[], trees: TagNodes): string[] =>
 	tags.filter((tag) => !trees.has(tag.toLowerCase()));
 
-const fixTagsCase = (tags: string[], trees: TagTrees): string[] =>
+const fixTagsCase = (tags: string[], trees: TagNodes): string[] =>
 	tags.map((tag) => trees.get(tag.toLowerCase())?.tag ?? tag);
 
 const setTags = (tagInput: Highlightable, tags: Iterable<string>) => {
@@ -39,11 +39,11 @@ const setTags = (tagInput: Highlightable, tags: Iterable<string>) => {
 
 const checkTags = async (tagInput: Highlightable, options: GetTagsOptions) =>
 	loaderOverlaid(async () => {
-		const trees = await getTagTrees(options);
+		const {nodes} = await getTagTrees(options);
 		const userTags = getTagsFromElement(tagInput);
-		const properCaseTags = fixTagsCase(userTags, trees);
+		const properCaseTags = fixTagsCase(userTags, nodes);
 		setTags(tagInput, properCaseTags);
-		return getInvalidTags(properCaseTags, trees);
+		return getInvalidTags(properCaseTags, nodes);
 	});
 
 const handleSave = (tagInput: Highlightable, options: GetTagsOptions) => {
