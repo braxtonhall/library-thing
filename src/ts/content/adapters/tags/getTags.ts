@@ -40,7 +40,7 @@ const rowToSheetDescriptor = ([sheet, topLeft, width, cwColumn, userMapper, as]:
 	const range: Range = `${sheet}!${topLeft}:${right}`;
 	const cwRange: Range = cwColumn ? `${sheet}!${cwColumn}${top}:${cwColumn}` : undefined;
 	const mapper: TagMapper = (userMapper ?? "").includes("$TAG") ? (userMapper as TagMapper) : "$TAG";
-	return {range, mapper, cwRange, name: as ?? sheet};
+	return {range, mapper, cwRange, height: Number(width), name: as ?? sheet};
 };
 
 const getSheetDescriptors = async (): Promise<TagSheetDescriptor[]> => {

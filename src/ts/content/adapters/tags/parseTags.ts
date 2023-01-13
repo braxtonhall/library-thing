@@ -13,7 +13,7 @@ const parseRows = ({rows, fromRow, depth, nodes, parent}: ParserOptions): number
 	while (row < rows.length) {
 		const {tag, warning} = rows[row][depth] ?? {};
 		if (tag) {
-			const node = {name: tag, parent, warning, children: []};
+			const node = {name: tag, parent, warning, children: [], height: parent.height - 1};
 			parent.children.push(node);
 			// TODO if nodes already contains this tag, we need to emit a warning somehow!!! see #214
 			// Keys in the tag nodes map are lowercase for ez lookup later
@@ -29,8 +29,8 @@ const parseRows = ({rows, fromRow, depth, nodes, parent}: ParserOptions): number
 const parseTags = (sheets: RawTagSheet[]) => {
 	const nodes: TagNodes = new Map();
 	const roots = sheets.map((sheet) => {
-		const rows = sheet.values;
-		const parent = {...sheet, children: []};
+		const {values: rows, ...rest} = sheet;
+		const parent: TagRoot = {...rest, children: []};
 		for (let fromRow = 0; fromRow < rows.length; fromRow = parseRows({rows, fromRow, depth: 0, nodes, parent}) + 1);
 		return parent;
 	});

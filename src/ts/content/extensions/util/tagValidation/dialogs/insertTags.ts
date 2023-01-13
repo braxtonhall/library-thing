@@ -38,33 +38,31 @@ const nodeToInsertionButton =
 		onClick: async () => resolve(confirm(tag, remainingTags, node)),
 	});
 
-const confirm = (tag: string, remainingTags: string[], node: TagRoot | TagTree) =>
-	new Promise<string[]>((resolve) =>
+const confirm = (tag: string, remainingTags: string[], node: TagRoot | TagTree) => {
+	const hasSubTag = node.height > 1 && node.children.length > 0;
+	const hasMultipleSubTags = hasSubTag && node.children.length > 1;
+	const oneOf = hasMultipleSubTags ? "one of " : "";
+	const s = hasMultipleSubTags ? "s" : "";
+	const subTagMessage = `Or as a sub tag under ${oneOf}the following existing tag${s}?`;
+	return new Promise<string[]>((resolve) =>
 		createModal({
 			text: `Insert "${tag}" under "${node.name}"?`,
+			subText: hasSubTag ? [subTagMessage] : [],
 			elements: [
 				{
 					kind: "button",
-					text: "Yes",
-					colour: UIColour.GREY,
+					text: `Yes! Insert it under "${node.name}"`,
+					colour: UIColour.GREEN,
 					onClick: async () => resolve(remainingTags.filter((otherTag) => otherTag !== tag)),
 				},
-				...(node.children.length // TODO this kinda but better and checking for depth
-					? [
-							{
-								kind: "button" as const,
-								text: "Deeper",
-								colour: UIColour.BLUE,
-								onClick: async () => resolve(insertTagIntoOneOf(tag, remainingTags, node.children)),
-							},
-					  ]
-					: []),
+				...(hasSubTag ? node.children.map(nodeToInsertionButton(tag, remainingTags, resolve)) : []),
 				{kind: "button", text: "Back", colour: UIColour.RED, onClick: async () => resolve(remainingTags)},
 			],
 			colour: UIColour.BLUE,
 			onCancel: async () => resolve(remainingTags),
 		})
 	);
+};
 
 const insertTagIntoOneOf = (tag: string, remainingTags: string[], options: Array<TagRoot | TagTree>) =>
 	new Promise<string[]>((resolve) =>
