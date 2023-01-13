@@ -64,20 +64,25 @@ const confirm = (tag: string, remainingTags: string[], node: TagRoot | TagTree) 
 	);
 };
 
-const insertTagIntoOneOf = (tag: string, remainingTags: string[], options: Array<TagRoot | TagTree>) =>
-	new Promise<string[]>((resolve) =>
-		createModal({
-			text: "Where would you like to insert this tag?",
-			elements: [
-				...options.map(nodeToInsertionButton(tag, remainingTags, resolve)),
-				{kind: "button", text: "Back", colour: UIColour.RED, onClick: async () => resolve(remainingTags)},
-			],
-			colour: UIColour.BLUE,
-			onCancel: async () => resolve(remainingTags),
-		})
-	);
-
 const insertTag = (tag: string, remainingTags: string[]): Promise<string[]> =>
-	loaderOverlaid(getTagTrees).then(({roots}) => insertTagIntoOneOf(tag, remainingTags, roots));
+	loaderOverlaid(getTagTrees).then(
+		({roots}) =>
+			new Promise<string[]>((resolve) =>
+				createModal({
+					text: "Where would you like to insert this tag?",
+					elements: [
+						...roots.map(nodeToInsertionButton(tag, remainingTags, resolve)),
+						{
+							kind: "button",
+							text: "Back",
+							colour: UIColour.RED,
+							onClick: async () => resolve(remainingTags),
+						},
+					],
+					colour: UIColour.BLUE,
+					onCancel: async () => resolve(remainingTags),
+				})
+			)
+	);
 
 export {insertTags};
