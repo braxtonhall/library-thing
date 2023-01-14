@@ -35,10 +35,10 @@ const nodeToInsertionButton =
 		kind: "button",
 		text: node.name,
 		colour: UIColour.BLUE,
-		onClick: async () => resolve(confirm(tag, remainingTags, node)),
+		onClick: async () => resolve(insertTagUnder(tag, remainingTags, node)),
 	});
 
-const confirm = (tag: string, remainingTags: string[], node: TagRoot | TagTree) => {
+const insertTagUnder = (tag: string, remainingTags: string[], node: TagRoot | TagTree) => {
 	const hasSubTag = node.height > 1 && node.children.length > 0;
 	const hasMultipleSubTags = hasSubTag && node.children.length > 1;
 	const oneOf = hasMultipleSubTags ? "one of " : "";
