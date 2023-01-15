@@ -2,7 +2,6 @@ import {createModal} from "../../../../../common/ui/modal";
 import {UIColour} from "../../../../../common/ui/colour";
 import {getSheetLink} from "../../../../../common/entities/spreadsheet";
 import {GetTagsOptions} from "../types";
-// import {insertTags} from "./insertTags";
 
 const getUserAcceptance = (
 	invalidTags: string[],
@@ -13,12 +12,6 @@ const getUserAcceptance = (
 			text: "Are you sure? The following tags are not in the Tag Index",
 			subText: invalidTags,
 			elements: [
-				// {
-				// 	kind: "button",
-				// 	text: "Insert Tags",
-				// 	colour: UIColour.GREY,
-				// 	onClick: async () => resolve(insertTags(invalidTags).then(() => saveHandler({noCache: true}))),
-				// },
 				{
 					kind: "button",
 					text: "Open the Tag Index",
