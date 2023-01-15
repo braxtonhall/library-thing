@@ -185,4 +185,5 @@ const createModal = ({
 	document.body.appendChild(overlay);
 };
 
+export type {ModalButton, ModalInput};
 export {createModal, dismissModals};

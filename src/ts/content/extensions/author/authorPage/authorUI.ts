@@ -118,7 +118,7 @@ const appendUI = (container: Element, handlers: ButtonHandlers, getTagsCallback:
 	viewExistingTags();
 };
 
-const insertTags = (tags: string[]) => {
+const renderAuthorTags = (tags: string[]) => {
 	const list = document.getElementById(TAG_LIST_ID);
 	const input = document.getElementById(AUTHOR_TAG_INPUT_ID) as HTMLInputElement;
 	if (tags.length === 0) {
@@ -144,4 +144,4 @@ const getInputElement = () => document.getElementById(AUTHOR_TAG_INPUT_ID) as HT
 const viewExistingTags = toggleViews(TAG_LIST_CONTAINER_ID, TAG_INPUT_CONTAINER_ID);
 const viewTagEditor = toggleViews(TAG_INPUT_CONTAINER_ID, TAG_LIST_CONTAINER_ID);
 
-export {appendUI, insertTags, getInput, viewExistingTags, viewTagEditor, AUTHOR_TAG_INPUT_ID};
+export {appendUI, renderAuthorTags, getInput, viewExistingTags, viewTagEditor, AUTHOR_TAG_INPUT_ID};

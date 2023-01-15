@@ -1,14 +1,25 @@
+import {Range} from "../sheets";
+
+type TagMapper = `${string}$TAG${string}`;
+type TagSheetDescriptor = {range: Range; mapper: TagMapper; name: string; cwRange?: Range; height: number};
+
+type RawTagSheet = TagSheetDescriptor & {values: WarnedTag[][]};
+
+type TagRoot = TagSheetDescriptor & {children: TagTree[]};
+
 /**
  * A tag tree contains the properly cased tag at the root,
  * and a pointer to its parent in the tree
  */
-type TagTree = {tag: string; parent?: TagTree; warning: boolean};
+type TagTree = {name: string; parent: TagTree | TagRoot; warning: boolean; children: TagTree[]; height: number};
 
 /**
- * TagTrees is a map of lowercase tag to the tag subtree at that tag
+ * TagNodes is a map of lowercase tag to the tag subtree at that tag
  * It contains every subtree of the complete tag tree
  */
-type TagTrees = Map<string, TagTree>;
+type TagNodes = Map<string, TagTree>;
+
+type Tags = {nodes: TagNodes; roots: TagRoot[]};
 
 interface TagSearchOptions {
 	noCache: boolean;
@@ -16,4 +27,4 @@ interface TagSearchOptions {
 
 type WarnedTag = {tag: string; warning: boolean};
 
-export {WarnedTag, TagTree, TagTrees, TagSearchOptions};
+export {WarnedTag, TagTree, TagRoot, TagNodes, TagSearchOptions, RawTagSheet, TagSheetDescriptor, TagMapper, Tags};

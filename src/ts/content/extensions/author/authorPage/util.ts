@@ -1,5 +1,5 @@
 import Author from "../../../adapters/author";
-import {insertTags} from "./authorUI";
+import {renderAuthorTags} from "./authorUI";
 import {filterAuthorTags} from "../../../util/filterAuthorTags";
 import {BookRecord} from "../../../adapters/book";
 
@@ -11,7 +11,7 @@ const getAuthorInfo = () => {
 
 const getTags = async () => {
 	const author = await Author.getAuthor(getAuthorInfo().uuid);
-	insertTags(author?.tags ?? []);
+	renderAuthorTags(author?.tags ?? []);
 };
 
 const authorTagsFromBooksWhere = (books: BookRecord[], where: (book: BookRecord) => boolean) =>
