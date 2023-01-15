@@ -1,9 +1,8 @@
-import {FormAreaElement, FormData} from "./types";
-import {getFormElements} from "./util";
-import {ensureRolesInputCount, show} from "./ui";
-
-const COLLECTIONS_ID_PREFIX = "collection_u_";
-const COLLECTIONS_KEY = "___collections_";
+import {FormAreaElement, FormData} from "../types";
+import {getFormElements} from "../util";
+import {ensureRolesInputCount, show} from "../ui";
+import {match} from "../../../../common/util/match";
+import {collections} from "./collections";
 
 const FORM_META_DATA_KEY = "___metadata_";
 const ROLES_INPUT_COUNT_KEY = "___roles-count_";
@@ -29,14 +28,11 @@ const valueTransformers: {[elementId: string]: Transformer<string>} = {
 	},
 };
 
-const extractSaveDataFor = (targetElement: Element, formData: FormData) => {
-	if (targetElement.id.startsWith(COLLECTIONS_ID_PREFIX)) {
-		const span = targetElement.parentElement.getElementsByTagName("span")[0];
-		return formData[COLLECTIONS_KEY][span?.textContent] ?? targetElement;
-	} else {
-		return formData[targetElement.id] ?? targetElement;
-	}
-};
+const extractFromFormData = (targetElement: Element, formData: FormData) =>
+	match(targetElement)
+		.case(...collections.fromFormData(formData))
+		.default(() => formData[targetElement.id] ?? targetElement)
+		.yield();
 
 // form metadata is data ABOUT the form. this could be extended in the future,
 // like ... for physical description
@@ -54,33 +50,28 @@ const getRolesInputCount = (document: Document): number =>
 const isFormDataElement = (element: FormAreaElement): boolean => element && element.id && element.type !== "hidden";
 
 const getFormData = (_document = document) =>
-	getFormElements(_document).reduce((saveData: FormData, element: any) => {
+	getFormElements(_document).reduce((formData: FormData, element: any) => {
 		if (isFormDataElement(element)) {
-			const {value, checked} = element;
-			if (element.id.startsWith(COLLECTIONS_ID_PREFIX)) {
-				const collections = saveData[COLLECTIONS_KEY] || {};
-				const [span] = element.parentElement.getElementsByTagName("span");
-				collections[span.textContent] = {value, checked};
-				saveData[COLLECTIONS_KEY] = collections;
-			} else {
-				saveData[element.id] = {value, checked};
-			}
+			match(element)
+				.case(...collections.fromElement(formData))
+				.default(() => (formData[element.id] = {value: element.value, checked: element.checked}))
+				.yield();
 		}
-		return saveData;
+		return formData;
 	}, getFormMetadata(_document));
 
-const transformIncomingData = (incoming: {value: string; checked: boolean}, existing: any) => {
+const transformIncomingData = (incoming: any, existing: any) => {
 	const transformedValue = valueTransformers[existing.id]?.(incoming.value, existing.value) ?? incoming.value;
 	const transformedChecked =
 		checkedTransformers[existing.id]?.(incoming.checked, existing.checked) ?? incoming.checked;
 	return {value: transformedValue, checked: transformedChecked};
 };
 
-const insertFormData = (saveData: FormData) => {
-	ensureRolesInputCount(saveData?.[FORM_META_DATA_KEY]?.[ROLES_INPUT_COUNT_KEY] ?? 0);
+const insertFormData = (formData: FormData) => {
+	ensureRolesInputCount(formData?.[FORM_META_DATA_KEY]?.[ROLES_INPUT_COUNT_KEY] ?? 0);
 	getFormElements(document).forEach((element: any) => {
 		if (isFormDataElement(element)) {
-			const {value, checked} = transformIncomingData(extractSaveDataFor(element, saveData), element);
+			const {value, checked} = transformIncomingData(extractFromFormData(element, formData), element);
 			if (element.value !== value || element.checked !== checked) {
 				element.value = value;
 				element.checked = checked;
@@ -93,6 +84,10 @@ const insertFormData = (saveData: FormData) => {
 
 // This is a little weird that this is in this file... Probably doesn't belong here, but I don't want
 // to expose COLLECTIONS_ID_PREFIX
-const ensureVisible = (element: Element) => element.id.startsWith(COLLECTIONS_ID_PREFIX) && show(element);
+const ensureVisible = (element: Element) =>
+	match(element)
+		.case(collections.predicate, show)
+		.default((): void => undefined)
+		.yield();
 
 export {getFormData, insertFormData};
