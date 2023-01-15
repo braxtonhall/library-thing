@@ -8,11 +8,11 @@ const COLLECTIONS_KEY = "___collections_";
 const FORM_META_DATA_KEY = "___metadata_";
 const ROLES_INPUT_COUNT_KEY = "___roles-count_";
 
-// IDs of elements we don't want to copy/paste
-const ID_BLACKLIST = new Set(["item_inventory_barcode_1"]);
 const TRANSFORMERS = {
-	form_comments: (comments: string): string => {
-		const lines = comments.split("\n");
+	item_inventory_barcode_1: (incoming: string, existing: string): string => existing,
+	form_comments: (incoming: string, existing: string): string => {
+		// TODO: use existing
+		const lines = incoming.split("\n");
 		const withoutLocation = lines.filter((line) => !/^LOCATION:/i.test(line));
 		return withoutLocation.join("\n");
 	},
@@ -40,8 +40,7 @@ const getRolesInputCount = (document: Document): number =>
 // We can't change hidden elements because LibraryThing relies
 // on hidden form inputs to send additional, form-specific metadata
 // on save
-const isFormDataElement = (element: FormAreaElement): boolean =>
-	element && element.id && element.type !== "hidden" && !ID_BLACKLIST.has(element.id);
+const isFormDataElement = (element: FormAreaElement): boolean => element && element.id && element.type !== "hidden";
 
 const getFormData = (_document = document) =>
 	getFormElements(_document).reduce((saveData: FormData, element: any) => {
@@ -63,12 +62,12 @@ const insertFormData = (saveData: FormData) => {
 	ensureRolesInputCount(saveData?.[FORM_META_DATA_KEY]?.[ROLES_INPUT_COUNT_KEY] ?? 0);
 	getFormElements(document).forEach((element: any) => {
 		if (isFormDataElement(element)) {
-			const {value, checked} = extractSaveDataFor(element, saveData);
-			if (element.value !== value || element.checked !== checked) {
+			const {value: incomingValue, checked: incomingChecked} = extractSaveDataFor(element, saveData);
+			if (element.value !== incomingValue || element.checked !== incomingChecked) {
 				// We transform AFTER checking equality, because we want to ensure
 				// self-pasting doesn't modify data
-				element.value = TRANSFORMERS[element.id]?.(value) ?? value;
-				element.checked = checked;
+				element.value = TRANSFORMERS[element.id]?.(incomingValue, element.value) ?? incomingValue;
+				element.checked = incomingChecked;
 				element.dispatchEvent(new Event("change"));
 				ensureVisible(element);
 			}
