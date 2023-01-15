@@ -2,37 +2,24 @@ import {FormAreaElement, FormData} from "../types";
 import {getFormElements} from "../util";
 import {ensureRolesInputCount, show} from "../ui";
 import {match} from "../../../../common/util/match";
-import {collections} from "./collections";
+import {collections} from "./uniqueData/collections";
+import {physicalDescription} from "./uniqueData/physicalDescription";
+import {transformIncomingData} from "./transformData";
+import {matchFactoryFromDescriptors} from "./uniqueData/uniqueFormElement";
 
 const FORM_META_DATA_KEY = "___metadata_";
 const ROLES_INPUT_COUNT_KEY = "___roles-count_";
 
-/**
- * This is how specific elements should be transformed as a paste operation occurs
- * Indexed using the element ID on librarything.com
- */
-type Transformer<T> = (incoming: T, existing: T) => T;
-const checkedTransformers: {[elementId: string]: Transformer<boolean>} = {};
-const valueTransformers: {[elementId: string]: Transformer<string>} = {
-	item_inventory_barcode_1: (incoming, existing) => existing,
-	form_comments: (incoming, existing) => {
-		if (existing === incoming) {
-			// Don't remove existing data on an accidental paste
-			return existing;
-		} else {
-			return incoming
-				.split("\n")
-				.filter((line) => !/^\s*LOCATION:.+/i.test(line))
-				.join("\n");
-		}
-	},
-};
+const matchFactory = matchFactoryFromDescriptors(collections, ...physicalDescription);
 
-const extractFromFormData = (targetElement: Element, formData: FormData) =>
-	match(targetElement)
-		.case(...collections.fromFormData(formData))
-		.default(() => formData[targetElement.id] ?? targetElement)
-		.yield();
+const extractFromFormData = matchFactory("fromFormData", (formData, element) => formData[element.id] ?? element);
+
+const extractFromElement = matchFactory(
+	"fromElement",
+	(formData, element: any) => (formData[element.id] = {value: element.value, checked: element.checked})
+);
+
+const internalIsFormDataElement = matchFactory("isFormData", (_formData, element: any) => !!element.id);
 
 // form metadata is data ABOUT the form. this could be extended in the future,
 // like ... for physical description
@@ -47,31 +34,20 @@ const getRolesInputCount = (document: Document): number =>
 // We can't change hidden elements because LibraryThing relies
 // on hidden form inputs to send additional, form-specific metadata
 // on save
-const isFormDataElement = (element: FormAreaElement): boolean => element && element.id && element.type !== "hidden";
+const isFormDataElement = (element: FormAreaElement): boolean =>
+	element && element.type !== "hidden" && internalIsFormDataElement(null, element);
 
 const getFormData = (_document = document) =>
 	getFormElements(_document).reduce((formData: FormData, element: any) => {
-		if (isFormDataElement(element)) {
-			match(element)
-				.case(...collections.fromElement(formData))
-				.default(() => (formData[element.id] = {value: element.value, checked: element.checked}))
-				.yield();
-		}
+		isFormDataElement(element) && extractFromElement(formData, element);
 		return formData;
 	}, getFormMetadata(_document));
-
-const transformIncomingData = (incoming: any, existing: any) => {
-	const transformedValue = valueTransformers[existing.id]?.(incoming.value, existing.value) ?? incoming.value;
-	const transformedChecked =
-		checkedTransformers[existing.id]?.(incoming.checked, existing.checked) ?? incoming.checked;
-	return {value: transformedValue, checked: transformedChecked};
-};
 
 const insertFormData = (formData: FormData) => {
 	ensureRolesInputCount(formData?.[FORM_META_DATA_KEY]?.[ROLES_INPUT_COUNT_KEY] ?? 0);
 	getFormElements(document).forEach((element: any) => {
 		if (isFormDataElement(element)) {
-			const {value, checked} = transformIncomingData(extractFromFormData(element, formData), element);
+			const {value, checked} = transformIncomingData(extractFromFormData(formData, element), element);
 			if (element.value !== value || element.checked !== checked) {
 				element.value = value;
 				element.checked = checked;
