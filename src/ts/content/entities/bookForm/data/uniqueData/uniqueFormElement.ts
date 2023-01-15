@@ -6,7 +6,6 @@ type FromFormData = (formData: FormData, element) => {value: string; checked: bo
 type FromElement = (formData: FormData, element) => void;
 
 interface UniqueFormElementDescriptor {
-	predicate: Predicate;
 	isFormData: () => readonly [Predicate, () => true];
 	fromFormData: (formData: FormData) => readonly [Predicate, (element) => {value: string; checked: boolean}];
 	fromElement: (formData: FormData) => readonly [Predicate, (element) => void];
@@ -23,7 +22,6 @@ const uniqueFormElement = ({
 	fromElement,
 	fromFormData,
 }: UniqueFormElementOptions): UniqueFormElementDescriptor => ({
-	predicate,
 	isFormData: () => [predicate, () => true] as const,
 	fromFormData: (formData: FormData) => [predicate, (element) => fromFormData(formData, element)] as const,
 	fromElement: (formData: FormData) => [predicate, (element) => fromElement(formData, element)] as const,

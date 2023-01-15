@@ -12,7 +12,7 @@ const extractCollectionsDataFromFormData = (formData: FormData, element) => {
 };
 
 const extractCollectionsDataFromElement = (formData: FormData, element) => {
-	const collections = formData[COLLECTIONS_KEY] || {};
+	const collections = formData[COLLECTIONS_KEY] ?? {};
 	const span = element.parentElement.getElementsByTagName("span")?.[0];
 	collections[span.textContent] = {value: element.value, checked: element.checked};
 	formData[COLLECTIONS_KEY] = collections;
@@ -24,4 +24,4 @@ const collections = uniqueFormElement({
 	fromFormData: extractCollectionsDataFromFormData,
 });
 
-export {collections};
+export {collections, isCollectionsElement};
