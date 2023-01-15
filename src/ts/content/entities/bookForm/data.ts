@@ -69,9 +69,10 @@ const getFormData = (_document = document) =>
 		return saveData;
 	}, getFormMetadata(_document));
 
-const transformIncomingData = (element: any, incoming: {value: string; checked: boolean}) => {
-	const transformedValue = valueTransformers[element.id]?.(incoming.value, element.value) ?? incoming.value;
-	const transformedChecked = checkedTransformers[element.id]?.(incoming.checked, element.checked) ?? incoming.checked;
+const transformIncomingData = (incoming: {value: string; checked: boolean}, existing: any) => {
+	const transformedValue = valueTransformers[existing.id]?.(incoming.value, existing.value) ?? incoming.value;
+	const transformedChecked =
+		checkedTransformers[existing.id]?.(incoming.checked, existing.checked) ?? incoming.checked;
 	return {value: transformedValue, checked: transformedChecked};
 };
 
@@ -79,7 +80,7 @@ const insertFormData = (saveData: FormData) => {
 	ensureRolesInputCount(saveData?.[FORM_META_DATA_KEY]?.[ROLES_INPUT_COUNT_KEY] ?? 0);
 	getFormElements(document).forEach((element: any) => {
 		if (isFormDataElement(element)) {
-			const {value, checked} = transformIncomingData(element, extractSaveDataFor(element, saveData));
+			const {value, checked} = transformIncomingData(extractSaveDataFor(element, saveData), element);
 			if (element.value !== value || element.checked !== checked) {
 				element.value = value;
 				element.checked = checked;
