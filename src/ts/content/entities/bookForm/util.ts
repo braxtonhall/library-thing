@@ -17,9 +17,6 @@ const formExists = (): boolean => !!document.querySelector("#book_editForm .book
 const getForm = (document: Document): HTMLElement => document.getElementById("book_editForm");
 
 /**
- * I hate that this lives here,
- * but I don't want to expose COLLECTIONS_KEY
- *
  * Also, this dumb implementation only works
  * because the form is always the same order.
  *
