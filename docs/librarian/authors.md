@@ -19,6 +19,7 @@ This section describes how you can do that.
 Author's pages will show their tags. The picture above shows the default view.
 
 The three buttons are:
+
 1. **Push**: all tags associated with the author are appended to the list of tags for all books by that author.
 1. **Sync**: performs a push, and additionally _removes_ any extra tags on a book that are not associated with any of its authors. _Ensure that your author tags are correct before performing a sync!_
 1. **Edit**: brings up the edit view
@@ -26,6 +27,7 @@ The three buttons are:
 <img src="../img/authors/author-side-edit.png" alt="author edit">
 
 The edit view (pictured above) has three additional buttons, described below:
+
 1. **Pull**: copies all author tags associated with an authors books to the author. This is useful if you have existing books with author tags on them, and an empty author page with no tags on it yet.
 1. **Save**: saves the author tags
 1. **Cancel**: returns to the default view.

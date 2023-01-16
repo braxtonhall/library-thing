@@ -1,12 +1,9 @@
 import {makeCache} from "../../../common/util/cache";
-import {TagSearchOptions, TagTrees, WarnedTag} from "./types";
-import Sheets, {Range, ValueRange} from "../sheets";
-import {parseTree} from "./parseTags";
+import {TagSearchOptions, WarnedTag, TagSheetDescriptor, TagMapper, RawTagSheet, Tags} from "./types";
+import Sheets, {Range, ValueRange, Values} from "../sheets";
+import {parseTags} from "./parseTags";
 import {incrementColumnBy} from "../sheets/util";
 import {getSheetId} from "../../../common/entities/spreadsheet";
-
-type TagMapper = `${string}$TAG${string}`;
-type MappedRange = {range: Range; mapper: TagMapper; name: string; cwRange?: Range};
 
 const META_TAG_SHEET = "Tag Index Index";
 /**
@@ -27,12 +24,12 @@ const META_TAG_SHEET = "Tag Index Index";
  *    The first tag in this table is at A2
  */
 
-const {asyncCached, setCache} = makeCache<TagTrees>();
+const {asyncCached, setCache} = makeCache<Tags>();
 
 const rowIsRange = ([, topLeft, width]: string[]): boolean =>
 	topLeft && width && /^[A-Z]+[0-9]+$/.test(topLeft) && /^[0-9]+$/.test(width);
 
-const rowToMappedRange = ([sheet, topLeft, width, cwColumn, userMapper, as]: string[]): MappedRange => {
+const rowToSheetDescriptor = ([sheet, topLeft, width, cwColumn, userMapper, as]: string[]): TagSheetDescriptor => {
 	// `left` is a column, for example "B"
 	const left = topLeft.match(/^[A-Z]+/)[0];
 	// `top` is a row, for example "4"
@@ -43,52 +40,54 @@ const rowToMappedRange = ([sheet, topLeft, width, cwColumn, userMapper, as]: str
 	const range: Range = `${sheet}!${topLeft}:${right}`;
 	const cwRange: Range = cwColumn ? `${sheet}!${cwColumn}${top}:${cwColumn}` : undefined;
 	const mapper: TagMapper = (userMapper ?? "").includes("$TAG") ? (userMapper as TagMapper) : "$TAG";
-	return {range, mapper, cwRange, name: as ?? sheet};
+	return {range, mapper, cwRange, height: Number(width), name: as ?? sheet};
 };
 
-const getTagRanges = async (): Promise<MappedRange[]> => {
-	const range = Sheets.createRange(META_TAG_SHEET, "A", "E");
+const getSheetDescriptors = async (): Promise<TagSheetDescriptor[]> => {
+	const range = Sheets.createRange(META_TAG_SHEET, "A", "F");
 	const response = await Sheets.readRanges(await getSheetId(), [range]);
-	return response?.[0].values.filter(rowIsRange).map(rowToMappedRange) ?? [];
+	return response?.[0].values.filter(rowIsRange).map(rowToSheetDescriptor) ?? [];
 };
 
-const extractRanges = (ranges: MappedRange[]): Set<Range> =>
+const extractRanges = (ranges: TagSheetDescriptor[]): Set<Range> =>
 	ranges.reduce(
 		(acc, {cwRange, range}) => (cwRange ? acc.add(cwRange).add(range) : acc.add(range)),
 		new Set<Range>()
 	);
 
-const nameResponses = (ranges: Range[], response: ValueRange[] | null): Map<Range, ValueRange> => {
+const nameResponses = (ranges: Range[], response: ValueRange[] | null): Map<Range, Values> => {
 	const groupedResponses = new Map();
-	response?.forEach((valueRange, index) => groupedResponses.set(ranges[index], valueRange));
+	response?.forEach((valueRange, index) => groupedResponses.set(ranges[index], valueRange?.values));
 	return groupedResponses;
 };
 
-const annotateWithContentWarnings = (tags: string[][], contentWarnings: ValueRange | undefined): WarnedTag[][] =>
+const annotateWithContentWarnings = (tags: string[][], contentWarnings: Values | undefined): WarnedTag[][] =>
 	tags.map((row, rowIndex) => row.map((cell) => ({tag: cell, warning: !!contentWarnings?.values?.[rowIndex]?.[0]})));
 
-const toWarningTags = (namedResponses: Map<Range, ValueRange>) => (mappedRange: MappedRange) => {
-	const tags = namedResponses.get(mappedRange.range);
-	const mappedTags = mapTags(tags, mappedRange.mapper);
-	const contentWarnings = namedResponses.get(mappedRange.cwRange);
-	return annotateWithContentWarnings(mappedTags, contentWarnings);
-};
+const toTagSheet =
+	(namedResponses: Map<Range, Values>) =>
+	(descriptor: TagSheetDescriptor): RawTagSheet => {
+		const tags = namedResponses.get(descriptor.range);
+		const mappedTags = mapTags(tags, descriptor.mapper);
+		const contentWarnings = namedResponses.get(descriptor.cwRange);
+		const values = annotateWithContentWarnings(mappedTags, contentWarnings);
+		return {...descriptor, values};
+	};
 
-const getSheetsTags = async (): Promise<WarnedTag[][]> => {
-	const mappedRanges = await getTagRanges();
+const getSheetsTags = async (): Promise<RawTagSheet[]> => {
+	const mappedRanges = await getSheetDescriptors();
 	const ranges = [...extractRanges(mappedRanges)]; // We might have duplicate ranges, so we use a set when extracting
-	const response = await Sheets.readRanges(await getSheetId(), [...ranges]);
+	const response = await Sheets.readRanges(await getSheetId(), ranges);
 	const namedResponses = nameResponses(ranges, response);
-	return mappedRanges.flatMap(toWarningTags(namedResponses));
+	return mappedRanges.map(toTagSheet(namedResponses));
 };
 
-const mapTags = (valueRange: ValueRange | undefined, mapper: TagMapper): string[][] => {
-	const values = valueRange?.values ?? [];
-	return values.map((row) => row.map((value) => mapper.replaceAll("$TAG", value)));
+const mapTags = (values: Values | undefined, mapper: TagMapper): string[][] => {
+	return values?.map((row) => row.map((value) => mapper.replaceAll("$TAG", value))) ?? [];
 };
 
 const getTagTrees = async ({noCache}: TagSearchOptions = {noCache: false}) => {
-	const implementation = async () => parseTree(await getSheetsTags());
+	const implementation = async () => parseTags(await getSheetsTags());
 	if (noCache) {
 		return implementation().then((tree) => setCache("", tree));
 	} else {

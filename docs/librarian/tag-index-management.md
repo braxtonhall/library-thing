@@ -8,6 +8,7 @@ It describes the requirements of The Tag Index such that it integrates with Bett
 [Here's an example Tag Index!](https://docs.google.com/spreadsheets/d/17JPwEnhxwKDvSITn6fWcj-D8ZXL2MAcVmOCgu8tmjes)
 
 ## Availability
+
 1. The Tag Index must be a [Google Sheet](https://docs.google.com/spreadsheets).
 1. Anyone who will be using Better LibraryThing with this Tag Index must be able to edit the sheet.
 
@@ -38,7 +39,6 @@ Examples:
 <img src="../img/tag-index/tag-sheet.png" alt="Example tag sheet in the Tag Index">
 <img src="../img/tag-index/tag-sheet-2.png" alt="Second example tag sheet in the Tag Index">
 
-
 ## Tag Index _Index_
 
 The Tag Index _Index_ is used to tell Better Library Thing where all the tables of tags are.
@@ -63,6 +63,7 @@ Example Tag Index _Index_:
 Some tags may require a content warning, which is a short
 description of possible trigger material in a book entry's comments,
 formatted as:
+
 > CW: actual content warning
 
 In the Tag Index, to say that a Content Warning is required,

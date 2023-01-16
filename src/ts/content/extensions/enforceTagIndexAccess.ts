@@ -1,8 +1,7 @@
 import config, {ConfigKey} from "../../common/entities/config";
-import {createModal} from "../../common/ui/modal";
+import {createModal, dismissModals} from "../../common/ui/modal";
 import {UIColour} from "../../common/ui/colour";
 import {onLogged} from "./util/onLogged";
-import {clearOverlays} from "../../common/ui/overlay";
 import {invokeWorker} from "../../common/workers/invoker";
 import {WorkerKind} from "../../common/workers/types";
 import {onBackgroundEvent} from "../util/onBackgroundEvent";
@@ -10,8 +9,10 @@ import {BackgroundEvent} from "../../common/backgroundEvent";
 
 let canAccessTagIndex = true; // default to true to reduce likelihood of pop in (very unlikely)
 
+const ENFORCEMENT_MODAL_TAG = "enforce-tag-index-modal";
+
 const enforceTagIndexAccess = async () => {
-	clearOverlays();
+	dismissModals(ENFORCEMENT_MODAL_TAG);
 	if (await config.get(ConfigKey.EnforceTagIndexAccess)) {
 		const createWarningModal = async () => {
 			canAccessTagIndex === false &&
@@ -33,7 +34,8 @@ const enforceTagIndexAccess = async () => {
 						},
 					],
 					colour: UIColour.PURPLE,
-					onCancel: createWarningModal,
+					tag: ENFORCEMENT_MODAL_TAG,
+					exitable: false,
 				});
 		};
 		return createWarningModal();

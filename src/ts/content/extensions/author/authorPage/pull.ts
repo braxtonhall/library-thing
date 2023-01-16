@@ -1,5 +1,5 @@
 import {createModal} from "../../../../common/ui/modal";
-import {getInput, insertTags} from "./authorUI";
+import {getInput, renderAuthorTags} from "./authorUI";
 import {showToast, ToastType} from "../../../../common/ui/toast";
 import {loaderOverlaid} from "../../../../common/ui/loadingIndicator";
 import {authorTagsFromBooksWhere, getAuthorInfo} from "./util";
@@ -30,7 +30,7 @@ const uncertainTagModal =
 					kind: "button",
 					text: `Add${strings.all}`,
 					colour: UIColour.RED,
-					onClick: async () => insertTags([...certainTags, ...uncertainTags]),
+					onClick: async () => renderAuthorTags([...certainTags, ...uncertainTags]),
 				},
 				{kind: "button", text: "Back", colour: UIColour.BLUE},
 			],
@@ -63,7 +63,7 @@ const onPull = async () =>
 		const multiAuthorTags = authorTagsFromBooksWhere(books, (book) => book.authorIds.length !== 1);
 		const certainTags = new Set([...getInput(), ...(author?.tags ?? []), ...singleAuthorTags]);
 		const uncertainTags = new Set(multiAuthorTags.filter((tag) => !certainTags.has(tag)));
-		insertTags([...certainTags]);
+		renderAuthorTags([...certainTags]);
 		return {certainTags, uncertainTags, name};
 	}).then(finishPull);
 

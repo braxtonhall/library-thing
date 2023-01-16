@@ -1,5 +1,5 @@
 import Author, {AuthorRecord} from "../../../adapters/author";
-import {appendUI, getInput, insertTags, AUTHOR_TAG_INPUT_ID, viewExistingTags, viewTagEditor} from "./authorUI";
+import {appendUI, getInput, renderAuthorTags, AUTHOR_TAG_INPUT_ID, viewExistingTags, viewTagEditor} from "./authorUI";
 import {loaderOverlaid} from "../../../../common/ui/loadingIndicator";
 import Book from "../../../adapters/book";
 import {createPushBookTags, createSyncBookTags} from "../util/bookEditor";
@@ -18,7 +18,7 @@ const onEdit = () => {
 const onBackToExistingTags = (getAuthor: () => Promise<AuthorRecord>) => () =>
 	loaderOverlaid(async () => {
 		const author = await getAuthor();
-		author && insertTags(author.tags);
+		author && renderAuthorTags(author.tags);
 		viewExistingTags();
 	});
 

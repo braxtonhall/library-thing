@@ -1,19 +1,25 @@
 # Better LibraryThing
 
-A browser extension to improve the LibraryThing cataloguing experience. Made in support of the [Vancouver Black Library](https://www.vancouverblacklibrary.org/).
+[link-vbl]: https://www.vancouverblacklibrary.org/ "Vancouver Black Library"
 
-<p align="center">
-	<img src="src/img/vbl.png" alt="vancouver black library" style="width: 100px; height: auto">
-</p>
+A browser extension to improve the [LibraryThing](https://www.librarything.com/) cataloguing experience. Made in support of the [Vancouver Black Library][link-vbl].
+
+[<p align="center"><img src="src/img/vbl.png" alt="vancouver black library" style="width: 100px; height: auto"></p>][link-vbl]
 
 ## Installation
 
-[link-chrome]: https://chrome.google.com/webstore/detail/better-librarything/hbnlneckiahefebnpdhgpohonfkkcaln 'Version published on Chrome Web Store'
-[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/betterlibrarything/ 'Version published on Mozilla Add-ons'
+[link-chrome]: https://chrome.google.com/webstore/detail/better-librarything/hbnlneckiahefebnpdhgpohonfkkcaln "Version published on Chrome Web Store"
+[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/betterlibrarything/ "Version published on Mozilla Add-ons"
 
-[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/chrome/chrome.svg" width="48" alt="Chrome" valign="middle">][link-chrome] also compatible with [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/edge/edge.svg" width="24" alt="Edge" valign="middle">][link-chrome] [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/opera/opera.svg" width="24" alt="Opera" valign="middle">][link-chrome] [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/brave/brave.svg" width="24" alt="Brave" valign="middle">][link-chrome]
+[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/chrome/chrome.svg" width="48" alt="Chrome" valign="middle">][link-chrome]
+[<img valign="middle" src="https://img.shields.io/chrome-web-store/v/hbnlneckiahefebnpdhgpohonfkkcaln.svg?label=%20">][link-chrome]
+also compatible with
+[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/edge/edge.svg" width="24" alt="Edge" valign="middle">][link-chrome]
+[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/opera/opera.svg" width="24" alt="Opera" valign="middle">][link-chrome]
+[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/brave/brave.svg" width="24" alt="Brave" valign="middle">][link-chrome]
 
 [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/firefox/firefox.svg" width="48" alt="Firefox" valign="middle">][link-firefox]
+[<img valign="middle" src="https://img.shields.io/amo/v/betterlibrarything.svg?label=%20">][link-firefox]
 
 ## Features
 
@@ -25,7 +31,10 @@ While Editing a book, leaving the page without hitting Save, Cancel, or Delete B
 
 ### Copy/Paste
 
-While on the Edit book page, a Copy and Paste button appear to allow you to Copy and Paste entire book entries.
+On any book's page or catalog entry, click the Copy button to save a book's metadata.
+
+You can then click the Paste button while editing a book or creating a new entry
+to paste the entire book entry (except the barcode, of course).
 
 <img src="docs/img/copy.gif" alt="warning">
 
@@ -76,6 +85,7 @@ The banner will also be grey if you are not logged in to the VanBlackLibrary Lib
 <img src="docs/img/banner.png" alt="banner">
 
 ### Misc. Improvements
+
 - **Resizes**: When you resize a text area in a book form, the new size saved for the next time you visit!
 - **Sort Indicator**: Changing a book title's sorting will show you what the book will be sorted as directly on the form.
 
