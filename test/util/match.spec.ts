@@ -57,6 +57,16 @@ describe("match", () => {
 		expect(predicateCalled).to.be.true;
 		expect(callbackCalled).to.be.false;
 	});
+
+	it("should pass values to the callbacks", () => {
+		const identity = <T>(x: T): typeof x => x;
+		expect(
+			match("foo")
+				.case(() => true, identity)
+				.yield()
+		).to.equal("foo");
+		expect(match("bar").default(identity).yield()).to.equal("bar");
+	});
 });
 
 // TYPE LEVEL TESTS
