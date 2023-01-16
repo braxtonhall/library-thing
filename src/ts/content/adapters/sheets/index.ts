@@ -2,7 +2,7 @@ import {googleFetch} from "../../services/google/googleFetch";
 
 const BASE_URL = "https://sheets.googleapis.com/v4/spreadsheets";
 
-type Range = `${string}!${string}` | `${string}!${string}:${string}`;
+type Range = string;
 type Values = string[][];
 
 interface ValueRange {
@@ -44,6 +44,9 @@ const readRanges = async (spreadsheetId: string, ranges: Range[]): Promise<Value
 	return response?.valueRanges ?? null;
 };
 
+const readRange = (spreadsheetId: string, range: Range): Promise<ValueRange | null> =>
+	readRanges(spreadsheetId, [range]).then((response) => response?.[0] ?? null);
+
 const appendRowToSheet = async (spreadsheetId: string, range: string, values: Values): Promise<ValueRange | null> => {
 	const options: RequestInit = {
 		method: "POST",
@@ -81,7 +84,15 @@ const updateRowInSheet = async (spreadsheetId: string, range: string, values: Va
 	return response?.updatedData ?? null;
 };
 
-const createRange = (sheet: string, from: string, to?: string): Range => `${sheet}!${from}${to ? `:${to}` : ""}`;
+const createRange = (sheet: string, from?: string, to?: string): Range => {
+	if (to) {
+		return `${sheet}!${from}:${to}`;
+	} else if (from) {
+		return `${sheet}!${from}`;
+	} else {
+		return sheet;
+	}
+};
 
 export type {ValueRange, Range, Values};
-export default {readRanges, appendRowToSheet, updateRowInSheet, createRange};
+export default {readRange, readRanges, appendRowToSheet, updateRowInSheet, createRange};

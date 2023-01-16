@@ -13,12 +13,11 @@ const parseRows = ({rows, fromRow, depth, nodes, parent}: ParserOptions): number
 	while (row < rows.length) {
 		const {tag, warning} = rows[row][depth] ?? {};
 		if (tag) {
-			const trimmedTag = tag.trim();
-			const node = {name: trimmedTag, parent, warning, children: [], height: parent.height - 1};
+			const node = {name: tag, parent, warning, children: [], height: parent.height - 1};
 			parent.children.push(node);
 			// TODO if nodes already contains this tag, we need to emit a warning somehow!!! see #214
 			// Keys in the tag nodes map are lowercase for ez lookup later
-			nodes.set(trimmedTag.toLowerCase(), node);
+			nodes.set(tag.toLowerCase(), node);
 			row = parseRows({rows, fromRow: row + 1, depth: depth + 1, nodes, parent: node});
 		} else {
 			break;
