@@ -63,8 +63,6 @@ const insertFormData = (formData: FormData) => {
 	});
 };
 
-// This is a little weird that this is in this file... Probably doesn't belong here, but I don't want
-// to expose COLLECTIONS_ID_PREFIX
 const ensureVisible = (element: Element) =>
 	match(element)
 		.case(isCollectionsElement, show)
