@@ -1,5 +1,10 @@
 import {FormData} from "../../../types";
 import {uniqueFormElement} from "../uniqueFormElement";
+import {
+	addDescriptionCountsToMetaData,
+	ensurePhysicalDescriptionInputCounts,
+	isPhysicalDescriptionRow,
+} from "./descriptionCounts";
 
 const isPhysicalDescriptionElement =
 	(ancestorId: string, name: string) =>
@@ -9,13 +14,12 @@ const isPhysicalDescriptionElement =
 const calculateRow = (element: Element): number => {
 	const fieldSet = element.closest("fieldset");
 	const siblings = Array.from(fieldSet.parentElement.children);
-	const rows = siblings.filter((sibling: HTMLElement) => sibling.style.display !== "none");
+	const rows = siblings.filter(isPhysicalDescriptionRow);
 	return rows.findIndex((row) => row === fieldSet);
 };
 
 const fromPhysicalDescriptionElement = (key: string, name: string) => (formData: FormData, element) => {
 	const row = calculateRow(element);
-	console.log(row, element.value);
 	if (row >= 0) {
 		formData[key] ??= [];
 		formData[key][row] ??= {};
@@ -63,4 +67,4 @@ const physicalDescription = [
 	weightUnit,
 ] as const;
 
-export {physicalDescription};
+export {physicalDescription, addDescriptionCountsToMetaData, ensurePhysicalDescriptionInputCounts};

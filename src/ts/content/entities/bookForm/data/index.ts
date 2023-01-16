@@ -3,13 +3,16 @@ import {getFormElements} from "../util";
 import {show} from "../ui";
 import {match} from "../../../../common/util/match";
 import {collections, isCollectionsElement} from "./uniqueData/collections";
-import {physicalDescription} from "./uniqueData/physicalDescription";
 import {transformIncomingData} from "./transformData";
 import {matchFactoryFromDescriptors} from "./uniqueData/uniqueFormElement";
 import {ensureRolesInputCount, addRoleCountToMetaData} from "./uniqueData/roles";
+import {
+	physicalDescription,
+	addDescriptionCountsToMetaData,
+	ensurePhysicalDescriptionInputCounts,
+} from "./uniqueData/physicalDescription";
 
 const FORM_META_DATA_KEY = "___metadata_";
-const PHYSICAL_DESCRIPTION_COUNTS_KEY = "___phys-desc-counts_";
 
 const matchFactory = matchFactoryFromDescriptors(collections, ...physicalDescription);
 
@@ -25,7 +28,7 @@ const internalIsFormDataElement = matchFactory("isFormData", (_formData, element
 // form metadata is data ABOUT the form. this could be extended in the future,
 // like ... for physical description
 const getFormMetadata = (document: Document): FormData => ({
-	[FORM_META_DATA_KEY]: [addRoleCountToMetaData].reduce(
+	[FORM_META_DATA_KEY]: [addRoleCountToMetaData, addDescriptionCountsToMetaData].reduce(
 		(metaData: Record<string, unknown>, callback: FormMetaDataDecorator) => callback(document, metaData),
 		{}
 	),
@@ -44,7 +47,9 @@ const getFormData = (_document = document) =>
 	}, getFormMetadata(_document));
 
 const insertFormData = (formData: FormData) => {
-	ensureRolesInputCount(formData?.[FORM_META_DATA_KEY] ?? {});
+	const metaData = formData?.[FORM_META_DATA_KEY] ?? {};
+	ensureRolesInputCount(metaData);
+	ensurePhysicalDescriptionInputCounts(metaData);
 	getFormElements(document).forEach((element: any) => {
 		if (isFormDataElement(element)) {
 			const {value, checked} = transformIncomingData(extractFromFormData(formData, element), element);

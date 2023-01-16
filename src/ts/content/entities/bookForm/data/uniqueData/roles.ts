@@ -1,6 +1,7 @@
 import {FormMetaDataDecorator} from "../../types";
+import {range} from "../../../../../common/util/range";
 
-const ROLES_INPUT_COUNT_KEY = "___roles-count_";
+const ROLES_INPUT_COUNT_KEY = "_roles-count_";
 
 const createBookEditRole = (n: number) => {
 	const div = document.createElement("div");
@@ -44,14 +45,14 @@ const editRoleHTML = (n: number) => `
  * @param formMetaData
  */
 const ensureRolesInputCount = (formMetaData: Record<string, unknown>): void => {
-	const count = formMetaData[ROLES_INPUT_COUNT_KEY] ?? 0;
+	const count = Number(formMetaData[ROLES_INPUT_COUNT_KEY] ?? 0);
 	const parent = document.getElementById("bookedit_roles");
 	const control = parent.querySelector("#addPersonControl");
-	parent &&
-		control &&
-		[...Array(count).keys()].forEach((n) => {
-			parent.querySelector(`#person_name-${n}`) || parent.insertBefore(createBookEditRole(n), control);
-		});
+	if (parent && control) {
+		range(0, count).forEach(
+			(n) => parent.querySelector(`#person_name-${n}`) || parent.insertBefore(createBookEditRole(n), control)
+		);
+	}
 };
 
 // We subtract one to omit the main author, who is not part of the roles section
