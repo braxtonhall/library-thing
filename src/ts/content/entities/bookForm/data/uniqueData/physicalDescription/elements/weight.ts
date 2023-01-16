@@ -1,4 +1,4 @@
-const weight = (n: number, showSubtract: boolean, showAdd: boolean) => `
+const weight = (n: number, showAdd: boolean) => `
 <fieldset id="fs_u_wgt_${n}">
 	<input type="hidden" name="type" value="weight">
 	<input type="hidden" name="deleted" value="">
@@ -9,9 +9,7 @@ const weight = (n: number, showSubtract: boolean, showAdd: boolean) => `
 		<option value="0" selected="">pounds</option>
 		<option value="1">kg</option>
 	</select>
-	<a href="#" id="arbm_fs_u_wgt_${n}" style="${
-	showSubtract === false ? "display:none;" : ""
-}" class="rowPlusMinus" onclick="book_deleteUIRow('fs_u_wgt_${n}');return false;">–</a>
+	<a href="#" id="arbm_fs_u_wgt_${n}" style="" class="rowPlusMinus" onclick="book_deleteUIRow('fs_u_wgt_${n}');return false;">–</a>
 	<a href="#" id="arb_fs_u_wgt_${n}" style="${
 	showAdd === false ? "display:none;" : ""
 }" class="rowPlusMinus" onclick="book_addUIRow('weight', 'fs_u_wgt_${n}');return false;">+</a>

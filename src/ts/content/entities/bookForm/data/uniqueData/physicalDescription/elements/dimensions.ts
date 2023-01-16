@@ -1,4 +1,4 @@
-const dimensions = (n: number, showSubtract: boolean, showAdd: boolean) => `
+const dimensions = (n: number, showAdd: boolean) => `
 <fieldset id="fs_u_dim_${n}">
 	<input type="hidden" name="type" value="dims">
 	<input type="hidden" name="deleted" value="">
@@ -25,9 +25,7 @@ const dimensions = (n: number, showSubtract: boolean, showAdd: boolean) => `
 					</select>
 				</td>
 				<td class="plusMinus">
-					<a href="#" id="arbm_fs_u_dim_${n}" style="${
-	showSubtract === false ? "display:none;" : ""
-}" class="rowPlusMinus" onclick="book_deleteUIRow('fs_u_dim_${n}');return false;">–</a>
+					<a href="#" id="arbm_fs_u_dim_${n}" style="" class="rowPlusMinus" onclick="book_deleteUIRow('fs_u_dim_${n}');return false;">–</a>
 					<a href="#" id="arb_fs_u_dim_${n}" style="${
 	showAdd === false ? "display:none;" : ""
 }" class="rowPlusMinus" onclick="book_addUIRow('dims', 'fs_u_dim_${n}');return false;">+</a>

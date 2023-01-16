@@ -29,10 +29,29 @@ const addDescriptionCountsToMetaData: FormMetaDataDecorator = (
 	[toKey(WEIGHT_INPUT_COUNT_ID)]: getPhysicalDescriptionInputCount(WEIGHT_INPUT_COUNT_ID, document),
 });
 
-const htmlGenerators: Record<string, (n: number, showSubtract: boolean, showAdd: boolean) => string> = {
+const htmlGenerators: Record<string, (n: number, showAdd: boolean) => string> = {
 	[PAGINATION_INPUT_COUNT_ID]: pagination,
 	[DIMENSIONS_INPUT_COUNT_ID]: dimensions,
 	[WEIGHT_INPUT_COUNT_ID]: weight,
+};
+
+const fixButtonDisplay = (elements: Element[], idPrefix: string, display: string) =>
+	elements
+		.map((child) => child.querySelector(`a.rowPlusMinus[id*=${idPrefix}]`))
+		.forEach((button: HTMLElement) => (button.style.display = display));
+
+const fixPlusMinusButtons = (elements: Element[]) => {
+	fixButtonDisplay(elements, "arbm_fs_u_", "");
+	fixButtonDisplay(elements, "arb_fs_u_", "none");
+};
+
+const getNewChildren = (fieldId: string, count: number, existing: number) => {
+	const htmlGenerator = htmlGenerators[fieldId];
+	const html = range(0, count)
+		.map((n) => htmlGenerator(existing + n, n === count - 1))
+		.join("");
+	const body = parseHtml(html);
+	return Array.from(body.children);
 };
 
 const ensurePhysicalDescriptionInputCount = (fieldId: string, formMetaData: Record<string, unknown>) => {
@@ -41,13 +60,10 @@ const ensurePhysicalDescriptionInputCount = (fieldId: string, formMetaData: Reco
 	const countToAdd = expectedCount - currentCount;
 	const parent = document.getElementById(fieldId);
 	if (parent && countToAdd > 0) {
-		const childrenCount = parent.children.length;
-		const htmlGenerator = htmlGenerators[fieldId];
-		const html = range(0, countToAdd)
-			.map((n) => htmlGenerator(childrenCount + n, expectedCount > 0, n === countToAdd - 1))
-			.join("");
-		const body = parseHtml(html);
-		parent.append(...Array.from(body.children));
+		const children = Array.from(parent.children);
+		fixPlusMinusButtons(children);
+		const childrenCount = children.length;
+		parent.append(...getNewChildren(fieldId, countToAdd, childrenCount));
 	}
 };
 

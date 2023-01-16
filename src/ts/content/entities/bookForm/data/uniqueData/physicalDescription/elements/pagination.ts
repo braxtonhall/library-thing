@@ -1,4 +1,4 @@
-const pagination = (n: number, showSubtract: boolean, showAdd: boolean) => `
+const pagination = (n: number, showAdd: boolean) => `
 <fieldset id="fs_u_pag_${n}">
 	<input type="hidden" name="type" value="pages">
 	<input type="hidden" name="deleted" value="">
@@ -15,9 +15,7 @@ const pagination = (n: number, showSubtract: boolean, showAdd: boolean) => `
 		<option value="6"></option>
 		<option value="7"></option>
 	</select>
-	<a href="#" id="arbm_fs_u_pag_${n}" style="${
-	showSubtract === false ? "display:none;" : ""
-}" class="rowPlusMinus" onclick="book_deleteUIRow('fs_u_pag_${n}');return false;">–</a>
+	<a href="#" id="arbm_fs_u_pag_${n}" style="" class="rowPlusMinus" onclick="book_deleteUIRow('fs_u_pag_${n}');return false;">–</a>
 	<a href="#" id="arb_fs_u_pag_${n}" style="${
 	showAdd === false ? "display:none;" : ""
 }" class="rowPlusMinus" onclick="book_addUIRow('pages', 'fs_u_pag_${n}');return false;">+</a>
