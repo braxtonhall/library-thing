@@ -1,6 +1,6 @@
 import {FormAreaElement, FormData} from "./types";
 
-const FORM_DATA_ELEMENT_TAGS = ["textarea", "input", "select"];
+const FORM_DATA_ELEMENT_TAGS = ["textarea", "input", "select", "fieldset"];
 
 const getElementsByTag = (parent: HTMLElement) => (tag: string) => Array.from(parent?.getElementsByTagName(tag) ?? []);
 
