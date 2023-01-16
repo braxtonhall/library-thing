@@ -137,9 +137,7 @@ const typeTests = () => {
 		)
 		.default(() => "c" as const)
 		.yield();
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const isAbc: "a" | "b" | "c" = abc;
+	abc satisfies "a" | "b" | "c";
 	// @ts-expect-error yield types should be preserved when actually yielding
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const isNotAbc: "a" = abc;
+	abc satisfies "a";
 };
