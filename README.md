@@ -80,7 +80,7 @@ Requires a [Tag Index](./docs/librarian/tag-index.md).
 
 When the extension is used, the LibraryThing banner is replaced with a [Vancouver Black Library](https://www.vancouverblacklibrary.org/) one, so you can discern whether the extension is active at a glance.
 
-The banner will also be grey if you are not logged in to the VanBlackLibrary LibraryThing, or if you don't have [Tag Index](./docs/librarian/tag-index.md) access.
+The banner will also be grey if you are not logged in to the VanBlackLibrary LibraryThing account, or if you don't have [Tag Index](./docs/librarian/tag-index.md) access.
 
 <img src="docs/img/banner.png" alt="banner">
 
