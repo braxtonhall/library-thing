@@ -63,10 +63,6 @@ const insertFormData = (formData: FormData) => {
 	});
 };
 
-const ensureVisible = (element: Element) =>
-	match(element)
-		.case(isCollectionsElement, show)
-		.default((): void => undefined)
-		.yield();
+const ensureVisible = (element: Element) => match(element).case(isCollectionsElement, show).yield();
 
 export {getFormData, insertFormData};

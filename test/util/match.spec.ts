@@ -1,3 +1,5 @@
+// noinspection BadExpressionStatementJS
+
 import {match} from "../../src/ts/common/util/match";
 import {expect} from "chai";
 
@@ -42,6 +44,19 @@ describe("match", () => {
 			.yield();
 		expect(foo).to.equal("9");
 	});
+
+	it("should be able to yield without a default case", () => {
+		let predicateCalled = false;
+		let callbackCalled = false;
+		const predicate = () => {
+			predicateCalled = true;
+			return false;
+		};
+		const callback = () => (callbackCalled = true);
+		match(9).case(predicate, callback).yield();
+		expect(predicateCalled).to.be.true;
+		expect(callbackCalled).to.be.false;
+	});
 });
 
 // TYPE LEVEL TESTS
@@ -62,15 +77,17 @@ declare const foo: Foo;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const typeTests = () => {
-	// @ts-expect-error Predicate parameter should be same type of match value
+	// Predicate parameter should be same type of match value
 	match(foo).case(
+		// @ts-expect-error Predicate parameter should be same type of match value
 		(value: string) => !!value,
 		() => "string"
 	);
 
-	// @ts-expect-error Callback parameter should be consistent with type of predicate parameter
+	// Callback parameter should be consistent with type of predicate parameter
 	match(foo).case<Bar, string>(
 		(value: Bar): value is Bar => !!value,
+		// @ts-expect-error Callback parameter should be consistent with type of predicate parameter
 		(value: Baz) => value.foo
 	);
 	match(foo).case<Bar, string>(
@@ -78,33 +95,34 @@ const typeTests = () => {
 		(value: Bar) => value.foo
 	);
 
-	// @ts-expect-error yield can only be called after a default
+	// typed yield can only be called after a default
 	match(foo)
 		.case(
 			(): boolean => true,
 			() => ""
 		)
-		.yield();
+		// @ts-expect-error calling yield before default results in void
+		.yield() satisfies string;
 	match(foo)
 		.case(
 			() => true,
 			() => ""
 		)
-		.yield();
+		.yield() satisfies string;
 	match(foo)
 		.default(() => "")
-		.yield();
+		.yield() satisfies string;
 
-	// @ts-expect-error only yield can be called after a default
 	match(foo)
 		.default(() => "")
+		// @ts-expect-error only yield can be called after a default
 		.case(
 			(value: string) => !!value,
 			() => "string"
 		);
-	// @ts-expect-error only yield can be called after a default
 	match(foo)
 		.default(() => "")
+		// @ts-expect-error only yield can be called after a default
 		.default(() => "string");
 
 	// yield types should be preserved when actually yielding
