@@ -9,10 +9,10 @@ import {showToast, ToastType} from "../../../../../../common/ui/toast";
  */
 
 const WARNING =
-	"hey! it seems like your installation of Better LibraryThing is a little out of date.\nclick here for update information!";
+	"hey! it seems like your installation of Better LibraryThing is really out of date!\nif you'd like to keep using it, click here for update information!";
 
 const zhane: FormatStrategy = async () => {
-	showToast(WARNING, ToastType.WARNING, () => window.open("https://betterlibrarything.com/"));
+	showToast(WARNING, ToastType.ERROR, () => window.open("https://betterlibrarything.com/"));
 	return [];
 };
 
