@@ -28,7 +28,7 @@ const createToast = (toastType: ToastType) => {
 
 const show = (toast: HTMLDivElement): Promise<HTMLDivElement> => {
 	return new Promise((resolve) => {
-		const animation = toast.animate(fadeIn, TOAST_TRANSITION_MS);
+		const animation = toast.animate(fadeIn, {duration: TOAST_TRANSITION_MS, easing: "ease-in-out"});
 		animation.onfinish = () => {
 			toast.className = toast.className.replace(TRANSITION_CLASS_NAME, CLICKABLE_CLASS_NAME);
 			resolve(toast);

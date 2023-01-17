@@ -1,4 +1,6 @@
 type FormAreaElement = HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement;
 type FormData = Record<string, Record<string, any>>;
 
-export type {FormAreaElement, FormData};
+type FormMetaDataDecorator = (document: Document, formMetaData: Record<string, unknown>) => Record<string, unknown>;
+
+export type {FormAreaElement, FormData, FormMetaDataDecorator};
