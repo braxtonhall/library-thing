@@ -9,7 +9,7 @@ import {createModal} from "../../../../common/ui/modal";
 import {showToast, ToastType} from "../../../../common/ui/toast";
 import {onPull} from "./pull";
 import {UIColour} from "../../../../common/ui/colour";
-import {appendTagValidator} from "../../util/tagValidation";
+import {insertTagValidator} from "../../util/tagValidation";
 
 const onEdit = () => {
 	viewTagEditor();
@@ -78,12 +78,11 @@ window.addEventListener("pageshow", async () => {
 		if (container) {
 			appendUI(container, {onSync, onEdit, onSave, onPush, onPull, onCancel}, getTags);
 			const input = document.getElementById(AUTHOR_TAG_INPUT_ID) as HTMLInputElement;
-			const {showTagValidator} = appendTagValidator(
+			return insertTagValidator(
 				(listener) => listeners.add(listener),
 				(listener) => listeners.delete(listener),
 				input
 			);
-			showTagValidator();
 		}
 	}
 });

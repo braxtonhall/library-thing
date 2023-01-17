@@ -1,12 +1,12 @@
 import {onFormRender} from "../entities/bookForm";
-import {appendTagValidator} from "./util/tagValidation";
+import {insertTagValidator} from "./util/tagValidation";
 import {getAuthorIdsFromLinks} from "../util/getAuthorIdsFromLinks";
 import {onLogged} from "./util/onLogged";
-import {appendFinder} from "./util/finderExtension";
+import {insertFinder} from "./util/finderExtension";
 import {getAuthorTags} from "./util/getAuthorTags";
 import Author from "../adapters/author";
 import {getAncestry, getTagsFromElement} from "../adapters/tags";
-import {appendContentWarningChecker} from "./util/contentWarningCheck";
+import {insertContentWarningChecker} from "./util/contentWarningCheck";
 
 const authorIds = () =>
 	getAuthorIdsFromLinks(document.querySelectorAll<HTMLLinkElement>("div.headsummary > h2 a[href]"));
@@ -28,7 +28,7 @@ onFormRender((form, forEachElement, onSave, offSave) => {
 	const tagsTextAreaContainer = document.getElementById(tagsTextAreaContainerId);
 	const tagsTextArea = document.getElementById(tagsTextAreaId) as HTMLTextAreaElement;
 	if (tagsTextAreaContainer && tagsTextArea && commentsTextArea) {
-		const {showFinder: showAuthorPull, hideFinder: hideAuthorPull} = appendFinder<string[]>({
+		insertFinder<string[]>({
 			buttonName: "Pull Author Tags",
 			buttonImage: "img/book-and-quill.png",
 			description: "Copy the tags of every author of this book",
@@ -42,7 +42,7 @@ onFormRender((form, forEachElement, onSave, offSave) => {
 			delimiter: ", ",
 		});
 
-		const {showFinder: showAncestors, hideFinder: hideAncestors} = appendFinder<string[]>({
+		insertFinder<string[]>({
 			buttonName: "Add Ancestor Tags",
 			buttonImage: "img/written-book.png",
 			description: "Get parent tags for any current nested tags",
@@ -56,31 +56,12 @@ onFormRender((form, forEachElement, onSave, offSave) => {
 			delimiter: ", ",
 		});
 
-		const {showTagValidator, hideTagValidator} = appendTagValidator(onSave, offSave, tagsTextArea);
-		const {showContentWarningCheck, hideContentWarningCheck} = appendContentWarningChecker(
-			onSave,
-			offSave,
-			tagsTextArea,
-			commentsTextArea
-		);
+		void insertTagValidator(onSave, offSave, tagsTextArea);
+		void insertContentWarningChecker(onSave, offSave, tagsTextArea, commentsTextArea);
 
-		const onLogOut = () => {
-			hideAuthorPull();
-			hideAncestors();
-			hideTagValidator();
-			hideContentWarningCheck();
-		};
-		onLogOut(); // Do it now so things don't pop in and out
-		return onLogged({
+		void onLogged({
 			container: tagsTextAreaContainer,
 			description: "Log in for tag validation and to sync this book's tags with its authors' tags",
-			onLogIn: () => {
-				showAuthorPull();
-				showAncestors();
-				showTagValidator();
-				showContentWarningCheck();
-			},
-			onLogOut,
 		});
 	}
 });

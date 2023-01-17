@@ -3,6 +3,7 @@ import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {onFormRender} from "../../entities/bookForm";
 import {createIconButton} from "../../../common/ui/button";
 import {Finder, FinderParameters} from "../../services/finder/finder";
+import {onLogged} from "./onLogged";
 
 const findTextContent = (id: string) => (): string =>
 	(document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement)?.value ?? "";
@@ -23,14 +24,15 @@ interface FinderExtensionOptions<T> {
 	onFail: (response: T, input: FinderParameters) => string;
 	transform: (response: T, input: FinderParameters) => string;
 	delimiter: string;
+	requiresLogged?: boolean;
 }
 
 const createFinderExtension = <T>(options: FinderExtensionOptions<T>) =>
 	onFormRender(() => {
-		appendFinder(options);
+		insertFinder(options);
 	});
 
-const appendFinder = <T>(options: FinderExtensionOptions<T>) => {
+const insertFinder = <T>(options: FinderExtensionOptions<T>) => {
 	const onClick = (textArea: HTMLTextAreaElement) => async (event: MouseEvent) => {
 		event.preventDefault();
 		const input = {author: findAuthor(), title: findTitle(), isbn: findISBN()};
@@ -58,12 +60,18 @@ const appendFinder = <T>(options: FinderExtensionOptions<T>) => {
 		);
 		textAreaContainer.appendChild(finderButton);
 
-		const showFinder = () => (finderButton.style.display = "");
-		const hideFinder = () => (finderButton.style.display = "none");
-		return {showFinder, hideFinder};
+		if (options.requiresLogged) {
+			const showFinder = () => (finderButton.style.display = "");
+			const hideFinder = () => (finderButton.style.display = "none");
+			hideFinder();
+			void onLogged({
+				onLogIn: showFinder,
+				onLogOut: hideFinder,
+			});
+		}
 	} else {
 		throw new Error("appendFinder should not have been called on this page");
 	}
 };
 
-export {createFinderExtension, appendFinder};
+export {createFinderExtension, insertFinder};
