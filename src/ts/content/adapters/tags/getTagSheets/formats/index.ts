@@ -24,9 +24,12 @@ const toFormatVersion = (userFormatVersion: string): FormatVersion =>
 
 const getFormatVersion = (values: Values): FormatVersion => {
 	const firstRow = values[0] ?? [];
-	const formatKeywordIndex = firstRow.findIndex((cell) => cell.trim().toLowerCase() === FormatKeyword.FORMAT);
-	const userFormatVersion = firstRow[formatKeywordIndex + 1]?.trim()?.toLowerCase();
-	return toFormatVersion(userFormatVersion ?? DEFAULT_FORMAT_VERSION);
+	const [hashFormat, rawUserFormat] = firstRow;
+	if (hashFormat?.trim()?.toLowerCase() === FormatKeyword.FORMAT) {
+		return toFormatVersion(rawUserFormat?.trim()?.toLowerCase() ?? DEFAULT_FORMAT_VERSION);
+	} else {
+		return DEFAULT_FORMAT_VERSION;
+	}
 };
 
 const getFormatStrategy = (values: Values): FormatStrategy => getSheetsTagsStrategies[getFormatVersion(values)];
