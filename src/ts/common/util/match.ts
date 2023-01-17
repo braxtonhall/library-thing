@@ -3,7 +3,7 @@ type Match<On, Out> = {
 		predicate: (value: On) => value is Sub,
 		yields: (value: Sub) => Opt
 	): Match<On, Out | Opt> & Yield<void>;
-	case<Opt>(predicate: (value: On) => true, yields: (value: On) => Opt): Yield<Opt>;
+	case<Opt>(predicate: (value: On) => true, yields: (value: On) => Opt): Yield<Out | Opt>;
 	case<Opt>(predicate: (value: On) => boolean, yields: (value: On) => Opt): Match<On, Out | Opt> & Yield<void>;
 	default<Opt>(yields: (value: On) => Opt): Yield<Out | Opt>;
 };

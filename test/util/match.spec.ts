@@ -150,4 +150,30 @@ const typeTests = () => {
 	abc satisfies "a" | "b" | "c";
 	// @ts-expect-error yield types should be preserved when actually yielding
 	abc satisfies "a";
+
+	// Yield after an always true case should behave like yield after a default
+	const someCase = match(foo)
+		.case(
+			(): boolean => Math.random() < 0.5,
+			() => "case 1" as const
+		)
+		.case(
+			(): true => true,
+			() => "case 2" as const
+		)
+		.yield();
+	if (someCase === "case 1") {
+		// 50% chance this happens
+	}
+	match(foo)
+		.case(
+			(): boolean => Math.random() < 0.5,
+			() => "case 1" as const
+		)
+		.case(
+			(): true => true,
+			() => "case 2" as const
+		)
+		// @ts-expect-error yield after a always true case should behave like a default
+		.yield() satisfies "case 2";
 };
