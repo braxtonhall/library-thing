@@ -8,8 +8,26 @@ const COLLECTIONS_KEY = "___collections_";
 const FORM_META_DATA_KEY = "___metadata_";
 const ROLES_INPUT_COUNT_KEY = "___roles-count_";
 
-// IDs of elements we don't want to copy/paste
-const ID_BLACKLIST = new Set(["item_inventory_barcode_1"]);
+/**
+ * This is how specific elements should be transformed as a paste operation occurs
+ * Indexed using the element ID on librarything.com
+ */
+type Transformer<T> = (incoming: T, existing: T) => T;
+const checkedTransformers: {[elementId: string]: Transformer<boolean>} = {};
+const valueTransformers: {[elementId: string]: Transformer<string>} = {
+	item_inventory_barcode_1: (incoming, existing) => existing,
+	form_comments: (incoming, existing) => {
+		if (existing === incoming) {
+			// Don't remove existing data on an accidental paste
+			return existing;
+		} else {
+			return incoming
+				.split("\n")
+				.filter((line) => !/^\s*LOCATION:.+/i.test(line))
+				.join("\n");
+		}
+	},
+};
 
 const extractSaveDataFor = (targetElement: Element, formData: FormData) => {
 	if (targetElement.id.startsWith(COLLECTIONS_ID_PREFIX)) {
@@ -33,8 +51,7 @@ const getRolesInputCount = (document: Document): number =>
 // We can't change hidden elements because LibraryThing relies
 // on hidden form inputs to send additional, form-specific metadata
 // on save
-const isFormDataElement = (element: FormAreaElement): boolean =>
-	element && element.id && element.type !== "hidden" && !ID_BLACKLIST.has(element.id);
+const isFormDataElement = (element: FormAreaElement): boolean => element && element.id && element.type !== "hidden";
 
 const getFormData = (_document = document) =>
 	getFormElements(_document).reduce((saveData: FormData, element: any) => {
@@ -52,11 +69,18 @@ const getFormData = (_document = document) =>
 		return saveData;
 	}, getFormMetadata(_document));
 
+const transformIncomingData = (incoming: {value: string; checked: boolean}, existing: any) => {
+	const transformedValue = valueTransformers[existing.id]?.(incoming.value, existing.value) ?? incoming.value;
+	const transformedChecked =
+		checkedTransformers[existing.id]?.(incoming.checked, existing.checked) ?? incoming.checked;
+	return {value: transformedValue, checked: transformedChecked};
+};
+
 const insertFormData = (saveData: FormData) => {
 	ensureRolesInputCount(saveData?.[FORM_META_DATA_KEY]?.[ROLES_INPUT_COUNT_KEY] ?? 0);
 	getFormElements(document).forEach((element: any) => {
 		if (isFormDataElement(element)) {
-			const {value, checked} = extractSaveDataFor(element, saveData);
+			const {value, checked} = transformIncomingData(extractSaveDataFor(element, saveData), element);
 			if (element.value !== value || element.checked !== checked) {
 				element.value = value;
 				element.checked = checked;
