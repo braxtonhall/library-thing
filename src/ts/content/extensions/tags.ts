@@ -40,6 +40,7 @@ onFormRender((form, forEachElement, onSave, offSave) => {
 			textAreaId: tagsTextAreaId,
 			transform: (tags: string[]) => tags.join(", "),
 			delimiter: ", ",
+			requiresLogged: true,
 		});
 
 		insertFinder<string[]>({
@@ -54,6 +55,7 @@ onFormRender((form, forEachElement, onSave, offSave) => {
 			textAreaId: tagsTextAreaId,
 			transform: (tags: string[]) => tags.join(", "),
 			delimiter: ", ",
+			requiresLogged: true,
 		});
 
 		void insertTagValidator(onSave, offSave, tagsTextArea);
