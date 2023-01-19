@@ -1,3 +1,3 @@
-import {appendTagValidator} from "./appendTagValidator";
+import {insertTagValidator} from "./insertTagValidator";
 
-export {appendTagValidator};
+export {insertTagValidator};

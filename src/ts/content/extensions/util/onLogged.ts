@@ -81,11 +81,11 @@ const getLogStatus = async (): Promise<LoggedStatus> => {
 	return {authed, sheetSet, ready: authed && sheetSet};
 };
 
-const onLogged = async ({onLogIn: userOnLogIn, onLogOut: userOnLogOut, container, description}: OnLogOptions) => {
-	let onLogIn: InternalOnLoggedCallback = userOnLogIn;
-	let onLogOut: InternalOnLoggedCallback = userOnLogOut;
-	if (container) {
-		const loginButton = createIconButton("Login", "img/login.png", onLoginClick, description);
+const onLogged = async (options: OnLogOptions) => {
+	let onLogIn: InternalOnLoggedCallback = options.onLogIn;
+	let onLogOut: InternalOnLoggedCallback = options.onLogOut;
+	if (options.container) {
+		const loginButton = createIconButton("Login", "img/login.png", onLoginClick, options.description);
 		const sheetLinkButton = createIconButton("Add Tag Index", "img/icon16.png", onAddSheetClick);
 		const removeButtons = () => {
 			removeInjectedButton(loginButton);
@@ -94,8 +94,8 @@ const onLogged = async ({onLogIn: userOnLogIn, onLogOut: userOnLogOut, container
 		onLogIn = compose(removeButtons, onLogIn);
 		onLogOut = compose(({authed, sheetSet}) => {
 			removeButtons();
-			authed || injectButton(loginButton, container);
-			sheetSet || injectButton(sheetLinkButton, container);
+			authed || injectButton(loginButton, options.container);
+			sheetSet || injectButton(sheetLinkButton, options.container);
 		}, onLogOut);
 	}
 	const status = await getLogStatus();

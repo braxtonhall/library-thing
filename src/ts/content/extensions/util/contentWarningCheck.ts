@@ -3,6 +3,7 @@ import {loaderOverlaid} from "../../../common/ui/loadingIndicator";
 import {getTagsFromElement, getTagTrees, TagNodes} from "../../adapters/tags";
 import {createModal} from "../../../common/ui/modal";
 import {UIColour} from "../../../common/ui/colour";
+import {onLogged} from "./onLogged";
 
 const contentWarningIsPresent = (commentsTextArea: HTMLTextAreaElement): boolean =>
 	commentsTextArea.value
@@ -77,16 +78,17 @@ const handleSave = (tagsTextArea: HTMLTextAreaElement, commentsTextArea: HTMLTex
 		}
 	});
 
-const appendContentWarningChecker = (
+const insertContentWarningChecker = (
 	onSave: OnSave,
 	offSave: OffSave,
 	tagsTextArea: HTMLTextAreaElement,
 	commentsTextArea: HTMLTextAreaElement
 ) => {
 	const saveButtonListener = () => handleSave(tagsTextArea, commentsTextArea);
-	const showContentWarningCheck = () => onSave(saveButtonListener);
-	const hideContentWarningCheck = () => offSave(saveButtonListener);
-	return {showContentWarningCheck, hideContentWarningCheck};
+	return onLogged({
+		onLogIn: () => onSave(saveButtonListener),
+		onLogOut: () => offSave(saveButtonListener),
+	});
 };
 
-export {appendContentWarningChecker};
+export {insertContentWarningChecker};

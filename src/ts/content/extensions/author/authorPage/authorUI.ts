@@ -82,7 +82,7 @@ const currentTagViewButtons = ({onPush, onSync, onEdit}: ButtonHandlers, getTags
 	);
 	const onEditButton = createTagButton("Edit", "img/edit.gif", onEdit);
 
-	onLogged({
+	void onLogged({
 		container,
 		description: "Log in to manage this author's book tags",
 		onLogIn: async () => {

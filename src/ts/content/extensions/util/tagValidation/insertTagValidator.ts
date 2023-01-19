@@ -4,6 +4,7 @@ import {OffSave, OnSave} from "../../../entities/bookForm";
 import {Highlight, Highlightable, highlighted} from "../../../../common/ui/highlighter";
 import {getUserAcceptance} from "./dialogs/userAcceptance";
 import {GetTagsOptions} from "./types";
+import {onLogged} from "../onLogged";
 
 const applyHighlights = async (text: string): Promise<Highlight[]> => {
 	const {nodes: validTags} = await getTagTrees().catch(() => ({nodes: new Map()}));
@@ -58,7 +59,7 @@ const handleSave = (tagInput: Highlightable, options: GetTagsOptions) => {
 	return saveHandler(options);
 };
 
-const appendTagValidator = (onSave: OnSave, offSave: OffSave, input: Highlightable) => {
+const insertTagValidator = (onSave: OnSave, offSave: OffSave, input: Highlightable) => {
 	const backdrop = highlighted(input, applyHighlights);
 	const saveButtonListener = () => handleSave(input, {noCache: false});
 	const showTagValidator = () => {
@@ -70,7 +71,11 @@ const appendTagValidator = (onSave: OnSave, offSave: OffSave, input: Highlightab
 		offSave(saveButtonListener);
 		backdrop.style.display = "none";
 	};
-	return {showTagValidator, hideTagValidator};
+	hideTagValidator(); // Do it now so things don't pop in and out
+	return onLogged({
+		onLogIn: showTagValidator,
+		onLogOut: hideTagValidator,
+	});
 };
 
-export {appendTagValidator};
+export {insertTagValidator};
