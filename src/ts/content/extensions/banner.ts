@@ -22,8 +22,20 @@ const editElement = <E extends HTMLElement>(id: string, callback: (element: E) =
 	element && callback(element);
 };
 
-const setLogo = (id: string) =>
-	editElement(id, (logo: HTMLImageElement) => (logo.src = browser.runtime.getURL("img/icon128.png")));
+const freezeSize = (id: string) =>
+	editElement(id, (logo: HTMLImageElement) => {
+		const {clientWidth, clientHeight} = logo;
+		logo.style.width = `${clientWidth}px`;
+		logo.style.height = `${clientHeight}px`;
+	});
+
+const setSrc = (id: string, src: string) =>
+	editElement(id, (logo: HTMLImageElement) => {
+		logo.src = src;
+		logo.srcset = src;
+		logo.style.objectFit = "cover";
+		logo.style.objectPosition = "top";
+	});
 
 const setCSS = (id: string, css: Partial<CSSStyleDeclaration>) =>
 	editElement(id, (element) => Object.entries(css).forEach(([key, value]) => (element.style[key] = value)));
@@ -44,10 +56,17 @@ const loggedIn = (authorized: boolean): boolean => authorized && Cookies.get(LOG
 const setMasthead = (authorized: boolean) =>
 	setCSS("masthead", {transition: "500ms", filter: selectFilter(authorized)});
 
+// TODO some of this should go in banner.sass
+
 window.addEventListener("pageshow", () => {
-	const background = `url(${browser.runtime.getURL("img/icon128.png")}) no-repeat 16px 0`;
-	setCSS("masthead_logo_wordmark", {background});
-	setLogo("masthead_lt_logo");
+	const vblLogo = browser.runtime.getURL("img/icon128.png");
+	const logoCss = `url(${vblLogo}) no-repeat 16px 0`;
+	setCSS("masthead_logo_wordmark", {background: logoCss});
+	freezeSize("masthead_logo_wordmark2");
+	setSrc("masthead_logo_wordmark2", vblLogo);
+	setSrc("masthead_lt_logo", vblLogo);
+	setCSS("masthead_lt_logo", {background: "unset"});
+	setSrc("masthead_lt_logo2", vblLogo);
 	setFavicon();
 	return onLogged({
 		onLogOut: () => setMasthead(false),
