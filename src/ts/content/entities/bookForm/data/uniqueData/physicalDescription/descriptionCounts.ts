@@ -15,7 +15,7 @@ const isPhysicalDescriptionRow = (element: HTMLElement) =>
 	element.tagName.toLowerCase() === "fieldset" && element.style.display !== "none";
 
 const getPhysicalDescriptionInputCount = (fieldId: string, document: Document) => {
-	const rows = Array.from(document.getElementById(fieldId).children);
+	const rows = Array.from(document.getElementById(fieldId)?.children ?? []);
 	return rows.filter(isPhysicalDescriptionRow).length;
 };
 
