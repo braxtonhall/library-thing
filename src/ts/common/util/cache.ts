@@ -12,14 +12,14 @@ const makeCache = <T>() => {
 
 	const _yield = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
 
-	const pollForBook = async (id: string): Promise<T> => {
+	const pollForValue = async (id: string): Promise<T> => {
 		if (cache.has(id)) {
 			const value = cache.get(id);
 			if (value === LOCK) {
 				// If the value is LOCK, then someone else is already working on the request.
 				// We should yield and then try again
 				await _yield();
-				return pollForBook(id);
+				return pollForValue(id);
 			} else {
 				return value;
 			}
@@ -53,7 +53,7 @@ const makeCache = <T>() => {
 				}
 			}
 		} else {
-			return pollForBook(id);
+			return pollForValue(id);
 		}
 	};
 
