@@ -1,5 +1,7 @@
 @use "colours"
 
+$toast-background-colour: colours.$white
+
 .vblblt-toast
 	/* Set a default minimum width */
 	min-width: 400px
@@ -8,7 +10,7 @@
 	text-align: center
 	font-weight: bold
 	/* Rounded borders */
-	border-radius: 8px
+	border-radius: 4px
 	padding: 16px
 	position: fixed
 	z-index: 99
@@ -16,6 +18,8 @@
 	top: 80px
 	color: #000
 	visibility: visible
+	background-color: $toast-background-colour
+	border-bottom: 10px solid
 
 	&.ready
 		pointer-events: auto
@@ -27,14 +31,11 @@
 		cursor: pointer
 
 	&.error-toast
-		background-color: colours.$red
-
+		border-bottom-color: colours.$red
 	&.warning-toast
-		background-color: colours.$amber
-
+		border-bottom-color: colours.$amber
 	&.info-toast
-		background-color: colours.$blue
-
+		border-bottom-color: colours.$blue
 	&.success-toast
-		background-color: colours.$green
+		border-bottom-color: colours.$green
 
