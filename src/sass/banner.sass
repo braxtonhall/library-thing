@@ -1,3 +1,24 @@
 @media screen and (max-width: 1090px)
 	#masthead_logo_wordmark
 		background: none !important
+
+#masthead
+	transition: 500ms !important
+	&.authed
+		filter: saturate(1.5) !important
+	&.de-authed
+		filter: saturate(0) !important
+
+#masthead_logo_wordmark2
+	height: 45px
+	object-fit: cover
+	object-position: top
+
+#masthead_lt_logo
+	background: unset !important
+	object-fit: cover
+	object-position: top
+
+#masthead_lt_logo2
+	object-fit: cover
+	object-position: top

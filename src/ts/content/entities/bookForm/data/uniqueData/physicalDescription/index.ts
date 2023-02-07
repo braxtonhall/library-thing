@@ -15,7 +15,7 @@ const calculateRow = (element: Element): number => {
 	const fieldSet = element.closest("fieldset");
 	const siblings = Array.from(fieldSet.parentElement.children);
 	const rows = siblings.filter(isPhysicalDescriptionRow);
-	return rows.findIndex((row) => row === fieldSet);
+	return rows.indexOf(fieldSet);
 };
 
 const fromPhysicalDescriptionElement = (key: string, name: string) => (formData: FormData, element) => {

@@ -5,8 +5,8 @@ import * as browser from "webextension-polyfill";
 import Cookies from "../adapters/cookies";
 import {onLogged} from "./util/onLogged";
 
-const LOGGED_IN_SATURATION = 1.5;
-const LOGGED_OUT_SATURATION = 0;
+const AUTHED_CLASS = "authed";
+const DEAUTHED_CLASS = "de-authed";
 const LOGGED_IN_ID = "VanBlackLibrary";
 const LOGGED_IN_COOKIE_KEY = "cookie_userid";
 
@@ -22,8 +22,11 @@ const editElement = <E extends HTMLElement>(id: string, callback: (element: E) =
 	element && callback(element);
 };
 
-const setLogo = (id: string) =>
-	editElement(id, (logo: HTMLImageElement) => (logo.src = browser.runtime.getURL("img/icon128.png")));
+const setSrc = (id: string, src: string) =>
+	editElement(id, (logo: HTMLImageElement) => {
+		logo.src = src;
+		logo.srcset = src;
+	});
 
 const setCSS = (id: string, css: Partial<CSSStyleDeclaration>) =>
 	editElement(id, (element) => Object.entries(css).forEach(([key, value]) => (element.style[key] = value)));
@@ -36,18 +39,26 @@ const setFavicon = () =>
 			element.type = "image/x-icon";
 		});
 
-const selectFilter = (authorized: boolean): string =>
-	`saturate(${loggedIn(authorized) ? LOGGED_IN_SATURATION : LOGGED_OUT_SATURATION})`;
-
-const loggedIn = (authorized: boolean): boolean => authorized && Cookies.get(LOGGED_IN_COOKIE_KEY) === LOGGED_IN_ID;
+const loggedIn = (): boolean => Cookies.get(LOGGED_IN_COOKIE_KEY) === LOGGED_IN_ID;
 
 const setMasthead = (authorized: boolean) =>
-	setCSS("masthead", {transition: "500ms", filter: selectFilter(authorized)});
+	editElement("masthead", (masthead: HTMLElement) => {
+		if (authorized && loggedIn()) {
+			masthead.classList.add(AUTHED_CLASS);
+			masthead.classList.remove(DEAUTHED_CLASS);
+		} else {
+			masthead.classList.add(DEAUTHED_CLASS);
+			masthead.classList.remove(AUTHED_CLASS);
+		}
+	});
 
 window.addEventListener("pageshow", () => {
-	const background = `url(${browser.runtime.getURL("img/icon128.png")}) no-repeat 16px 0`;
-	setCSS("masthead_logo_wordmark", {background});
-	setLogo("masthead_lt_logo");
+	const vblLogo = browser.runtime.getURL("img/icon128.png");
+	const logoCss = `url(${vblLogo}) no-repeat 16px 0`;
+	setCSS("masthead_logo_wordmark", {background: logoCss});
+	setSrc("masthead_logo_wordmark2", vblLogo);
+	setSrc("masthead_lt_logo", vblLogo);
+	setSrc("masthead_lt_logo2", vblLogo);
 	setFavicon();
 	return onLogged({
 		onLogOut: () => setMasthead(false),
