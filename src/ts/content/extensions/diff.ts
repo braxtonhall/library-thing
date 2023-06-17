@@ -1,12 +1,10 @@
 import "../../../sass/diff.sass";
-import {FormData, getFormData, onFormRender} from "../entities/bookForm";
+import {FormData, onFormRender} from "../entities/bookForm";
 import {FormAreaElement} from "../entities/bookForm/types";
 import {getFormDataForElement, getFormDataFromElement} from "../entities/bookForm/data";
 
-let cleanFormData: FormData;
-
-const makeOnChange = (formAreaElement: FormAreaElement) => {
-	const savedData = getFormDataForElement(cleanFormData, formAreaElement);
+const makeOnChange = (formAreaElement: FormAreaElement, getCleanFormData: () => FormData) => {
+	const savedData = getFormDataForElement(getCleanFormData(), formAreaElement);
 	return () => {
 		const {value: afterValue, checked: afterChecked} = getFormDataFromElement(formAreaElement);
 		if (savedData === false || savedData.checked !== afterChecked || savedData.value !== afterValue) {
@@ -17,15 +15,13 @@ const makeOnChange = (formAreaElement: FormAreaElement) => {
 	};
 };
 
-const addDiffListener = (formAreaElement: FormAreaElement): void => {
-	const onChange = makeOnChange(formAreaElement);
-	formAreaElement.addEventListener("change", onChange);
-	formAreaElement.addEventListener("input", onChange);
-	onChange();
-};
+const addDiffListener =
+	(getCleanFormData: () => FormData) =>
+	(formAreaElement: FormAreaElement): void => {
+		const onChange = makeOnChange(formAreaElement, getCleanFormData);
+		formAreaElement.addEventListener("change", onChange);
+		formAreaElement.addEventListener("input", onChange);
+		onChange();
+	};
 
-onFormRender(({forEachElement}) => {
-	cleanFormData = getFormData();
-	console.log(cleanFormData["person_name-5"]);
-	forEachElement(addDiffListener);
-});
+onFormRender(({forEachElement, getCleanFormData}) => forEachElement(addDiffListener(getCleanFormData)));

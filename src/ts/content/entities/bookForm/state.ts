@@ -1,4 +1,5 @@
-import {FormAreaElement} from "./types";
+import {FormAreaElement, FormData} from "./types";
+import {getFormData} from "./data";
 
 type OnSave = (callback: OnSaveListener) => void;
 type OffSave = OnSave;
@@ -13,6 +14,7 @@ type FormState = {
 	onConfirm: OnConfirm;
 	registerFormElement: FormElementListener;
 	onFormElement: OnFormElement;
+	getCleanFormData: () => FormData;
 };
 
 const maybeClick =
@@ -48,6 +50,7 @@ const replaceButton = (
 };
 
 const createFormState = (): FormState => {
+	const formData = getFormData();
 	const listeners: Set<OnSaveListener> = new Set<OnSaveListener>();
 	const confirmListeners: Set<OnConfirmedListener> = new Set<OnConfirmedListener>();
 	const formElementListeners: Set<FormElementListener> = new Set<FormElementListener>();
@@ -59,7 +62,7 @@ const createFormState = (): FormState => {
 	const onFormElement = (callback: FormElementListener) => formElementListeners.add(callback);
 	const registerFormElement = (formAreaElement: FormAreaElement) =>
 		formElementListeners.forEach((callback) => callback(formAreaElement));
-	return {onSave, offSave, onConfirm, onFormElement, registerFormElement};
+	return {onSave, offSave, onConfirm, onFormElement, registerFormElement, getCleanFormData: () => formData};
 };
 
 export type {OnSave, OffSave, OnConfirm, FormState, FormElementListener};

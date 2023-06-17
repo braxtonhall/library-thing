@@ -1,4 +1,4 @@
-import {FormAreaElement} from "./types";
+import {FormAreaElement, FormData} from "./types";
 import {formExists, getForm, getFormElementsFromSubtree} from "./util";
 import {createFormState, FormState, OffSave, OnConfirm, OnSave} from "./state";
 import {getFormDataElements} from "./data";
@@ -10,6 +10,7 @@ type FormRenderEnvironment = {
 	onSave: OnSave;
 	offSave: OffSave;
 	onConfirm: OnConfirm;
+	getCleanFormData: () => FormData;
 };
 type FormRenderListener = (env: FormRenderEnvironment) => void;
 
@@ -29,9 +30,10 @@ const encloseCallbackArguments = (callback: FormRenderListener) => () =>
 	callback({
 		form: getForm(document),
 		forEachElement: forEachFormElement,
-		onSave: state.onSave,
-		offSave: state.offSave,
-		onConfirm: state.onConfirm,
+		onSave: (callback) => state.onSave(callback),
+		offSave: (callback) => state.offSave(callback),
+		onConfirm: (callback) => state.onConfirm(callback),
+		getCleanFormData: () => state.getCleanFormData(),
 	});
 
 const onFormRender = (callback: FormRenderListener): void => {
