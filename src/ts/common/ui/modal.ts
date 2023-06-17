@@ -20,12 +20,7 @@ type ModalInput = BaseModalElement & {
 	onSelect: (userText: string) => Promise<void>;
 };
 
-type ModalFrame = BaseModalElement & {
-	kind: "frame";
-	html: string;
-};
-
-type ModalElement = ModalButton | ModalInput | ModalFrame;
+type ModalElement = ModalButton | ModalInput;
 
 interface ModalOptions {
 	text: string;
@@ -51,7 +46,6 @@ const MODAL_MAIN_TEXT_CLASS_NAME = "better-library-thing-modal-main-text";
 const MODAL_SUB_TEXT_CLASS_NAME = "better-library-thing-modal-sub-text";
 const MODAL_BUTTON_CLASS_NAME = "better-library-thing-modal-button";
 const MODAL_INPUT_CLASS_NAME = "better-library-thing-modal-input";
-const MODAL_FRAME_CLASS_NAME = "better-library-thing-modal-frame";
 const MODAL_INPUT_CONTAINER_CLASS_NAME = "better-library-thing-modal-input-container";
 const MODAL_ELEMENT_CONTAINER_CLASS_NAME = "better-library-thing-modal-element-container";
 const MODAL_TAG_ATTR = "modal-tag";
@@ -83,12 +77,6 @@ const createModalButton = (exit: () => void, {text, onClick, colour}: ModalButto
 	return button;
 };
 
-const createModalFrame = (exit: () => void, {/*text, */ colour, html}: ModalFrame) => {
-	const frame = createWithClass("div", `${MODAL_FRAME_CLASS_NAME} ${colour}`);
-	frame.innerHTML = html;
-	return frame;
-};
-
 const createModalInput = (exit: () => void, {text, onSelect, colour, ensureNonEmpty, placeholder}: ModalInput) => {
 	const input = createWithClass("input", `${MODAL_INPUT_CLASS_NAME} ${colour}`);
 	input.placeholder = placeholder;
@@ -107,13 +95,11 @@ const createModalInput = (exit: () => void, {text, onSelect, colour, ensureNonEm
 	return container;
 };
 
-const createModalElement = (exit: () => void) => (element: ModalButton | ModalInput | ModalFrame) => {
+const createModalElement = (exit: () => void) => (element: ModalElement) => {
 	if (element.kind === "button") {
 		return createModalButton(exit, element);
-	} else if (element.kind === "input") {
-		return createModalInput(exit, element);
 	} else {
-		return createModalFrame(exit, element);
+		return createModalInput(exit, element);
 	}
 };
 
