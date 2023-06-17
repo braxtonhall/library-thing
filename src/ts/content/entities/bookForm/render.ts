@@ -1,4 +1,4 @@
-import {FormAreaElement, FormData} from "./types";
+import {FormAreaElement} from "./types";
 import {formExists, getForm, getFormElementsFromSubtree} from "./util";
 import {createFormState, FormState, OffSave, OnConfirm, OnSave} from "./state";
 import {getFormDataElements} from "./data";
