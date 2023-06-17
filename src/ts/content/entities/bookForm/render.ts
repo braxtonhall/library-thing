@@ -66,15 +66,15 @@ window.addEventListener("pageshow", () => {
 	const editForm = getForm(document);
 	if (editForm) {
 		new MutationObserver(handleFormMutation).observe(editForm, {childList: true});
-		new MutationObserver((mutations) => {
+		new MutationObserver((mutations) =>
 			mutations.forEach((mutation) =>
 				mutation.addedNodes.forEach(
 					(node) =>
 						node instanceof HTMLElement &&
 						getFormElementsFromSubtree(node).forEach(state.registerFormElement)
 				)
-			);
-		}).observe(editForm, {subtree: true, childList: true});
+			)
+		).observe(editForm, {subtree: true, childList: true});
 		handleFormMutation();
 	}
 });
