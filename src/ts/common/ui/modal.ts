@@ -3,28 +3,34 @@ import "../../../sass/modal.sass";
 import {createOverlay} from "./overlay";
 import {UIColour} from "./colour";
 
-interface ModalElement {
-	kind: string;
+type BaseModalElement = {
 	text: string;
 	colour: UIColour;
-}
+};
 
-interface ModalButton extends ModalElement {
+type ModalButton = BaseModalElement & {
 	kind: "button";
 	onClick?: () => Promise<void>;
-}
+};
 
-interface ModalInput extends ModalElement {
+type ModalInput = BaseModalElement & {
 	kind: "input";
 	placeholder: string;
 	ensureNonEmpty: boolean;
 	onSelect: (userText: string) => Promise<void>;
-}
+};
+
+type ModalFrame = BaseModalElement & {
+	kind: "frame";
+	html: string;
+};
+
+type ModalElement = ModalButton | ModalInput | ModalFrame;
 
 interface ModalOptions {
 	text: string;
 	subText?: string[];
-	elements: (ModalButton | ModalInput)[];
+	elements: ModalElement[];
 	onCancel?: () => Promise<void>;
 	colour: UIColour;
 	/**
@@ -45,6 +51,7 @@ const MODAL_MAIN_TEXT_CLASS_NAME = "better-library-thing-modal-main-text";
 const MODAL_SUB_TEXT_CLASS_NAME = "better-library-thing-modal-sub-text";
 const MODAL_BUTTON_CLASS_NAME = "better-library-thing-modal-button";
 const MODAL_INPUT_CLASS_NAME = "better-library-thing-modal-input";
+const MODAL_FRAME_CLASS_NAME = "better-library-thing-modal-frame";
 const MODAL_INPUT_CONTAINER_CLASS_NAME = "better-library-thing-modal-input-container";
 const MODAL_ELEMENT_CONTAINER_CLASS_NAME = "better-library-thing-modal-element-container";
 const MODAL_TAG_ATTR = "modal-tag";
@@ -76,6 +83,12 @@ const createModalButton = (exit: () => void, {text, onClick, colour}: ModalButto
 	return button;
 };
 
+const createModalFrame = (exit: () => void, {/*text, */ colour, html}: ModalFrame) => {
+	const frame = createWithClass("div", `${MODAL_FRAME_CLASS_NAME} ${colour}`);
+	frame.innerHTML = html;
+	return frame;
+};
+
 const createModalInput = (exit: () => void, {text, onSelect, colour, ensureNonEmpty, placeholder}: ModalInput) => {
 	const input = createWithClass("input", `${MODAL_INPUT_CLASS_NAME} ${colour}`);
 	input.placeholder = placeholder;
@@ -94,11 +107,13 @@ const createModalInput = (exit: () => void, {text, onSelect, colour, ensureNonEm
 	return container;
 };
 
-const createModalElement = (exit: () => void) => (element: ModalButton | ModalInput) => {
+const createModalElement = (exit: () => void) => (element: ModalButton | ModalInput | ModalFrame) => {
 	if (element.kind === "button") {
 		return createModalButton(exit, element);
-	} else {
+	} else if (element.kind === "input") {
 		return createModalInput(exit, element);
+	} else {
+		return createModalFrame(exit, element);
 	}
 };
 

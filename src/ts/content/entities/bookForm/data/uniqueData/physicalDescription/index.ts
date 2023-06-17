@@ -20,18 +20,19 @@ const calculateRow = (element: Element): number => {
 
 const fromPhysicalDescriptionElement = (key: string, name: string) => (formData: FormData, element) => {
 	const row = calculateRow(element);
-	if (row >= 0) {
-		formData[key] ??= [];
-		formData[key][row] ??= {};
-		formData[key][row][name] ??= {};
-		formData[key][row][name] = {value: element.value, checked: element.checked};
-	}
+	formData[key] ??= [];
+	formData[key][row] ??= {};
+	formData[key][row][name] ??= {};
+	return (formData[key][row][name] = {value: element.value, checked: element.checked});
 };
 
-const fromPhysicalDescriptionFormData = (key: string, name: string) => (formData: FormData, element) => {
+const fromPhysicalDescriptionFormDataStrict = (key: string, name: string) => (formData: FormData, element) => {
 	const row = calculateRow(element);
-	return formData[key]?.[row]?.[name] ?? element;
+	return formData[key]?.[row]?.[name] ?? false;
 };
+
+const fromPhysicalDescriptionFormData = (key: string, name: string) => (formData: FormData, element) =>
+	fromPhysicalDescriptionFormDataStrict(key, name)(formData, element) || element;
 
 const physicalDescriptionFormElement = (id: string) => (name: string) => {
 	const key = `_vbl_${id}`;
@@ -39,6 +40,7 @@ const physicalDescriptionFormElement = (id: string) => (name: string) => {
 		predicate: isPhysicalDescriptionElement(id, name),
 		fromElement: fromPhysicalDescriptionElement(key, name),
 		fromFormData: fromPhysicalDescriptionFormData(key, name),
+		fromFormDataStrict: fromPhysicalDescriptionFormDataStrict(key, name),
 	});
 };
 

@@ -1,28 +1,38 @@
-import {FormAreaElement} from "./types";
-import {formExists, getForm, getFormElements} from "./util";
-import {createOnSave, OffSave, OnConfirm, OnSave} from "./save";
+import {FormAreaElement, FormData} from "./types";
+import {formExists, getForm, getFormElementsFromSubtree} from "./util";
+import {createFormState, FormState, OffSave, OnConfirm, OnSave} from "./state";
+import {getFormDataElements} from "./data";
 
 type ForEachFormElement = (callback: (element: FormAreaElement) => void) => void;
-type FormRenderListener = (
-	form: HTMLElement,
-	forEachElement: ForEachFormElement,
-	onSave: OnSave,
-	offSave: OffSave,
-	onConfirm: OnConfirm
-) => void;
+type FormRenderEnvironment = {
+	form: HTMLElement;
+	forEachElement: ForEachFormElement;
+	onSave: OnSave;
+	offSave: OffSave;
+	onConfirm: OnConfirm;
+};
+type FormRenderListener = (env: FormRenderEnvironment) => void;
 
 const FORM_RENDER_EVENT = "library-thing-form-rendered";
 const FORM_REMOVED_EVENT = "library-thing-form-removed";
 
-const forEachFormElement: ForEachFormElement = (callback: (element: FormAreaElement) => void): void =>
-	getFormElements(document).forEach(callback);
+const forEachFormElement: ForEachFormElement = (callback: (element: FormAreaElement) => void): void => {
+	getFormDataElements(document).forEach(callback);
+	state.onFormElement(callback);
+};
 
 const listeners = new Map<FormRenderListener, () => void>();
 // kinda gross but i don't have a better idea without a bIG refactor
-let save: {onSave: OnSave; offSave: OffSave; onConfirm: OnConfirm};
+let state: FormState;
 
 const encloseCallbackArguments = (callback: FormRenderListener) => () =>
-	callback(getForm(document), forEachFormElement, save.onSave, save.offSave, save.onConfirm);
+	callback({
+		form: getForm(document),
+		forEachElement: forEachFormElement,
+		onSave: state.onSave,
+		offSave: state.offSave,
+		onConfirm: state.onConfirm,
+	});
 
 const onFormRender = (callback: FormRenderListener): void => {
 	const listener = encloseCallbackArguments(callback);
@@ -45,7 +55,7 @@ const onceFormRemoved = (callback: () => void): void =>
 
 const handleFormMutation = () => {
 	if (formExists()) {
-		save = createOnSave();
+		state = createFormState();
 		window.dispatchEvent(new Event(FORM_RENDER_EVENT));
 	} else {
 		window.dispatchEvent(new Event(FORM_REMOVED_EVENT));
@@ -55,7 +65,16 @@ const handleFormMutation = () => {
 window.addEventListener("pageshow", () => {
 	const editForm = getForm(document);
 	if (editForm) {
-		new MutationObserver(handleFormMutation).observe(editForm, {subtree: false, childList: true});
+		new MutationObserver(handleFormMutation).observe(editForm, {childList: true});
+		new MutationObserver((mutations) => {
+			mutations.forEach((mutation) =>
+				mutation.addedNodes.forEach(
+					(node) =>
+						node instanceof HTMLElement &&
+						getFormElementsFromSubtree(node).forEach(state.registerFormElement)
+				)
+			);
+		}).observe(editForm, {subtree: true, childList: true});
 		handleFormMutation();
 	}
 });

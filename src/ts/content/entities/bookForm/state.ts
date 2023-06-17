@@ -1,8 +1,19 @@
+import {FormAreaElement} from "./types";
+
 type OnSave = (callback: OnSaveListener) => void;
 type OffSave = OnSave;
 type OnConfirm = (callback: OnConfirmedListener) => void;
 type OnSaveListener = () => Promise<boolean>;
 type OnConfirmedListener = () => void;
+type FormElementListener = (element: FormAreaElement) => void;
+type OnFormElement = (callback: FormElementListener) => void;
+type FormState = {
+	onSave: OnSave;
+	offSave: OffSave;
+	onConfirm: OnConfirm;
+	registerFormElement: FormElementListener;
+	onFormElement: OnFormElement;
+};
 
 const maybeClick =
 	(
@@ -36,16 +47,20 @@ const replaceButton = (
 	button.insertAdjacentElement("beforebegin", td);
 };
 
-const createOnSave = (): {onSave: OnSave; offSave: OffSave; onConfirm: OnConfirm} => {
+const createFormState = (): FormState => {
 	const listeners: Set<OnSaveListener> = new Set<OnSaveListener>();
 	const confirmListeners: Set<OnConfirmedListener> = new Set<OnConfirmedListener>();
+	const formElementListeners: Set<FormElementListener> = new Set<FormElementListener>();
 	replaceButton(document.getElementById("book_editTabTextSave1"), listeners, confirmListeners);
 	replaceButton(document.getElementById("book_editTabTextSave2"), listeners, confirmListeners);
 	const onSave = (callback: OnSaveListener) => listeners.add(callback);
 	const offSave = (callback: OnSaveListener) => listeners.delete(callback);
 	const onConfirm = (callback: OnConfirmedListener) => confirmListeners.add(callback);
-	return {onSave, offSave, onConfirm};
+	const onFormElement = (callback: FormElementListener) => formElementListeners.add(callback);
+	const registerFormElement = (formAreaElement: FormAreaElement) =>
+		formElementListeners.forEach((callback) => callback(formAreaElement));
+	return {onSave, offSave, onConfirm, onFormElement, registerFormElement};
 };
 
-export type {OnSave, OffSave, OnConfirm};
-export {createOnSave};
+export type {OnSave, OffSave, OnConfirm, FormState, FormElementListener};
+export {createFormState};

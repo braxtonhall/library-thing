@@ -16,6 +16,11 @@ const FORM_META_DATA_KEY = "___metadata_";
 
 const matchFactory = matchFactoryFromDescriptors(collections, ...physicalDescription);
 
+const extractFromFormDataStrict = matchFactory(
+	"fromFormDataStrict",
+	(formData, element) => formData[element.id] ?? false
+);
+
 const extractFromFormData = matchFactory("fromFormData", (formData, element) => formData[element.id] ?? element);
 
 const extractFromElement = matchFactory(
@@ -40,9 +45,13 @@ const getFormMetadata = (document: Document): FormData => ({
 const isFormDataElement = (element: FormAreaElement): boolean =>
 	element && element.type !== "hidden" && internalIsFormDataElement(null, element);
 
+const getFormDataElements = (_document = document) => getFormElements(_document).filter(isFormDataElement);
+
+const getFormDataFromElement = (element: FormAreaElement) => extractFromElement({}, element);
+
 const getFormData = (_document = document) =>
-	getFormElements(_document).reduce((formData: FormData, element: any) => {
-		isFormDataElement(element) && extractFromElement(formData, element);
+	getFormDataElements(_document).reduce((formData: FormData, element: any) => {
+		extractFromElement(formData, element);
 		return formData;
 	}, getFormMetadata(_document));
 
@@ -50,19 +59,23 @@ const insertFormData = (formData: FormData) => {
 	const metaData = formData?.[FORM_META_DATA_KEY] ?? {};
 	ensureRolesInputCount(metaData);
 	ensurePhysicalDescriptionInputCounts(metaData);
-	getFormElements(document).forEach((element: any) => {
-		if (isFormDataElement(element)) {
-			const {value, checked} = transformIncomingData(extractFromFormData(formData, element), element);
-			if (element.value !== value || element.checked !== checked) {
-				element.value = value;
-				element.checked = checked;
-				element.dispatchEvent(new Event("change"));
-				ensureVisible(element);
-			}
+	getFormDataElements(document).forEach((element: any) => {
+		const {value, checked} = transformIncomingData(extractFromFormData(formData, element), element);
+		if (element.value !== value || element.checked !== checked) {
+			element.value = value;
+			element.checked = checked;
+			element.dispatchEvent(new Event("change"));
+			ensureVisible(element);
 		}
 	});
 };
 
 const ensureVisible = (element: Element) => match(element).case(isCollectionsElement, show).yield();
 
-export {getFormData, insertFormData};
+export {
+	getFormData,
+	getFormDataElements,
+	getFormDataFromElement,
+	extractFromFormDataStrict as getFormDataForElement,
+	insertFormData,
+};
