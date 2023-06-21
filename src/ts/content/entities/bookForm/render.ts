@@ -18,7 +18,7 @@ const FORM_RENDER_EVENT = "library-thing-form-rendered";
 const FORM_REMOVED_EVENT = "library-thing-form-removed";
 
 const forEachFormElement: ForEachFormElement = (callback: (element: FormAreaElement) => void): void => {
-	getFormDataElements(document).forEach(callback);
+	getFormDataElements(document).forEach(callback); // view -> edit. things called twice.
 	state.onFormElement(callback);
 };
 
@@ -68,14 +68,16 @@ window.addEventListener("pageshow", () => {
 	const editForm = getForm(document);
 	if (editForm) {
 		new MutationObserver(handleFormMutation).observe(editForm, {childList: true});
-		new MutationObserver((mutations) =>
-			mutations.forEach((mutation) =>
-				mutation.addedNodes.forEach(
-					(node) =>
-						node instanceof HTMLElement &&
-						getFormElementsFromSubtree(node).forEach(state.registerFormElement)
+		new MutationObserver(
+			(mutations) =>
+				state?.registerFormElement &&
+				mutations.forEach((mutation) =>
+					mutation.addedNodes.forEach(
+						(node) =>
+							node instanceof HTMLElement &&
+							getFormElementsFromSubtree(node).forEach(state.registerFormElement)
+					)
 				)
-			)
 		).observe(editForm, {subtree: true, childList: true});
 		handleFormMutation();
 	}
