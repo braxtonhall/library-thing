@@ -10,8 +10,7 @@ describe("match", () => {
 				(value): value is 10 => value === 10,
 				() => true
 			)
-			.default(() => false)
-			.yield();
+			.default(() => false);
 		expect(foo).to.be.true;
 	});
 
@@ -21,8 +20,7 @@ describe("match", () => {
 				(value): value is 10 => value === 10,
 				() => true
 			)
-			.default(() => false)
-			.yield();
+			.default(() => false);
 		expect(foo).to.be.false;
 	});
 
@@ -40,8 +38,7 @@ describe("match", () => {
 				(value): value is 8 => value === 8,
 				() => "8"
 			)
-			.default(() => "inf")
-			.yield();
+			.default(() => "inf");
 		expect(foo).to.equal("9");
 	});
 
@@ -65,7 +62,7 @@ describe("match", () => {
 				.case(() => true, identity)
 				.yield()
 		).to.equal("foo");
-		expect(match("bar").default(identity).yield()).to.equal("bar");
+		expect(match("bar").default(identity)).to.equal("bar");
 	});
 });
 
@@ -119,9 +116,7 @@ const typeTests = () => {
 			() => ""
 		)
 		.yield() satisfies string;
-	match(foo)
-		.default(() => "")
-		.yield() satisfies string;
+	match(foo).default(() => "") satisfies string;
 
 	match(foo)
 		.default(() => "")
@@ -145,8 +140,7 @@ const typeTests = () => {
 			(): boolean => true,
 			() => "b" as const
 		)
-		.default(() => "c" as const)
-		.yield();
+		.default(() => "c" as const);
 	abc satisfies "a" | "b" | "c";
 	// @ts-expect-error yield types should be preserved when actually yielding
 	abc satisfies "a";

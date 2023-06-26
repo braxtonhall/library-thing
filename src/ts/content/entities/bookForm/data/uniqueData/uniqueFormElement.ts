@@ -36,7 +36,6 @@ const matchFactoryFromDescriptors =
 	(formData: FormData, element: Element) =>
 		descriptors
 			.reduce((acc, descriptor) => acc.case(...descriptor[kind](formData)), match(element))
-			.default(() => otherwise(formData, element))
-			.yield();
+			.default(() => otherwise(formData, element));
 
 export {uniqueFormElement, matchFactoryFromDescriptors};
