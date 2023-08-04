@@ -51,7 +51,7 @@
 			let md = "README.md";
 			if (window.location.hash.length > 1) {
 				const path = window.location.hash.replace("#", "");
-				history.pushState({page: 1}, "Redirecting", path);
+				history.replaceState({path}, "Redirecting", path);
 				md = path.replace(/\.pretty/, "");
 			}
 
