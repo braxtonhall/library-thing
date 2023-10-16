@@ -1,4 +1,4 @@
-import {ForEachFormElement, onFormRender} from "../entities/bookForm";
+import {onFormRender} from "../entities/bookForm";
 import {debounce} from "../../common/util/debounce";
 import {getLastFormRender} from "../util/lastFormRender";
 import {AUTHOR_TAG_INPUT_ID} from "./author/authorPage/authorUI";
@@ -82,7 +82,7 @@ const ifTextArea =
 const beenAWhile = () => getLastFormRender() + ONE_DAY_MS < Date.now();
 const clearSizeData = () => config.set(ConfigKey.SizeData, {});
 
-onFormRender(async (form: HTMLElement, forEachElement: ForEachFormElement) => {
+onFormRender(async ({forEachElement}) => {
 	beenAWhile() && (await clearSizeData());
 	forEachElement(ifTextArea(mutateTextArea(await getSizeData())));
 });

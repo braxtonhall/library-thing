@@ -11,7 +11,7 @@ import {
 } from "./render";
 import {formDataEquals, formExists} from "./util";
 import {getFormData, insertFormData} from "./data";
-import {OnSave, OffSave} from "./save";
+import {OnSave, OffSave} from "./state";
 
 export type {FormData, ForEachFormElement, FormRenderListener, OnSave, OffSave};
 export {

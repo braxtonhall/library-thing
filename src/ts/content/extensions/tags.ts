@@ -21,7 +21,7 @@ const getAncestorTags = async (tags: string[]): Promise<string[]> => {
 	return minimalAncestors.filter((tag) => !existingLowerTags.has(tag.toLowerCase()));
 };
 
-onFormRender((form, forEachElement, onSave, offSave) => {
+onFormRender(({onSave, offSave}) => {
 	const tagsTextAreaContainerId = "bookedit_tags";
 	const tagsTextAreaId = "form_tags";
 	const commentsTextArea = document.getElementById("form_comments") as HTMLTextAreaElement;

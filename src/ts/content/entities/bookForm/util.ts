@@ -6,8 +6,10 @@ const getElementsByTag = (parent: HTMLElement) => (tag: string) => Array.from(pa
 
 const getElementsByTags = (parent: HTMLElement, tags: string[]) => tags.flatMap(getElementsByTag(parent));
 
-const getFormElements = (document: Document): FormAreaElement[] =>
-	getElementsByTags(getForm(document), FORM_DATA_ELEMENT_TAGS) as FormAreaElement[];
+const getFormElements = (document: Document): FormAreaElement[] => getFormElementsFromSubtree(getForm(document));
+
+const getFormElementsFromSubtree = (element: HTMLElement): FormAreaElement[] =>
+	getElementsByTags(element, FORM_DATA_ELEMENT_TAGS) as FormAreaElement[];
 
 // This is relying on the fact that when the edit form is available, the html matches this selector,
 // and fails to match in all other cases. This IS brittle. If LibraryThing changes
@@ -26,4 +28,4 @@ const getForm = (document: Document): HTMLElement => document.getElementById("bo
  */
 const formDataEquals = (formA: FormData, formB: FormData): boolean => JSON.stringify(formA) === JSON.stringify(formB);
 
-export {getForm, getFormElements, formExists, formDataEquals};
+export {getForm, getFormElements, getFormElementsFromSubtree, formExists, formDataEquals};

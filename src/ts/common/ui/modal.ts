@@ -3,28 +3,29 @@ import "../../../sass/modal.sass";
 import {createOverlay} from "./overlay";
 import {UIColour} from "./colour";
 
-interface ModalElement {
-	kind: string;
+type BaseModalElement = {
 	text: string;
 	colour: UIColour;
-}
+};
 
-interface ModalButton extends ModalElement {
+type ModalButton = BaseModalElement & {
 	kind: "button";
 	onClick?: () => Promise<void>;
-}
+};
 
-interface ModalInput extends ModalElement {
+type ModalInput = BaseModalElement & {
 	kind: "input";
 	placeholder: string;
 	ensureNonEmpty: boolean;
 	onSelect: (userText: string) => Promise<void>;
-}
+};
+
+type ModalElement = ModalButton | ModalInput;
 
 interface ModalOptions {
 	text: string;
 	subText?: string[];
-	elements: (ModalButton | ModalInput)[];
+	elements: ModalElement[];
 	onCancel?: () => Promise<void>;
 	colour: UIColour;
 	/**
@@ -94,7 +95,7 @@ const createModalInput = (exit: () => void, {text, onSelect, colour, ensureNonEm
 	return container;
 };
 
-const createModalElement = (exit: () => void) => (element: ModalButton | ModalInput) => {
+const createModalElement = (exit: () => void) => (element: ModalElement) => {
 	if (element.kind === "button") {
 		return createModalButton(exit, element);
 	} else {

@@ -42,4 +42,4 @@ const onHoverPasteButton = (editTooltip: (text: string) => void) => async () => 
 	}
 };
 
-onFormRender((form: HTMLElement) => Array.from(form.getElementsByClassName("book_bitTable")).forEach(appendCopyPaste));
+onFormRender(({form}) => Array.from(form.getElementsByClassName("book_bitTable")).forEach(appendCopyPaste));
