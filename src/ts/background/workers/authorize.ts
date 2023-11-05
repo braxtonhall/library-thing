@@ -82,7 +82,21 @@ const getAuthToken = async (interactive: boolean): Promise<string> => {
 		return browser.identity
 			.launchWebAuthFlow({url: getAuthUrl(), interactive})
 			.catch(({message}) => {
-				throw new WorkerError(WorkerErrorKind.Unknown, message);
+				/*
+				 * this appears to be erroring with the following message:
+				 *
+				 * "User interaction required.
+				 *  Try setting `abortOnLoadForNonInteractive` and `timeoutMs For NonInteractive`
+				 *  if multiple navigations are required, or if code is used
+				 *  for redirects in the authorization page after it's loaded."
+				 *
+				 * but it's still logging in and setting the token correctly in storage
+				 *
+				 * log the error message, but don't block the existing login flow
+				 * https://github.com/braxtonhall/library-thing/issues/288
+				 * */
+
+				console.error(message);
 			})
 			.then(onResponse);
 	} else {
